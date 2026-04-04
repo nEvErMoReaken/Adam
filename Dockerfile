@@ -4,15 +4,20 @@ FROM base AS deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 COPY package.json yarn.lock .yarnrc.yml ./
-RUN corepack enable && corepack prepare yarn@3.6.1 --activate && yarn install --immutable
+# 移除 yarnPath 限制，让 corepack 直接管理
+RUN sed -i '/yarnPath/d' .yarnrc.yml && \
+    corepack enable && corepack prepare yarn@3.6.1 --activate && \
+    yarn install --immutable
 
 FROM base AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
+RUN sed -i '/yarnPath/d' .yarnrc.yml && \
+    corepack enable && corepack prepare yarn@3.6.1 --activate
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV DOCKER=true
-RUN corepack enable && corepack prepare yarn@3.6.1 --activate && yarn build
+RUN yarn build
 
 FROM base AS runner
 WORKDIR /app
