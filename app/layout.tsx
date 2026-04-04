@@ -2,20 +2,22 @@ import 'css/tailwind.css'
 import 'pliny/search/algolia.css'
 import 'remark-github-blockquote-alert/alert.css'
 
-import { Space_Grotesk } from 'next/font/google'
+import { JetBrains_Mono } from 'next/font/google'
 import { Analytics, AnalyticsConfig } from 'pliny/analytics'
 import { SearchProvider, SearchConfig } from 'pliny/search'
 import Header from '@/components/Header'
-import SectionContainer from '@/components/SectionContainer'
 import Footer from '@/components/Footer'
+import WalkingPet from '@/components/TerminalPet'
+import KeyboardHelp from '@/components/KeyboardHelp'
+import GlobalKeyboardShortcuts from '@/components/GlobalKeyboardShortcuts'
 import siteMetadata from '@/data/siteMetadata'
 import { ThemeProviders } from './theme-providers'
 import { Metadata } from 'next'
 
-const space_grotesk = Space_Grotesk({
+const jetbrainsMono = JetBrains_Mono({
   subsets: ['latin'],
   display: 'swap',
-  variable: '--font-space-grotesk',
+  variable: '--font-jetbrains-mono',
 })
 
 export const metadata: Metadata = {
@@ -31,7 +33,7 @@ export const metadata: Metadata = {
     url: './',
     siteName: siteMetadata.title,
     images: [siteMetadata.socialBanner],
-    locale: 'en_US',
+    locale: 'zh_CN',
     type: 'website',
   },
   alternates: {
@@ -64,7 +66,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang={siteMetadata.language}
-      className={`${space_grotesk.variable} scroll-smooth`}
+      className={`${jetbrainsMono.variable} scroll-smooth`}
       suppressHydrationWarning
     >
       <link
@@ -91,19 +93,23 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         color="#5bbad5"
       />
       <meta name="msapplication-TileColor" content="#000000" />
-      <meta name="theme-color" media="(prefers-color-scheme: light)" content="#fff" />
-      <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000" />
       <link rel="alternate" type="application/rss+xml" href={`${basePath}/feed.xml`} />
-      <body className="bg-white pl-[calc(100vw-100%)] text-black antialiased dark:bg-gray-950 dark:text-white">
+      <body
+        className="bg-[var(--c-base)] pl-[calc(100vw-100%)] text-[var(--c-text)] antialiased"
+        style={{ fontFamily: 'var(--font-jetbrains-mono), ui-monospace, monospace' }}
+      >
         <ThemeProviders>
           <Analytics analyticsConfig={siteMetadata.analytics as AnalyticsConfig} />
-          <SectionContainer>
+          <div className="flex h-dvh flex-col overflow-hidden">
             <SearchProvider searchConfig={siteMetadata.search as SearchConfig}>
               <Header />
-              <main className="mb-auto">{children}</main>
+              <main className="min-h-0 flex-1 overflow-y-auto">{children}</main>
             </SearchProvider>
             <Footer />
-          </SectionContainer>
+            <WalkingPet />
+            <KeyboardHelp />
+            <GlobalKeyboardShortcuts />
+          </div>
         </ThemeProviders>
       </body>
     </html>
