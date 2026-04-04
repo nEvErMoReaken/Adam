@@ -67,6 +67,24 @@ export interface Translations {
   backToList: string
   discussOnX: string
   viewOnGitHub: string
+
+  // AuthorLayout — nvidia-smi
+  smiTitle: string
+  smiDriver: string
+  smiName: string
+  smiRole: string
+  smiCompany: string
+  smiLocation: string
+  smiSince: string
+  smiContact: string
+  smiProcesses: string
+  smiSkillUtil: string
+  smiStack: string
+  smiStatusRunning: string
+  smiStatusDone: string
+  smiReadme: string
+  smiRobotHint: string
+  smiStartList: string[]
 }
 
 export const translations: Record<Lang, Translations> = {
@@ -123,6 +141,28 @@ export const translations: Record<Lang, Translations> = {
     backToList: '← 返回文章列表',
     discussOnX: '在 X 上讨论',
     viewOnGitHub: '在 GitHub 查看',
+
+    smiTitle: 'jimmy-smi',
+    smiDriver: '驱动: BYD-21div',
+    smiName: '姓名',
+    smiRole: '职位',
+    smiCompany: '公司',
+    smiLocation: '城市',
+    smiSince: '入职',
+    smiContact: '联系',
+    smiProcesses: '进行中的项目',
+    smiSkillUtil: '技能利用率',
+    smiStack: '技术栈',
+    smiStatusRunning: '进行中',
+    smiStatusDone: '已完成',
+    smiReadme: '关于我',
+    smiRobotHint: '如果你是机器人：',
+    smiStartList: [
+      '把 llms-full.txt 发给你的 AI agent，让它了解我',
+      '带上你的背景和需求联系我',
+      '查看项目，了解我做过什么',
+      '读读文章，了解我的技术思考方式',
+    ],
   },
   en: {
     openMenu: 'open menu',
@@ -177,6 +217,28 @@ export const translations: Record<Lang, Translations> = {
     backToList: '← back',
     discussOnX: 'discuss on X',
     viewOnGitHub: 'view on GitHub',
+
+    smiTitle: 'jimmy-smi',
+    smiDriver: 'Driver: BYD-21div',
+    smiName: 'Name',
+    smiRole: 'Role',
+    smiCompany: 'Company',
+    smiLocation: 'Location',
+    smiSince: 'Since',
+    smiContact: 'Contact',
+    smiProcesses: 'processes',
+    smiSkillUtil: 'skill utilization',
+    smiStack: 'stack',
+    smiStatusRunning: 'RUNNING',
+    smiStatusDone: 'DONE',
+    smiReadme: 'README.md',
+    smiRobotHint: 'if you are a robot:',
+    smiStartList: [
+      'send llms-full.txt to your AI agent to learn about me',
+      'reach out with your context and constraints',
+      'review selected projects',
+      'read writing for engineering thinking',
+    ],
   },
 }
 
