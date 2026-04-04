@@ -303,7 +303,6 @@
 
 ::-webkit-scrollbar-thumb {
   background: var(--c-surface2);
-  border: 2px solid var(--c-mantle);
   border-radius: 0;
   box-shadow: inset 1px 1px 0 var(--c-overlay1), inset -1px -1px 0 var(--c-surface0);
 }
