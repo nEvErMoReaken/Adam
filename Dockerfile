@@ -4,14 +4,15 @@ FROM base AS deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 COPY package.json yarn.lock .yarnrc.yml ./
-RUN corepack enable && yarn install --immutable
+RUN corepack enable && corepack prepare yarn@3.6.1 --activate && yarn install --immutable
 
 FROM base AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 ENV NEXT_TELEMETRY_DISABLED=1
-RUN corepack enable && yarn build
+ENV DOCKER=true
+RUN corepack enable && corepack prepare yarn@3.6.1 --activate && yarn build
 
 FROM base AS runner
 WORKDIR /app

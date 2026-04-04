@@ -1,0 +1,29 @@
+name: Deploy to VPS
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          password: ${{ secrets.VPS_PASSWORD }}
+          port: ${{ secrets.VPS_PORT }}
+          script: |
+            cd /opt/jimmy-blog
+            git pull origin main
+            docker build -t jimmy-blog:latest .
+            docker stop jimmy-blog 2>/dev/null || true
+            docker rm jimmy-blog 2>/dev/null || true
+            docker run -d \
+              --name jimmy-blog \
+              --restart unless-stopped \
+              -p 3000:3000 \
+              jimmy-blog:latest
+            docker image prune -f
