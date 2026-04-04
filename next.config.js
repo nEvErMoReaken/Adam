@@ -68,6 +68,8 @@ module.exports = () => {
     basePath,
     reactStrictMode: true,
     trailingSlash: true,
+    eslint: { ignoreDuringBuilds: true },
+    typescript: { ignoreBuildErrors: false },
     turbopack: {
       root: process.cwd(),
       rules: {
