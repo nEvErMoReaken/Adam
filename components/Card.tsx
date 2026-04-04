@@ -2,15 +2,14 @@ import Image from './Image'
 import Link from './Link'
 
 const Card = ({ title, description, imgSrc, href }) => (
-  <div className="md max-w-[544px] p-4 md:w-1/2">
+  <div className="p-4 md:w-1/2">
     <div
-      className={`${
-        imgSrc && 'h-full'
-      } overflow-hidden rounded-md border-2 border-gray-200/60 dark:border-gray-700/60`}
+      className="overflow-hidden border"
+      style={{ borderColor: 'var(--c-split)', backgroundColor: 'var(--c-mantle)' }}
     >
       {imgSrc &&
         (href ? (
-          <Link href={href} aria-label={`Link to ${title}`}>
+          <Link href={href} aria-label={`前往 ${title}`}>
             <Image
               alt={title}
               src={imgSrc}
@@ -29,23 +28,23 @@ const Card = ({ title, description, imgSrc, href }) => (
           />
         ))}
       <div className="p-6">
-        <h2 className="mb-3 text-2xl leading-8 font-bold tracking-tight">
+        <h2 className="mb-3 text-xl font-bold leading-8 tracking-tight text-[var(--c-text)]">
           {href ? (
-            <Link href={href} aria-label={`Link to ${title}`}>
+            <Link href={href} aria-label={`前往 ${title}`}>
               {title}
             </Link>
           ) : (
             title
           )}
         </h2>
-        <p className="prose mb-3 max-w-none text-gray-500 dark:text-gray-400">{description}</p>
+        <p className="mb-4 font-mono text-sm text-[var(--c-subtext0)]">{description}</p>
         {href && (
           <Link
             href={href}
-            className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400 text-base leading-6 font-medium"
-            aria-label={`Link to ${title}`}
+            className="font-mono text-sm text-[var(--c-blue)] transition-opacity hover:opacity-75"
+            aria-label={`前往 ${title}`}
           >
-            Learn more &rarr;
+            [查看项目] →
           </Link>
         )}
       </div>

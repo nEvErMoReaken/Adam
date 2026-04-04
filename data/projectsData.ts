@@ -7,18 +7,14 @@ interface Project {
 
 const projectsData: Project[] = [
   {
-    title: 'A Search Engine',
-    description: `What if you could look up any information in the world? Webpages, images, videos
-    and more. Google has many features to help you find exactly what you're looking
-    for.`,
+    title: '项目名称一',
+    description: `这里是项目描述，介绍这个项目的背景、功能和技术栈。`,
     imgSrc: '/static/images/google.png',
     href: 'https://www.google.com',
   },
   {
-    title: 'The Time Machine',
-    description: `Imagine being able to travel back in time or to the future. Simple turn the knob
-    to the desired date and press "Go". No more worrying about lost keys or
-    forgotten headphones with this simple yet affordable solution.`,
+    title: '项目名称二',
+    description: `这里是另一个项目的描述，你可以替换为真实的项目信息。`,
     imgSrc: '/static/images/time-machine.jpg',
     href: '/blog/the-time-machine',
   },
