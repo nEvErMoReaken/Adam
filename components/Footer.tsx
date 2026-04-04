@@ -47,7 +47,7 @@ export default function Footer() {
   const currentLabel = THEMES.find(t => t.id === theme)?.label ?? theme
 
   return (
-    <footer className="z-50 shrink-0">
+    <footer className="z-50 shrink-0 select-none">
       <SlashCommandPanel />
 
       {/* 状态栏 */}
