@@ -3167,6 +3167,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@prequist/lanyard@npm:^1.0.1":
+  version: 1.1.0
+  resolution: "@prequist/lanyard@npm:1.1.0"
+  checksum: cd3eefac39b4ea0bd7aae4ff254245652aa97bfabd53752ea11c62bacd29ba49c0c150f26cd652d6c8eb1b87298bcbe0a8ccd95dde42137cdeab06acff3c4ab2
+  languageName: node
+  linkType: hard
+
 "@protobufjs/aspromise@npm:^1.1.1, @protobufjs/aspromise@npm:^1.1.2":
   version: 1.1.2
   resolution: "@protobufjs/aspromise@npm:1.1.2"
@@ -11984,6 +11991,7 @@ __metadata:
     tailwindcss: ^4.1.18
     typescript: ^5.9.3
     unist-util-visit: ^5.1.0
+    use-lanyard: ^1.7.0
   languageName: unknown
   linkType: soft
 
@@ -12523,6 +12531,18 @@ __metadata:
     "@types/react":
       optional: true
   checksum: 4da1c82d7a2409cee6c882748a40f4a083decf238308bf12c3d0166f0e338f8d512f37b8d11987eb5a421f14b9b5b991edf3e11ed25c3bb7a6559081f8359b44
+  languageName: node
+  linkType: hard
+
+"use-lanyard@npm:^1.7.0":
+  version: 1.7.0
+  resolution: "use-lanyard@npm:1.7.0"
+  dependencies:
+    "@prequist/lanyard": ^1.0.1
+  peerDependencies:
+    react: "*"
+    react-dom: "*"
+  checksum: d118c4aaac019dd97b502ff813718884df5fa25cf9f236e6c7320d5c7a318b7a29f40e3ed40105bb25517cacce9964d9f63c6a767744c33cbddff1c5424dc79a
   languageName: node
   linkType: hard
 

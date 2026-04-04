@@ -46,7 +46,8 @@
     "remark-github-blockquote-alert": "^2.0.1",
     "remark-math": "^6.0.0",
     "tailwindcss": "^4.1.18",
-    "unist-util-visit": "^5.1.0"
+    "unist-util-visit": "^5.1.0",
+    "use-lanyard": "^1.7.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.3",

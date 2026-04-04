@@ -4,7 +4,6 @@ import { ReactNode } from 'react'
 import type { Authors } from 'contentlayer/generated'
 import { Pane, PaneLayout } from '@/components/PaneLayout'
 import { useLang } from '@/lib/i18n'
-import Link from '@/components/Link'
 
 interface Props {
   children: ReactNode
@@ -21,20 +20,20 @@ const SKILLS = {
 }
 
 const PROJECTS = [
-  { nameZh: 'MSS / IoT网关',     nameEn: 'MSS / IoT Gateway',    roleZh: '核心开发+架构', roleEn: 'Core Dev + Architect', running: true,  since: '2023-07' },
-  { nameZh: 'BYD充电站智能化',   nameEn: 'BYD Smart Station',    roleZh: 'PM+算法工程化', roleEn: 'PM + Algorithm Eng',   running: true,  since: '2025-07' },
-  { nameZh: '迪电共享充电桩',    nameEn: 'Shared EV Charging',   roleZh: '后端开发',      roleEn: 'Backend Dev',          running: true,  since: '2025-09' },
-  { nameZh: '纯正用品商城',      nameEn: 'BYD Merchandise App',  roleZh: '后端开发',      roleEn: 'Backend Dev',          running: false, since: '2025-07' },
-  { nameZh: 'AFC售检票系统',     nameEn: 'AFC Ticketing (CCT)',  roleZh: '后端开发',      roleEn: 'Backend Dev',          running: false, since: '2024-11' },
+  { nameZh: 'MSS / IoT网关',   nameEn: 'MSS / IoT Gateway',   roleZh: '核心开发+架构', roleEn: 'Core Dev + Arch', running: true,  since: '2023-07' },
+  { nameZh: 'BYD充电站智能化', nameEn: 'BYD Smart Station',   roleZh: 'PM+算法工程化', roleEn: 'PM + Algo Eng',   running: true,  since: '2025-07' },
+  { nameZh: '迪电共享充电桩',  nameEn: 'Shared EV Charging',  roleZh: '后端开发',      roleEn: 'Backend Dev',     running: true,  since: '2025-09' },
+  { nameZh: '纯正用品商城',    nameEn: 'BYD Merchandise App', roleZh: '后端开发',      roleEn: 'Backend Dev',     running: false, since: '2025-07' },
+  { nameZh: 'AFC售检票系统',   nameEn: 'AFC Ticketing (CCT)', roleZh: '后端开发',      roleEn: 'Backend Dev',     running: false, since: '2024-11' },
 ]
 
 const BARS = [
-  { labelZh: 'Go / 后端',    labelEn: 'Go / Backend',   value: 92, color: 'var(--c-blue)' },
-  { labelZh: 'Java / Kotlin', labelEn: 'Java / Kotlin', value: 80, color: 'var(--c-blue)' },
-  { labelZh: 'LLM 工程化',   labelEn: 'LLM Eng',        value: 78, color: 'var(--c-mauve)' },
-  { labelZh: 'IoT / 边缘',   labelEn: 'IoT / Edge',     value: 85, color: 'var(--c-green)' },
+  { labelZh: 'Go / 后端',       labelEn: 'Go / Backend',   value: 92, color: 'var(--c-blue)' },
+  { labelZh: 'Java / Kotlin',   labelEn: 'Java / Kotlin',  value: 80, color: 'var(--c-blue)' },
+  { labelZh: 'LLM 工程化',      labelEn: 'LLM Eng',        value: 78, color: 'var(--c-mauve)' },
+  { labelZh: 'IoT / 边缘',      labelEn: 'IoT / Edge',     value: 85, color: 'var(--c-green)' },
   { labelZh: '运维 / 基础设施', labelEn: 'DevOps / Infra', value: 75, color: 'var(--c-yellow)' },
-  { labelZh: '前端',          labelEn: 'Frontend',       value: 65, color: 'var(--c-peach)' },
+  { labelZh: '前端',             labelEn: 'Frontend',       value: 65, color: 'var(--c-peach)' },
 ]
 
 function Bar({ label, value, color }: { label: string; value: number; color: string }) {
@@ -51,24 +50,22 @@ function Bar({ label, value, color }: { label: string; value: number; color: str
 
 function Divider({ label }: { label: string }) {
   return (
-    <div className="flex items-center gap-2 font-mono text-[10px] text-[var(--c-overlay0)] select-none pt-1">
-      <span>+{'-'.repeat(18)}+</span>
-      <span className="uppercase tracking-widest">{label}</span>
-      <span>+{'-'.repeat(18)}+</span>
+    <div className="flex items-center gap-1 font-mono text-[10px] text-[var(--c-overlay0)] select-none py-1">
+      <span>+-{'-'.repeat(14)}-+</span>
+      <span className="uppercase tracking-widest shrink-0">{label}</span>
+      <span>+-{'-'.repeat(14)}-+</span>
     </div>
   )
 }
 
 export default function AuthorLayout({ children, content }: Props) {
-  const { name, occupation, company, github } = content
   const { t, lang } = useLang()
+  const { name, occupation, company, github } = content
 
   return (
-    <PaneLayout cols="grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
-
-      {/* 左 pane：nvidia-smi 风格 */}
+    <PaneLayout cols="grid-cols-1">
       <Pane title={t.smiTitle} index={0}>
-        <div className="p-4 space-y-3 font-mono text-xs overflow-x-auto">
+        <div className="p-4 space-y-2 font-mono text-xs overflow-x-auto">
 
           {/* 顶部框 */}
           <div className="text-[var(--c-overlay0)] select-none">
@@ -79,7 +76,7 @@ export default function AuthorLayout({ children, content }: Props) {
 
           {/* 基本信息 */}
           <div className="space-y-0.5">
-            {[
+            {([
               [t.smiName,     name],
               [t.smiRole,     occupation],
               [t.smiCompany,  company],
@@ -87,7 +84,7 @@ export default function AuthorLayout({ children, content }: Props) {
               [t.smiContact,  'SleepRhino@linux.do'],
               ['GitHub',      github?.replace('https://', '')],
               [t.smiSince,    '2023-07 @ BYD'],
-            ].map(([k, v]) => (
+            ] as [string, string][]).map(([k, v]) => (
               <p key={k} className="flex gap-2">
                 <span className="w-20 shrink-0 text-[var(--c-subtext0)]">| {k}</span>
                 <span className="text-[var(--c-subtext0)]">:</span>
@@ -98,24 +95,19 @@ export default function AuthorLayout({ children, content }: Props) {
 
           <Divider label={t.smiProcesses} />
 
-          {/* 项目进程表 */}
+          {/* 项目 */}
           <div className="space-y-0.5">
-            {PROJECTS.map((p) => {
-              const pName = lang === 'zh' ? p.nameZh : p.nameEn
-              const pRole = lang === 'zh' ? p.roleZh : p.roleEn
-              const status = p.running ? t.smiStatusRunning : t.smiStatusDone
-              return (
-                <p key={p.nameEn} className="flex gap-1">
-                  <span className="text-[var(--c-overlay0)]">|</span>
-                  <span className="w-24 truncate text-[var(--c-blue)]">{pName}</span>
-                  <span className="w-20 truncate text-[var(--c-text)]">{pRole}</span>
-                  <span style={{ color: p.running ? 'var(--c-green)' : 'var(--c-subtext0)' }} className="w-16 shrink-0">
-                    {status}
-                  </span>
-                  <span className="text-[var(--c-overlay0)]">{p.since}</span>
-                </p>
-              )
-            })}
+            {PROJECTS.map((p) => (
+              <p key={p.nameEn} className="flex gap-1">
+                <span className="text-[var(--c-overlay0)]">|</span>
+                <span className="w-24 truncate text-[var(--c-blue)]">{lang === 'zh' ? p.nameZh : p.nameEn}</span>
+                <span className="w-20 truncate text-[var(--c-text)]">{lang === 'zh' ? p.roleZh : p.roleEn}</span>
+                <span style={{ color: p.running ? 'var(--c-green)' : 'var(--c-subtext0)' }} className="w-16 shrink-0">
+                  {p.running ? t.smiStatusRunning : t.smiStatusDone}
+                </span>
+                <span className="text-[var(--c-overlay0)]">{p.since}</span>
+              </p>
+            ))}
           </div>
 
           <Divider label={t.smiSkillUtil} />
@@ -123,19 +115,14 @@ export default function AuthorLayout({ children, content }: Props) {
           {/* 技能条 */}
           <div className="space-y-1">
             {BARS.map((b) => (
-              <Bar
-                key={b.labelEn}
-                label={lang === 'zh' ? b.labelZh : b.labelEn}
-                value={b.value}
-                color={b.color}
-              />
+              <Bar key={b.labelEn} label={lang === 'zh' ? b.labelZh : b.labelEn} value={b.value} color={b.color} />
             ))}
           </div>
 
           <Divider label={t.smiStack} />
 
-          {/* 技术标签 */}
-          <div className="space-y-1">
+          {/* 技术栈 */}
+          <div className="space-y-0.5">
             {Object.entries(SKILLS).map(([category, items]) => (
               <p key={category} className="flex flex-wrap gap-x-2 gap-y-0.5">
                 <span className="w-20 shrink-0 text-[var(--c-subtext0)]">| {category}</span>
@@ -152,30 +139,6 @@ export default function AuthorLayout({ children, content }: Props) {
           </div>
         </div>
       </Pane>
-
-      {/* 右 pane：README */}
-      <Pane title={t.smiReadme} index={1}>
-        <div className="p-6 space-y-4 font-mono text-sm">
-          <p className="text-[var(--c-subtext0)]">
-            {t.smiRobotHint}{' '}
-            <Link href="/llms-full.txt" className="text-[var(--c-blue)] hover:opacity-75">
-              llms-full.txt
-            </Link>
-          </p>
-          <ol className="space-y-2 text-[var(--c-text)]">
-            {t.smiStartList.map((item, i) => (
-              <li key={i} className="flex gap-2">
-                <span className="text-[var(--c-blue)] shrink-0">{i + 1})</span>
-                <span>{item}</span>
-              </li>
-            ))}
-          </ol>
-          <div className="pt-4 prose dark:prose-invert max-w-none text-sm">
-            {children}
-          </div>
-        </div>
-      </Pane>
-
     </PaneLayout>
   )
 }
