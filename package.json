@@ -12,12 +12,14 @@
     "prepare": "husky"
   },
   "dependencies": {
+    "@fontsource/noto-sans-sc": "^5.2.9",
     "@headlessui/react": "2.2.9",
     "@next/bundle-analyzer": "15.5.12",
     "@tailwindcss/forms": "^0.5.11",
     "@tailwindcss/postcss": "^4.1.18",
     "@tailwindcss/typography": "^0.5.19",
     "body-scroll-lock": "^3.1.5",
+    "cmdk": "^1.1.1",
     "contentlayer2": "0.5.8",
     "esbuild": "0.27.3",
     "github-slugger": "^2.0.0",

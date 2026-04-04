@@ -1,11 +1,11 @@
 /** @type {import("pliny/config").PlinyConfig } */
 const siteMetadata = {
-  title: 'Next.js Starter Blog',
-  author: 'Tails Azimuth',
-  headerTitle: 'TailwindBlog',
-  description: 'A blog created with Next.js and Tailwind.css',
-  language: 'en-us',
-  theme: 'system', // system, dark or light
+  title: '我的博客',
+  author: '你的名字',
+  headerTitle: '我的博客',
+  description: '记录想法、技术与生活',
+  language: 'zh-CN',
+  theme: 'latte', // latte or mocha
   siteUrl: 'https://tailwind-nextjs-starter-blog.vercel.app',
   siteRepo: 'https://github.com/timlrx/tailwind-nextjs-starter-blog',
   siteLogo: `${process.env.BASE_PATH || ''}/static/images/logo.png`,
@@ -22,7 +22,7 @@ const siteMetadata = {
   instagram: 'https://www.instagram.com',
   medium: 'https://medium.com',
   bluesky: 'https://bsky.app/',
-  locale: 'en-US',
+  locale: 'zh-CN',
   // set to true if you want a navbar fixed to the top
   stickyNav: false,
   analytics: {
@@ -73,15 +73,15 @@ const siteMetadata = {
       metadata: '0',
       // theme example: light, dark, dark_dimmed, dark_high_contrast
       // transparent_dark, preferred_color_scheme, custom
-      theme: 'light',
+      theme: 'catppuccin_latte',
       // theme when dark mode
-      darkTheme: 'transparent_dark',
+      darkTheme: 'catppuccin_mocha',
       // If the theme option above is set to 'custom`
       // please provide a link below to your custom theme css file.
       // example: https://giscus.app/themes/custom_example.css
       themeURL: '',
       // This corresponds to the `data-lang="en"` in giscus's configurations
-      lang: 'en',
+      lang: 'zh-CN',
     },
   },
   search: {

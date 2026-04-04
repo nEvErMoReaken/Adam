@@ -1,40 +1,112 @@
 @import 'tailwindcss';
+@import '@fontsource/noto-sans-sc/chinese-simplified-400.css';
+@import '@fontsource/noto-sans-sc/chinese-simplified-700.css';
 @plugin "@tailwindcss/forms";
 @plugin '@tailwindcss/typography';
 @source '../node_modules/pliny';
-@custom-variant dark (&:where(.dark, .dark *));
 
-/* Core theme configuration */
+/* dark variant: 由深色主题 class 触发（兼容 pliny 的 dark: 前缀） */
+@custom-variant dark (&:where(.mocha, .mocha *, .old-hope, .old-hope *));
+
+/* ─── Catppuccin 主题色值 ─────────────────────────────────────── */
+
+:root,
+.latte {
+  --c-base:     #eff1f5;
+  --c-mantle:   #e6e9ef;
+  --c-crust:    #dce0e8;
+  --c-surface0: #ccd0da;
+  --c-surface1: #bcc0cc;
+  --c-surface2: #acb0be;
+  --c-overlay0: #9ca0b0;
+  --c-overlay1: #8c8fa1;
+  --c-subtext0: #6c6f85;
+  --c-subtext1: #5c5f77;
+  --c-text:     #4c4f69;
+  --c-blue:     #1e66f5;
+  --c-mauve:    #8839ef;
+  --c-red:      #d20f39;
+  --c-green:    #40a02b;
+  --c-yellow:   #df8e1d;
+  --c-peach:    #fe640b;
+  --c-split:    #ccd0da;
+}
+
+.mocha {
+  --c-base:     #1e1e2e;
+  --c-mantle:   #181825;
+  --c-crust:    #11111b;
+  --c-surface0: #313244;
+  --c-surface1: #45475a;
+  --c-surface2: #585b70;
+  --c-overlay0: #6c7086;
+  --c-overlay1: #7f849c;
+  --c-subtext0: #a6adc8;
+  --c-subtext1: #bac2de;
+  --c-text:     #cdd6f4;
+  --c-blue:     #89b4fa;
+  --c-mauve:    #cba6f7;
+  --c-red:      #f38ba8;
+  --c-green:    #a6e3a1;
+  --c-yellow:   #f9e2af;
+  --c-peach:    #fab387;
+  --c-split:    #313244;
+}
+
+/* An Old Hope — dark theme inspired by a galaxy far far away */
+.old-hope {
+  --c-base:     #1c1d21;
+  --c-mantle:   #16171b;
+  --c-crust:    #101114;
+  --c-surface0: #2f3137;
+  --c-surface1: #3f4044;
+  --c-surface2: #505258;
+  --c-overlay0: #686b78;
+  --c-overlay1: #7a7d8a;
+  --c-subtext0: #9a9daa;
+  --c-subtext1: #b2b5c0;
+  --c-text:     #cbcdd2;
+  --c-blue:     #e5cd52;
+  --c-mauve:    #c678dd;
+  --c-red:      #eb3d54;
+  --c-green:    #78bd65;
+  --c-yellow:   #e5cd52;
+  --c-peach:    #ef7c2a;
+  --c-split:    #2f3137;
+}
+
+/* ─── Tailwind 主题变量 ───────────────────────────────────────── */
+
 @theme {
-  /* Font families */
-  --font-sans: var(--font-space-grotesk), ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
-    'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  /* 等宽字体：IDE 风格，中文走 Noto Sans SC */
+  --font-sans: var(--font-jetbrains-mono), 'Noto Sans SC', ui-monospace, 'Cascadia Code', 'Fira Code', monospace;
+  --font-mono: var(--font-jetbrains-mono), 'Noto Sans SC', ui-monospace, monospace;
 
-  /* Colors */
-  /* Copied from https://tailwindcss.com/docs/theme#default-theme-variable-reference */
-  --color-primary-50: oklch(0.971 0.014 343.198);
-  --color-primary-100: oklch(0.948 0.028 342.258);
-  --color-primary-200: oklch(0.899 0.061 343.231);
-  --color-primary-300: oklch(0.823 0.12 346.018);
-  --color-primary-400: oklch(0.718 0.202 349.761);
-  --color-primary-500: oklch(0.656 0.241 354.308);
-  --color-primary-600: oklch(0.592 0.249 0.584);
-  --color-primary-700: oklch(0.525 0.223 3.958);
-  --color-primary-800: oklch(0.459 0.187 3.815);
-  --color-primary-900: oklch(0.408 0.153 2.432);
-  --color-primary-950: oklch(0.284 0.109 3.907);
+  /* primary 色桥接到 Catppuccin 蓝 */
+  --color-primary-50:  color-mix(in srgb, var(--c-blue) 10%, var(--c-base));
+  --color-primary-100: color-mix(in srgb, var(--c-blue) 20%, var(--c-base));
+  --color-primary-200: color-mix(in srgb, var(--c-blue) 35%, var(--c-base));
+  --color-primary-300: color-mix(in srgb, var(--c-blue) 50%, var(--c-base));
+  --color-primary-400: color-mix(in srgb, var(--c-blue) 70%, var(--c-base));
+  --color-primary-500: var(--c-blue);
+  --color-primary-600: color-mix(in srgb, var(--c-blue) 85%, var(--c-text));
+  --color-primary-700: color-mix(in srgb, var(--c-blue) 70%, var(--c-text));
+  --color-primary-800: color-mix(in srgb, var(--c-blue) 55%, var(--c-text));
+  --color-primary-900: color-mix(in srgb, var(--c-blue) 40%, var(--c-text));
+  --color-primary-950: color-mix(in srgb, var(--c-blue) 25%, var(--c-text));
 
-  --color-gray-50: oklch(0.985 0.002 247.839);
-  --color-gray-100: oklch(0.967 0.003 264.542);
-  --color-gray-200: oklch(0.928 0.006 264.531);
-  --color-gray-300: oklch(0.872 0.01 258.338);
-  --color-gray-400: oklch(0.707 0.022 261.325);
-  --color-gray-500: oklch(0.551 0.027 264.364);
-  --color-gray-600: oklch(0.446 0.03 256.802);
-  --color-gray-700: oklch(0.373 0.034 259.733);
-  --color-gray-800: oklch(0.278 0.033 256.848);
-  --color-gray-900: oklch(0.21 0.034 264.665);
-  --color-gray-950: oklch(0.13 0.028 261.692);
+  /* gray 色桥接到 Catppuccin 文字色层 */
+  --color-gray-50:  var(--c-base);
+  --color-gray-100: var(--c-mantle);
+  --color-gray-200: var(--c-surface0);
+  --color-gray-300: var(--c-surface1);
+  --color-gray-400: var(--c-overlay0);
+  --color-gray-500: var(--c-subtext0);
+  --color-gray-600: var(--c-subtext1);
+  --color-gray-700: var(--c-subtext1);
+  --color-gray-800: var(--c-text);
+  --color-gray-900: var(--c-text);
+  --color-gray-950: var(--c-crust);
 
   /* Line heights */
   --line-height-11: 2.75rem;
@@ -42,51 +114,130 @@
   --line-height-13: 3.25rem;
   --line-height-14: 3.5rem;
 
-  /* Z-index values */
+  /* Z-index */
   --z-60: 60;
   --z-70: 70;
   --z-80: 80;
 }
 
-/*
-  The default border color has changed to `currentColor` in Tailwind CSS v4,
-  so we've added these compatibility styles to make sure everything still
-  looks the same as it did with Tailwind CSS v3.
+/* ─── Tailwind v4 兼容性修复 ─────────────────────────────────── */
 
-  If we ever want to remove these styles, we need to add an explicit border
-  color utility to any element that depends on these defaults.
-*/
 @layer base {
   *,
   ::after,
   ::before,
   ::backdrop,
   ::file-selector-button {
-    border-color: var(--color-gray-200, currentColor);
+    border-color: var(--c-split, currentColor);
   }
 
   a,
   button {
-    outline-color: var(--color-primary-500);
+    outline-color: var(--c-blue);
   }
 
   a:focus-visible,
   button:focus-visible {
     outline: 2px solid;
     border-radius: var(--radius-sm);
-    outline-color: var(--color-primary-500);
+    outline-color: var(--c-blue);
   }
 }
 
+/* ─── IDE 专属工具类 ─────────────────────────────────────────── */
+
 @layer utilities {
+  /* 终端蓝色下划线链接 */
+  .terminal-link {
+    color: var(--c-blue);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    font-family: var(--font-mono);
+  }
+  .terminal-link:hover {
+    opacity: 0.75;
+  }
+
+  /* 方括号按钮控件，自动添加 [] */
+  .terminal-control {
+    color: var(--c-blue);
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    padding: 0.125rem 0.25rem;
+    border-radius: 2px;
+    cursor: pointer;
+  }
+  .terminal-control::before {
+    content: '[';
+  }
+  .terminal-control::after {
+    content: ']';
+  }
+  .terminal-control:hover {
+    background-color: var(--c-blue);
+    color: var(--c-base);
+  }
+
+  /* Pane 标题栏（编辑器 tab 样式） */
+  .pane-titlebar {
+    background-color: var(--c-mantle);
+    border-bottom: 1px solid var(--c-split);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.25rem 0.75rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--c-subtext0);
+    height: 2rem;
+    flex-shrink: 0;
+  }
+
+  /* IDE 导航 tab */
+  .nav-tab {
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    padding: 0.25rem 0.75rem;
+    color: var(--c-subtext0);
+    white-space: nowrap;
+    transition: color 0.1s, background-color 0.1s;
+  }
+  .nav-tab:hover {
+    color: var(--c-text);
+    background-color: var(--c-surface0);
+  }
+  .nav-tab.active {
+    color: var(--c-text);
+    background-color: var(--c-base);
+  }
+  .nav-tab.active::before {
+    content: '| ';
+    color: var(--c-blue);
+  }
+
+  /* whoami 面板 key: value 行 */
+  .kv-key {
+    color: var(--c-subtext0);
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    min-width: 4rem;
+    display: inline-block;
+  }
+  .kv-value {
+    color: var(--c-text);
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+  }
+
+  /* prose 内链接颜色 */
   .prose {
     & a {
-      color: var(--color-primary-500);
+      color: var(--c-blue);
       &:hover {
-        color: var(--color-primary-600);
+        opacity: 0.75;
       }
       & code {
-        color: var(--color-primary-400);
+        color: var(--c-blue);
       }
     }
     & :where(h1, h2) {
@@ -97,25 +248,24 @@
       font-weight: 600;
     }
     & :where(code):not(pre code) {
-      color: var(--color-indigo-500);
+      color: var(--c-mauve);
     }
   }
 
   .prose-invert {
     & a {
-      color: var(--color-primary-500);
+      color: var(--c-blue);
       &:hover {
-        color: var(--color-primary-400);
-      }
-      & code {
-        color: var(--color-primary-400);
+        opacity: 0.75;
       }
     }
     & :where(h1, h2, h3, h4, h5, h6) {
-      color: var(--color-gray-100);
+      color: var(--c-text);
     }
   }
 }
+
+/* ─── 杂项样式 ───────────────────────────────────────────────── */
 
 .task-list-item::before {
   @apply hidden;
@@ -126,7 +276,9 @@
 }
 
 .footnotes {
-  @apply mt-12 border-t border-gray-200 pt-8 dark:border-gray-700;
+  margin-top: 3rem;
+  border-top: 1px solid var(--c-split);
+  padding-top: 2rem;
 }
 
 .data-footnote-backref {
@@ -142,11 +294,10 @@
 }
 
 .no-scrollbar {
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
-/* https://stackoverflow.com/questions/61083813/how-to-avoid-internal-autofill-selected-style-to-be-applied */
 input:-webkit-autofill,
 input:-webkit-autofill:focus {
   transition:
