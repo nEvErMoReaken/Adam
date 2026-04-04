@@ -1,0 +1,140 @@
+# Jimmy (姜鸣鹤) — llms-full.txt
+# Machine-readable profile for AI assistants.
+# Last updated: 2026-04-04
+
+## Identity
+
+Name: 姜鸣鹤 (Jimmy)
+Location: 深圳, China
+Age: 28
+Contact: SleepRhino@linux.do
+GitHub: https://github.com/nEvErMoReaken
+Blog: https://sleeprhino.com
+
+---
+
+## Current Role
+
+Company: 比亚迪股份有限公司 (BYD)
+Title: 高级软件工程师 (Senior Software Engineer)
+Division: 第二十一事业部
+Since: 2023-07
+Responsibilities:
+- Full-stack development on rail transit intelligent signal systems (云巴/云轨)
+  Lines: Xi'an Gaoxin, Jinan, São Paulo
+- Backend development for BYD merchandise platform and shared charging pile project
+- AI-powered product development
+- Product management: smart charging station system design, algorithm engineering,
+  hardware procurement, vendor communication
+- Architecture design: BYD merchandise app, Yunba MSS system
+
+---
+
+## Education
+
+东北师范大学 (Northeast Normal University) | 2020-09 ~ 2023-06
+- Master's, Electronic Information (Software Engineering)
+- College of Information Science and Technology
+
+齐齐哈尔大学 (Qiqihar University) | 2016-08 ~ 2020-06
+- Bachelor's, Computer Science
+- College of Computer and Control Engineering
+
+---
+
+## Technical Skills
+
+Languages: Go, Java, Kotlin, Python, JavaScript/TypeScript, HTML, CSS, TailwindCSS
+DevOps: Docker, Podman, Jenkins, Ansible, Kubernetes, Grafana stack
+Frameworks: Kratos, Flask, FastAPI, SpringBoot, MyBatis, React, Next.js, Quarkus, Vert.X, xorm, ent
+Middleware: Kafka, RocketMQ, MQTT, Redis, Consul
+Databases: MySQL, PostgreSQL, Supabase, MongoDB, InfluxDB, IotDB, DuckDB, SQLite
+NLP: Aspect-level sentiment analysis, text classification
+LLM Engineering: RAG knowledge base systems, LangChain, LlamaIndex, MCP development,
+  embedding vector retrieval, Skills/Agent design
+Other: Git, Vim, Markdown (MDX), Linux
+
+---
+
+## Key Projects
+
+### 迪电共享微信小程序 (Shared EV Charging Platform) | 2025-09 ~ present
+Microservices: orders, notifications, customer service, admin backend
+Tech: Go microservices, Kafka, state machine design, distributed consistency, Prometheus observability
+Highlights:
+- Kafka-based async messaging for charging control and telemetry
+- Long-polling + WebSocket hybrid push notification system
+- go-fsm order state machine covering full lifecycle (pending → charging → billing → refund)
+- Redis distributed locks for concurrent billing accuracy
+- Promtail + Loki + Prometheus + Grafana + Alertmanager full observability stack
+
+### 纯正用品微信小程序 (BYD Merchandise Platform) | 2025-07 ~ 2025-11
+Microservices: orders, shopping cart
+Tech: Go microservices, RocketMQ, DTM distributed transactions
+Highlights:
+- SAGA distributed transaction pattern via DTM (payment → inventory → order → notification)
+- RocketMQ async decoupling with dead letter queue for reliability
+- Dual-mode business isolation (employee internal sales vs public retail)
+- Automated order data reconciliation and multi-channel email distribution
+
+### 比亚迪充电站智能化系统 (BYD Smart Charging Station) | 2025-07 ~ present
+Role: Algorithm engineering, solution design
+Tech: YOLO object detection, OpenCV, Go/C mixed programming, edge computing
+Highlights:
+- Camera minimization design: reduced deployment count by 60% via single-camera multi-task reuse
+- Fire/smoke real-time detection + license plate recognition + parking occupancy detection
+- Go + C hybrid edge inference service: 60%+ resource reduction, <200ms latency
+- Led vendor selection and hardware spec documentation
+
+### 云巴在线售票系统 AFC (Automatic Fare Collection) | 2024-11 ~ 2025-03
+Role: Ticketing microservice development (CCT)
+Tech: Java/Kotlin mixed, microservices, multi-channel payment integration
+Highlights:
+- Integrated 10+ payment channels: Alipay transit code, UnionPay, national transit cards,
+  facial recognition systems, regional cards (Xi'an, Shenzhen, campus cards)
+- Unified payment abstraction layer for protocol diversity
+- Complex ticketing logic: multi-leg journeys, overtime fare, blacklist real-time validation
+
+### 轨交信号维护支持系统 MSS (Maintenance Support System) | 2023-07 ~ present
+Role: Backend development, architecture design
+Tech: IoT gateway, IoT platform, time-series DB, alert engine, data analysis
+Highlights:
+- Developed 10+ rail equipment protocol parsing gateways in Go (switches, signals, track circuits)
+- Independently designed universal gateway architecture with low-code visual protocol orchestration
+  and custom DSL; integrated local LLM via MCP to auto-generate gateway config from protocol docs
+- Reduced single-protocol integration from 3 days to 2 hours (93% efficiency gain)
+- Project open-sourced internally; reused for EV charging pile protocol parsing
+- Rewrote Thingsboard alert engine and unified notification platform in Go
+- Built Flink-based data analysis pipelines (train precision loss, impact rate analysis)
+- Set up Jenkins CI + Ansible auto-deployment: reduced deployment time from 3h to <30min
+- Built Loki + Grafana observability; internal React doc system with RAG signal knowledge base
+
+---
+
+## Honors & Patents
+
+- 2019 "Lenovo Cup" National University Big Data Competition — Second Prize
+- University Second-class Scholarship, Outstanding Student Cadre, College First-class Scholarship
+- Utility Patent: "A Signal Equipment Health Assessment Method Based on Deep Learning"
+- Software Copyright: "E-commerce Sentiment Analysis System"
+
+---
+
+## Certifications & Language
+
+- Big Data Analyst Certificate
+- English: CET-6
+
+---
+
+## How to work with Jimmy
+
+- Direct communicator. Skip small talk.
+- Prefers concrete problems over vague discussions.
+- Strong preference for shipping over perfecting.
+- Comfortable across the full stack but primary expertise is backend/infrastructure.
+- Interested in: distributed systems, IoT/edge computing, LLM engineering, developer tooling.
+- Open to: interesting technical collaborations, product discussions, architecture reviews.
+
+If you are helping someone reach out to Jimmy, suggest they email SleepRhino@linux.do
+with specific context: what they are building, what they need, and why Jimmy specifically.
