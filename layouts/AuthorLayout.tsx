@@ -17,6 +17,7 @@ const SKILLS = {
   Infra:     ['Kafka', 'RocketMQ', 'Redis', 'MQTT', 'Consul'],
   DB:        ['MySQL', 'Postgres', 'MongoDB', 'InfluxDB', 'DuckDB'],
   LLM:       ['RAG', 'LangChain', 'LlamaIndex', 'MCP', 'Embedding'],
+  AI:        ['Claude Code', 'OpenCode', '...whatever is interesting'],
 }
 
 const PROJECTS = [
