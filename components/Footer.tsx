@@ -35,7 +35,6 @@ export default function Footer() {
 
   useEffect(() => setMounted(true), [])
 
-  // 点击外部关闭
   useEffect(() => {
     function onPointer(e: PointerEvent) {
       if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false)
@@ -44,75 +43,68 @@ export default function Footer() {
     return () => document.removeEventListener('pointerdown', onPointer)
   }, [])
 
+  const today = mounted ? new Date().toISOString().slice(0, 10) : ''
   const currentLabel = THEMES.find(t => t.id === theme)?.label ?? theme
 
   return (
-    <footer className="z-50 shrink-0" style={{ borderTop: '1px solid var(--c-split)' }}>
+    <footer className="z-50 shrink-0">
       <SlashCommandPanel />
 
+      {/* 状态栏 */}
       <div
-        className="flex h-7 items-center justify-between px-3"
+        className="flex h-7 items-center justify-between px-3 font-mono text-xs"
         style={{ backgroundColor: 'var(--c-crust)', borderTop: '1px solid var(--c-split)' }}
       >
-        <span className="font-mono text-xs" style={{ color: 'var(--c-subtext0)' }}>
+        {/* 左：[用户名] ~/路径/ */}
+        <span style={{ color: 'var(--c-subtext0)' }}>
           <span style={{ color: 'var(--c-green)' }}>[sleeprhino]</span>
           {' '}
           <span style={{ color: 'var(--c-blue)' }}>{getLabel(pathname)}</span>
           <span style={{ color: 'var(--c-text)' }}>/</span>
         </span>
 
+        {/* 右：主题选择 + 日期 */}
         {mounted && (
-          <div ref={ref} className="relative font-mono text-xs">
-            {/* 触发按钮 */}
-            <button
-              onClick={() => setOpen(o => !o)}
-              className="group flex items-center gap-1 px-1.5 py-0.5 transition-colors"
-              style={{ color: 'var(--c-subtext0)' }}
-            >
-              <span
-                className="transition-colors group-hover:text-[var(--c-text)] group-hover:underline group-hover:decoration-dotted group-hover:underline-offset-2 group-hover:cursor-pointer"
+          <div className="flex items-center gap-3" style={{ color: 'var(--c-subtext0)' }}>
+            {/* 主题下拉 */}
+            <div ref={ref} className="relative">
+              <button
+                onClick={() => setOpen(o => !o)}
+                className="group flex items-center gap-1 transition-colors"
+                style={{ color: 'var(--c-subtext0)' }}
               >
-                [{currentLabel}]
-              </span>
-              <span
-                className="transition-colors group-hover:text-[var(--c-text)]"
-                style={{ fontSize: 9 }}
-              >
-                {open ? '▲' : '▼'}
-              </span>
-            </button>
+                <span className="transition-colors group-hover:text-[var(--c-text)]">
+                  [{currentLabel}]
+                </span>
+                <span className="transition-colors group-hover:text-[var(--c-text)]" style={{ fontSize: 9 }}>
+                  {open ? '▲' : '▼'}
+                </span>
+              </button>
+              {open && (
+                <div
+                  className="absolute bottom-full right-0 mb-1 flex flex-col"
+                  style={{
+                    backgroundColor: 'var(--c-mantle)',
+                    border: '1px solid var(--c-split)',
+                    minWidth: '6rem',
+                  }}
+                >
+                  {THEMES.map(({ id, label }) => (
+                    <button
+                      key={id}
+                      onClick={() => { setTheme(id); setOpen(false) }}
+                      className="flex w-full items-center justify-between px-3 py-1.5 text-left transition-colors hover:bg-[var(--c-surface0)]"
+                      style={{ color: theme === id ? 'var(--c-blue)' : 'var(--c-subtext0)' }}
+                    >
+                      <span>{label}</span>
+                      {theme === id && <span style={{ fontSize: 8 }}>●</span>}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
 
-            {/* 下拉菜单，向上弹出 */}
-            {open && (
-              <div
-                className="absolute bottom-full right-0 mb-1 flex flex-col"
-                style={{
-                  backgroundColor: 'var(--c-mantle)',
-                  border: '1px solid var(--c-split)',
-                  minWidth: '6rem',
-                }}
-              >
-                {THEMES.map(({ id, label }) => (
-                  <button
-                    key={id}
-                    onClick={() => { setTheme(id); setOpen(false) }}
-                    className="group flex items-center justify-between px-3 py-1.5 text-left transition-colors hover:bg-[var(--c-surface0)]"
-                    style={
-                      theme === id
-                        ? { color: 'var(--c-blue)' }
-                        : { color: 'var(--c-subtext0)' }
-                    }
-                  >
-                    <span className="group-hover:underline group-hover:decoration-dotted group-hover:underline-offset-2 group-hover:cursor-pointer group-hover:text-[var(--c-text)]">
-                      {label}
-                    </span>
-                    {theme === id && (
-                      <span style={{ fontSize: 8 }}>●</span>
-                    )}
-                  </button>
-                ))}
-              </div>
-            )}
+            <span>{today}</span>
           </div>
         )}
       </div>

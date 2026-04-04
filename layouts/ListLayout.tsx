@@ -9,6 +9,7 @@ import Link from '@/components/Link'
 import Tag from '@/components/Tag'
 import siteMetadata from '@/data/siteMetadata'
 import { Pane, PaneLayout } from '@/components/PaneLayout'
+import { useLang } from '@/lib/i18n'
 
 interface PaginationProps {
   totalPages: number
@@ -23,6 +24,7 @@ interface ListLayoutProps {
 
 function Pagination({ totalPages, currentPage }: PaginationProps) {
   const pathname = usePathname()
+  const { t } = useLang()
   const basePath = pathname
     .replace(/^\//, '')
     .replace(/\/page\/\d+\/?$/, '')
@@ -34,18 +36,18 @@ function Pagination({ totalPages, currentPage }: PaginationProps) {
     <nav className="flex items-center justify-between px-4 py-3 font-mono text-xs" style={{ borderTop: '1px solid var(--c-split)' }}>
       {prevPage ? (
         <Link href={currentPage - 1 === 1 ? `/${basePath}/` : `/${basePath}/page/${currentPage - 1}`} rel="prev" className="text-[var(--c-blue)] hover:opacity-75">
-          ← 上一页
+          {t.prevPage}
         </Link>
       ) : (
-        <span className="opacity-30 text-[var(--c-subtext0)]">← 上一页</span>
+        <span className="opacity-30 text-[var(--c-subtext0)]">{t.prevPage}</span>
       )}
       <span className="text-[var(--c-subtext0)]">{currentPage} / {totalPages}</span>
       {nextPage ? (
         <Link href={`/${basePath}/page/${currentPage + 1}`} rel="next" className="text-[var(--c-blue)] hover:opacity-75">
-          下一页 →
+          {t.nextPage}
         </Link>
       ) : (
-        <span className="opacity-30 text-[var(--c-subtext0)]">下一页 →</span>
+        <span className="opacity-30 text-[var(--c-subtext0)]">{t.nextPage}</span>
       )}
     </nav>
   )
@@ -58,6 +60,7 @@ export default function ListLayout({
   pagination,
 }: ListLayoutProps) {
   const [searchValue, setSearchValue] = useState('')
+  const { t } = useLang()
   const filteredBlogPosts = posts.filter((post) => {
     const searchContent = post.title + post.summary + post.tags?.join(' ')
     return searchContent.toLowerCase().includes(searchValue.toLowerCase())
@@ -75,10 +78,10 @@ export default function ListLayout({
             <span className="text-[var(--c-green)]">$</span>
             <span className="text-[var(--c-subtext0)]">grep -r</span>
             <input
-              aria-label="搜索文章"
+              aria-label={t.searchLabel}
               type="text"
               onChange={(e) => setSearchValue(e.target.value)}
-              placeholder="搜索文章..."
+              placeholder={t.searchPlaceholder}
               className="flex-1 bg-transparent text-[var(--c-text)] outline-none placeholder:text-[var(--c-overlay0)]"
             />
           </label>
@@ -87,7 +90,7 @@ export default function ListLayout({
         <ul>
           {!filteredBlogPosts.length && (
             <li className="px-4 py-3 font-mono text-xs text-[var(--c-subtext0)]">
-              未找到相关文章
+              {t.noResults}
             </li>
           )}
           {displayPosts.map((post) => {

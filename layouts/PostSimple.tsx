@@ -1,3 +1,5 @@
+'use client'
+
 import { ReactNode } from 'react'
 import { formatDate } from 'pliny/utils/formatDate'
 import { CoreContent } from 'pliny/utils/contentlayer'
@@ -7,6 +9,7 @@ import Link from '@/components/Link'
 import siteMetadata from '@/data/siteMetadata'
 import ScrollTopAndComment from '@/components/ScrollTopAndComment'
 import { Pane, PaneLayout } from '@/components/PaneLayout'
+import { useLang } from '@/lib/i18n'
 
 interface LayoutProps {
   content: CoreContent<Blog>
@@ -18,6 +21,7 @@ interface LayoutProps {
 export default function PostSimple({ content, next, prev, children }: LayoutProps) {
   const { path, slug, date, title } = content
   const basePath = path.split('/')[0]
+  const { t } = useLang()
 
   return (
     <>
@@ -54,7 +58,7 @@ export default function PostSimple({ content, next, prev, children }: LayoutProp
                 href={`/${basePath}`}
                 className="mt-3 block text-[var(--c-subtext0)] hover:text-[var(--c-blue)]"
               >
-                ← 返回文章列表
+                {t.backToList}
               </Link>
             </div>
           </article>
@@ -63,3 +67,4 @@ export default function PostSimple({ content, next, prev, children }: LayoutProp
     </>
   )
 }
+

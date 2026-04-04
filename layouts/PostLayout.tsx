@@ -12,6 +12,7 @@ import Tag from '@/components/Tag'
 import siteMetadata from '@/data/siteMetadata'
 import ScrollTopAndComment from '@/components/ScrollTopAndComment'
 import { Pane, PaneLayout } from '@/components/PaneLayout'
+import { useLang } from '@/lib/i18n'
 
 const editUrl = (path) => `${siteMetadata.siteRepo}/blob/main/data/${path}`
 const discussUrl = (path) =>
@@ -35,6 +36,7 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
   const { filePath, path, slug, date, title, tags } = content
   const basePath = path.split('/')[0]
   const router = useRouter()
+  const { t } = useLang()
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
@@ -122,7 +124,7 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
             {/* 标签 */}
             {tags && tags.length > 0 && (
               <div>
-                <p className="mb-1.5 text-xs text-[var(--c-subtext0)]">标签</p>
+                <p className="mb-1.5 text-xs text-[var(--c-subtext0)]">{t.tagsLabel}</p>
                 <div className="flex flex-wrap gap-1.5">
                   {tags.map((tag) => <Tag key={tag} text={tag} />)}
                 </div>
@@ -133,7 +135,7 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
             <div className="space-y-3 pt-2" style={{ borderTop: '1px solid var(--c-split)' }}>
               {prev && prev.path && (
                 <div>
-                  <p className="text-xs text-[var(--c-subtext0)]">上一篇</p>
+                  <p className="text-xs text-[var(--c-subtext0)]">{t.prevPost}</p>
                   <Link href={`/${prev.path}`} className="text-xs text-[var(--c-blue)] hover:opacity-75 line-clamp-2">
                     ← {prev.title}
                   </Link>
@@ -141,7 +143,7 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
               )}
               {next && next.path && (
                 <div>
-                  <p className="text-xs text-[var(--c-subtext0)]">下一篇</p>
+                  <p className="text-xs text-[var(--c-subtext0)]">{t.nextPost}</p>
                   <Link href={`/${next.path}`} className="text-xs text-[var(--c-blue)] hover:opacity-75 line-clamp-2">
                     {next.title} →
                   </Link>
@@ -154,7 +156,7 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
               href={`/${basePath}`}
               className="block text-xs text-[var(--c-subtext0)] hover:text-[var(--c-blue)]"
             >
-              ← 返回文章列表
+              {t.backToList}
             </Link>
           </div>
         </Pane>

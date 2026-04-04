@@ -6,34 +6,19 @@ import { useTheme } from 'next-themes'
 import { Command } from 'cmdk'
 import { useLang } from '@/lib/i18n'
 
-const PAGES = [
-  { cmd: '/home',     href: '/',         icon: '~' },
-  { cmd: '/blog',     href: '/blog',     icon: '📝' },
-  { cmd: '/projects', href: '/projects', icon: '🚀' },
-  { cmd: '/about',    href: '/about',    icon: '👤' },
-  { cmd: '/contact',  href: '/contact',  icon: '✉' },
-]
-
-const ACTIONS = [
-  { cmd: '/search', icon: '🔍', action: 'search' },
-  { cmd: '/theme',  icon: '◐',  action: 'theme' },
-]
-
 export default function SlashCommandPanel() {
   const router = useRouter()
   const { setTheme, theme } = useTheme()
-  const { t, lang } = useLang()
+  const { t } = useLang()
   const [value, setValue] = useState('')
   const [open, setOpen] = useState(false)
   const [focused, setFocused] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
 
-  // 点击输入框或输入 / 时打开
   useEffect(() => {
     setOpen(focused || value.startsWith('/'))
   }, [value, focused])
 
-  // 全局快捷键
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
       const tag = (e.target as HTMLElement).tagName
@@ -43,9 +28,7 @@ export default function SlashCommandPanel() {
         inputRef.current?.focus()
         setValue('/')
       }
-      if (e.key === 'Escape') {
-        close()
-      }
+      if (e.key === 'Escape') close()
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
@@ -66,16 +49,27 @@ export default function SlashCommandPanel() {
   function runAction(action: string) {
     if (action === 'theme') {
       setTheme(theme === 'latte' ? 'mocha' : 'latte')
-    }
-    if (action === 'search') {
+    } else if (action === 'search') {
       navigate('/blog')
       return
     }
     close()
   }
 
+  const PAGES = [
+    { cmd: '/home',     href: '/',         label: t.slashHome,     hint: '~/' },
+    { cmd: '/blog',     href: '/blog',     label: t.slashBlog,     hint: 'blog/' },
+    { cmd: '/projects', href: '/projects', label: t.slashProjects, hint: 'projects/' },
+    { cmd: '/about',    href: '/about',    label: t.slashAbout,    hint: 'about/' },
+    { cmd: '/contact',  href: '/contact',  label: t.slashContact,  hint: 'contact/' },
+  ]
+  const ACTIONS = [
+    { cmd: '/search', label: t.slashSearch, hint: 'grep',   action: 'search' },
+    { cmd: '/theme',  label: t.slashTheme,  hint: 'toggle', action: 'theme' },
+  ]
+
   return (
-    <div className="relative font-mono">
+    <div className="relative font-mono" style={{ borderTop: '1px solid var(--c-split)' }}>
       <Command shouldFilter={true} onKeyDown={e => e.key === 'Escape' && close()}>
 
         {/* 候选框 */}
@@ -83,174 +77,93 @@ export default function SlashCommandPanel() {
           <div
             className="absolute bottom-full left-0 right-0"
             style={{
-              backgroundColor: 'var(--c-crust)',
+              background: 'var(--c-mantle)',
               borderTop: '1px solid var(--c-split)',
               borderLeft: '1px solid var(--c-split)',
               borderRight: '1px solid var(--c-split)',
+              boxShadow: '0 -4px 16px rgba(0,0,0,0.1)',
               zIndex: 50,
             }}
           >
             <Command.List>
-              <Command.Empty
-                className="px-4 py-3 text-xs"
-                style={{ color: 'var(--c-subtext0)' }}
-              >
+              <Command.Empty className="px-4 py-2 text-xs" style={{ color: 'var(--c-subtext0)' }}>
                 {t.noMatch}
               </Command.Empty>
 
-              {/* pages 分组 */}
               <Command.Group>
-                <div
-                  className="px-3 pt-2 pb-1 text-[10px] uppercase tracking-widest"
-                  style={{ color: 'var(--c-overlay0)' }}
-                >
+                <div className="px-4 pt-2 pb-0.5 text-[10px] uppercase tracking-widest select-none" style={{ color: 'var(--c-overlay0)' }}>
                   {t.groupPages}
                 </div>
-                {PAGES.map((item, i) => {
-                  const labels = [t.slashHome, t.slashBlog, t.slashProjects, t.slashAbout, t.slashContact]
-                  return (
+                {PAGES.map(item => (
                   <Command.Item
                     key={item.cmd}
                     value={item.cmd}
                     onSelect={() => navigate(item.href)}
-                    className="group flex cursor-pointer items-center gap-3 px-3 py-2 text-xs transition-colors data-[selected=true]:bg-[var(--c-surface0)]"
+                    className="group flex cursor-pointer items-center gap-0 py-1.5 text-xs transition-colors data-[selected=true]:bg-[var(--c-surface0)]"
                   >
-                    <span
-                      className="w-4 shrink-0 text-center text-[10px]"
-                      style={{ color: 'var(--c-overlay0)' }}
-                    >
-                      {item.icon}
-                    </span>
-                    <span style={{ color: 'var(--c-blue)' }}>{item.cmd}</span>
-                    <span
-                      className="ml-auto"
-                      style={{ color: 'var(--c-subtext0)' }}
-                    >
-                      {labels[i]}
-                    </span>
-                    <span
-                      className="hidden text-[10px] group-data-[selected=true]:inline"
-                      style={{ color: 'var(--c-overlay0)' }}
-                    >
-                      ↵
-                    </span>
+                    <span className="w-4 shrink-0 text-center text-[var(--c-blue)] opacity-0 group-data-[selected=true]:opacity-100">|</span>
+                    <span className="flex-1 group-data-[selected=true]:text-[var(--c-blue)]" style={{ color: 'var(--c-text)' }}>{item.cmd}</span>
+                    <span className="pr-4 text-[10px] tabular-nums" style={{ color: 'var(--c-overlay0)' }}>{item.label}</span>
                   </Command.Item>
-                  )
-                })}
+                ))}
               </Command.Group>
 
-              {/* actions 分组 */}
               <Command.Group>
-                <div
-                  className="px-3 pt-3 pb-1 text-[10px] uppercase tracking-widest"
-                  style={{
-                    color: 'var(--c-overlay0)',
-                    borderTop: '1px solid var(--c-split)',
-                  }}
-                >
+                <div className="px-4 pt-2.5 pb-0.5 text-[10px] uppercase tracking-widest select-none" style={{ color: 'var(--c-overlay0)', borderTop: '1px solid var(--c-split)' }}>
                   {t.groupActions}
                 </div>
-                {ACTIONS.map((item, i) => {
-                  const labels = [t.slashSearch, t.slashTheme]
-                  return (
+                {ACTIONS.map(item => (
                   <Command.Item
                     key={item.cmd}
                     value={item.cmd}
                     onSelect={() => runAction(item.action)}
-                    className="group flex cursor-pointer items-center gap-3 px-3 py-2 text-xs transition-colors data-[selected=true]:bg-[var(--c-surface0)]"
+                    className="group flex cursor-pointer items-center gap-0 py-1.5 text-xs transition-colors data-[selected=true]:bg-[var(--c-surface0)]"
                   >
-                    <span
-                      className="w-4 shrink-0 text-center text-[10px]"
-                      style={{ color: 'var(--c-overlay0)' }}
-                    >
-                      {item.icon}
-                    </span>
-                    <span style={{ color: 'var(--c-mauve)' }}>{item.cmd}</span>
-                    <span
-                      className="ml-auto"
-                      style={{ color: 'var(--c-subtext0)' }}
-                    >
-                      {labels[i]}
-                    </span>
-                    <span
-                      className="hidden text-[10px] group-data-[selected=true]:inline"
-                      style={{ color: 'var(--c-overlay0)' }}
-                    >
-                      ↵
-                    </span>
+                    <span className="w-4 shrink-0 text-center text-[var(--c-mauve)] opacity-0 group-data-[selected=true]:opacity-100">|</span>
+                    <span className="flex-1 group-data-[selected=true]:text-[var(--c-mauve)]" style={{ color: 'var(--c-text)' }}>{item.cmd}</span>
+                    <span className="pr-4 text-[10px] tabular-nums" style={{ color: 'var(--c-overlay0)' }}>{item.label}</span>
                   </Command.Item>
-                  )
-                })}
+                ))}
               </Command.Group>
 
-              {/* 底部提示 */}
-              <div
-                className="flex items-center justify-between px-3 py-1.5 text-[10px]"
-                style={{
-                  borderTop: '1px solid var(--c-split)',
-                  color: 'var(--c-overlay0)',
-                }}
-              >
-                <span>{lang === 'zh' ? '↑↓ 选择' : '↑↓ navigate'}</span>
-                <span>{lang === 'zh' ? '↵ 确认' : '↵ select'}</span>
-                <span>{lang === 'zh' ? 'esc 关闭' : 'esc close'}</span>
+              <div className="flex items-center gap-4 px-4 py-1.5 text-[10px] select-none" style={{ borderTop: '1px solid var(--c-split)', color: 'var(--c-overlay0)' }}>
+                <span>↑↓ nav</span>
+                <span>↵ select</span>
+                <span>esc close</span>
               </div>
             </Command.List>
           </div>
         )}
 
-        {/* Tips */}
-        {!open && (
-          <div
-            className="px-3 py-1 font-mono text-[10px]"
-            style={{ color: 'var(--c-overlay0)', borderTop: '1px solid var(--c-split)' }}
-          >
-            {lang === 'zh'
-              ? <>按 <kbd style={{ color: 'var(--c-blue)' }}>/</kbd> 打开命令，<kbd style={{ color: 'var(--c-blue)' }}>?</kbd> 查看快捷键</>
-              : <>press <kbd style={{ color: 'var(--c-blue)' }}>/</kbd> for commands, <kbd style={{ color: 'var(--c-blue)' }}>?</kbd> for hotkeys</>
-            }
-          </div>
-        )}
+        {/* Tip 行 */}
+        <div className="px-4 py-0.5 text-[10px] select-none" style={{ color: 'var(--c-overlay0)', borderBottom: '1px solid var(--c-split)' }}>
+          Tip: press / for commands
+        </div>
 
-        {/* 输入栏 */}
+        {/* 输入行 */}
         <div
-          className="flex h-10 items-center sm:h-9"
-          style={{
-            backgroundColor: 'var(--c-mantle)',
-            outline: focused ? `1px solid var(--c-blue)` : 'none',
-            outlineOffset: '-1px',
-          }}
+          className="flex h-9 items-center"
+          style={{ backgroundColor: 'var(--c-mantle)' }}
         >
-          <span
-            className="pl-3 pr-1.5 text-xs transition-colors"
-            style={{ color: focused ? 'var(--c-blue)' : 'var(--c-green)' }}
-          >
+          <span className="pl-4 pr-2 text-xs select-none" style={{ color: focused ? 'var(--c-blue)' : 'var(--c-green)' }}>
             &gt;
           </span>
           <Command.Input
             ref={inputRef}
-            data-cmd-input=""
             value={value}
             onValueChange={setValue}
             onFocus={() => setFocused(true)}
-            onBlur={() => {
-              // 延迟，让 onSelect 能先触发
-              setTimeout(() => { setFocused(false); if (!value) setOpen(false) }, 150)
+            onBlur={() => setTimeout(() => { setFocused(false); if (!value) setOpen(false) }, 150)}
+            placeholder="Type /command"
+            className="flex-1 border-0 bg-transparent text-xs outline-none focus:ring-0"
+            style={{
+              color: 'var(--c-text)',
+              caretColor: 'var(--c-blue)',
             }}
-            placeholder="type /command or click to browse"
-            className="flex-1 border-0 bg-transparent text-xs outline-none placeholder:text-[var(--c-overlay0)] focus:ring-0"
-            style={{ color: 'var(--c-text)', caretColor: 'var(--c-blue)' }}
           />
-          {!focused && (
-            <span className="hidden pr-3 text-[10px] sm:block" style={{ color: 'var(--c-overlay0)' }}>
-              press /
-            </span>
-          )}
-          {focused && value === '' && (
-            <span className="hidden pr-3 text-[10px] sm:block" style={{ color: 'var(--c-blue)' }}>
-              browsing
-            </span>
-          )}
+          <span className="hidden pr-4 text-[10px] select-none sm:block" style={{ color: 'var(--c-overlay0)' }}>
+            Press / or Cmd/Ctrl+K
+          </span>
         </div>
       </Command>
     </div>

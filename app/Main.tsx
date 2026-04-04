@@ -1,23 +1,28 @@
+'use client'
+
 import Link from '@/components/Link'
 import siteMetadata from '@/data/siteMetadata'
 import { formatDate } from 'pliny/utils/formatDate'
+import { useLang } from '@/lib/i18n'
 
 const MAX_DISPLAY = 6
 
-const quickLinks = [
-  { index: 1, label: '浏览所有文章', href: '/blog' },
-  { index: 2, label: '查看项目展示', href: '/projects' },
-  { index: 3, label: '了解关于我', href: '/about' },
-  { index: 4, label: '联系我', href: '/contact' },
-]
-
-const whoami = {
-  职位: '全栈工程师',
-  地点: '中国',
-  关于: siteMetadata.description,
-}
-
 export default function Home({ posts }) {
+  const { t } = useLang()
+
+  const whoami = {
+    [t.roleKey]:     '全栈工程师',
+    [t.locationKey]: '中国',
+    [t.aboutKey]:    siteMetadata.description,
+  }
+
+  const quickLinks = [
+    { index: 1, label: t.quickBlog,     href: '/blog' },
+    { index: 2, label: t.quickProjects, href: '/projects' },
+    { index: 3, label: t.quickAbout,    href: '/about' },
+    { index: 4, label: t.quickContact,  href: '/contact' },
+  ]
+
   return (
     <div className="h-full">
       <div
@@ -39,7 +44,7 @@ export default function Home({ posts }) {
                 {siteMetadata.author}
               </h1>
               <p className="font-mono text-sm text-[var(--c-blue)]">
-                {'> '}{whoami.职位}
+                {'> '}{whoami[t.roleKey]}
               </p>
             </div>
 
@@ -56,10 +61,10 @@ export default function Home({ posts }) {
 
             {/* 最近文章 */}
             <div>
-              <p className="mb-2 font-mono text-xs text-[var(--c-subtext0)]"># 最近文章</p>
+              <p className="mb-2 font-mono text-xs text-[var(--c-subtext0)]">{t.recentPosts}</p>
               <ul className="space-y-1">
                 {!posts.length && (
-                  <li className="font-mono text-sm text-[var(--c-subtext0)]">暂无文章</li>
+                  <li className="font-mono text-sm text-[var(--c-subtext0)]">{t.noPosts}</li>
                 )}
                 {posts.slice(0, MAX_DISPLAY).map((post) => {
                   const { slug, date, title } = post
@@ -86,7 +91,7 @@ export default function Home({ posts }) {
                   href="/blog"
                   className="mt-2 inline-block font-mono text-xs text-[var(--c-blue)] hover:opacity-75"
                 >
-                  全部文章 →
+                  {t.allPosts}
                 </Link>
               )}
             </div>
@@ -96,7 +101,7 @@ export default function Home({ posts }) {
         {/* 右 pane：快速开始 */}
         <section className="flex min-h-0 flex-col bg-[var(--c-base)]">
           <div className="pane-titlebar">
-            <span className="font-semibold text-[var(--c-text)]">快速开始</span>
+            <span className="font-semibold text-[var(--c-text)]">{t.quickStart}</span>
             <span>1</span>
           </div>
           <div className="flex-1 overflow-y-auto p-4 space-y-4">
