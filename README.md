@@ -1,58 +1,119 @@
-# Jimmy's Blog
+# Jimmy's Blog · 个人博客
 
 ![preview](./public/static/images/preview.png)
 
-[![Live](https://img.shields.io/badge/live-sleeprhino.com-blue?style=flat-square&logo=vercel)](https://sleeprhino.com)
+[![Live](https://img.shields.io/badge/在线访问-sleeprhino.com-cba6f7?style=flat-square&logo=firefoxbrowser&logoColor=white)](https://sleeprhino.com)
 [![Next.js](https://img.shields.io/badge/Next.js-15-black?style=flat-square&logo=next.js)](https://nextjs.org)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind-4-38bdf8?style=flat-square&logo=tailwindcss)](https://tailwindcss.com)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5-3178c6?style=flat-square&logo=typescript)](https://www.typescriptlang.org)
-[![Docker](https://img.shields.io/badge/Docker-deployed-2496ed?style=flat-square&logo=docker)](https://docker.com)
-[![GitHub Actions](https://img.shields.io/github/actions/workflow/status/nEvErMoReaken/Adam/deploy.yml?style=flat-square&logo=github-actions&label=deploy)](https://github.com/nEvErMoReaken/Adam/actions)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-4-38bdf8?style=flat-square&logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-3178c6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org)
+[![Docker](https://img.shields.io/badge/Docker-deployed-2496ed?style=flat-square&logo=docker&logoColor=white)](https://docker.com)
+[![Deploy](https://img.shields.io/github/actions/workflow/status/nEvErMoReaken/Adam/deploy.yml?style=flat-square&logo=githubactions&logoColor=white&label=deploy)](https://github.com/nEvErMoReaken/Adam/actions)
 
-IDE/terminal-style personal blog. Catppuccin theme, split-pane layout, bilingual (zh/en).
+---
 
-## Stack
+> 🇨🇳 中文 | [🇬🇧 English](#english)
 
-| Layer | Tech |
-|-------|------|
-| Framework | Next.js 15 App Router |
-| Styling | Tailwind CSS 4 + Catppuccin |
-| Content | Contentlayer 2 (MDX) |
-| i18n | Custom zh/en context |
-| Deploy | Docker + VPS + GitHub Actions |
+## 项目简介
 
-## Dev
+IDE / 终端风格的个人博客，以 Catppuccin 配色系统为主题，双栏分屏布局，中英文切换。
+
+**核心特性：**
+
+- **终端 UI** — 标签页导航、分屏 pane、状态栏 footer、斜杠命令面板（`/blog`、`/about`…）
+- **Catppuccin 主题** — Latte（亮）/ Mocha（暗）/ Old Hope 三套配色
+- **中英双语** — 全站文字切换，localStorage 持久化
+- **Discord 状态** — 主页实时显示在线状态 + 当前活动（via Lanyard WebSocket）
+- **nvidia-smi 风格 About 页** — ASCII 进度条、项目进程表、技能利用率
+- **`llms-full.txt`** — 机器可读个人简介，供 AI agent 使用
+
+### TerminalPet · 桌面宠物
+
+仿 Claude Code 内置终端宠物实现，按 `/` 调出命令面板后可见。
+
+```
+   /\_/\
+  ( · · )
+  ( u  )    ← 你的专属小伙伴
+  (*)_(*)
+```
+
+- **5 种稀有度**：普通 / 稀有 / 精良 / 史诗 / 传说（带概率权重随机）
+- **8 种帽子**：王冠、大礼帽、螺旋帽、光环、巫师帽…
+- **5 项属性**：DEBUGGING / PATIENCE / CHAOS / WISDOM / SNARK
+- **闪光变体**：传说级有概率出现，带发光动画
+- **孵化动画**：召唤时有破壳特效
+- **双语支持**：属性、稀有度名称随全站语言切换
+
+---
+
+## 技术栈
+
+| 层 | 技术 |
+|----|------|
+| 框架 | Next.js 15 App Router |
+| 样式 | Tailwind CSS 4 + Catppuccin |
+| 内容 | Contentlayer 2 (MDX) |
+| i18n | 自定义 zh/en Context |
+| 部署 | Docker + VPS + GitHub Actions |
+
+## 本地开发
 
 ```bash
 yarn install
-yarn dev       # http://localhost:3000
+yarn dev   # http://localhost:3000
 ```
 
-## Deploy
+## 部署
 
-Push to `main` → GitHub Actions SSHes into VPS → `docker build` → restart container.
+推送到 `main` 分支 → GitHub Actions SSH 到 VPS → `docker build` → 重启容器。
 
-Required secrets: `VPS_HOST` `VPS_USER` `VPS_PASSWORD` `VPS_PORT`
+所需 Secrets：`VPS_HOST` `VPS_USER` `VPS_PASSWORD` `VPS_PORT`
 
 ---
 
 ## Changelog
 
 ### 2026-04
-
-- feat: Discord real-time status via Lanyard WebSocket
-- feat: Homepage personal info KV panel + robot hint (`llms-full.txt`)
-- feat: About page — nvidia-smi style terminal panel (bilingual)
-- feat: Docker deployment + GitHub Actions CI/CD
+- feat: Discord 实时状态（Lanyard WebSocket）
+- feat: 主页个人信息 KV 面板 + robot hint
+- feat: About 页 nvidia-smi 终端风格面板（双语）
+- feat: Docker 部署 + GitHub Actions CI/CD
 
 ### 2026-03
+- feat: IDE 终端分屏布局（PaneLayout）
+- feat: Catppuccin 主题系统（Latte / Mocha / Old Hope）
+- feat: 全站中英文切换
+- feat: 斜杠命令面板
+- feat: TerminalPet 桌面宠物
+- feat: Footer 状态栏
+- feat: `llms-full.txt` AI agent 可读简介
+- chore: 迁移历史博客文章，替换示例内容
 
-- feat: IDE/terminal split-pane layout (PaneLayout)
-- feat: Catppuccin theme system (Latte / Mocha / Old Hope)
-- feat: Global zh/en language switch (localStorage)
-- feat: Slash command panel (`/blog`, `/about`, etc.)
-- feat: TerminalPet desktop companion
-- feat: Footer as status bar
-- feat: `llms-full.txt` — machine-readable profile for AI agents
-- feat: DOS-style scrollbar (square, arrow buttons)
-- chore: Migrated 5 blog posts from old static site
+---
+
+<a name="english"></a>
+
+## English
+
+IDE/terminal-style personal blog with Catppuccin theme, split-pane layout, and bilingual (zh/en) support.
+
+**Highlights:** tab navigation · slash command panel · Discord live status · nvidia-smi About page · `llms-full.txt` for AI agents
+
+### TerminalPet
+
+A desktop companion inspired by Claude Code's built-in terminal pet. Summon it via the `/` command panel.
+
+- 5 rarities (common → legendary) with weighted random rolls
+- 8 hats, 5 stats (DEBUGGING / PATIENCE / CHAOS / WISDOM / SNARK)
+- Shiny variants with glow animation for legendary tier
+- Hatch animation on first summon
+
+### Dev
+
+```bash
+yarn install && yarn dev
+```
+
+### Deploy
+
+Push to `main` → GitHub Actions → SSH → `docker build` → restart container.
