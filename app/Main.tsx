@@ -11,8 +11,8 @@ export default function Home({ posts }) {
   const { t } = useLang()
 
   const whoami = {
-    [t.roleKey]:     '全栈工程师',
-    [t.locationKey]: '中国',
+    [t.roleKey]:     '全栈开发',
+    [t.locationKey]: 'BYD',
     [t.aboutKey]:    siteMetadata.description,
   }
 

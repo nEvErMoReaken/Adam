@@ -57,7 +57,7 @@ export default function Footer() {
       >
         {/* 左：[用户名] ~/路径/ */}
         <span style={{ color: 'var(--c-subtext0)' }}>
-          <span style={{ color: 'var(--c-green)' }}>[sleeprhino]</span>
+          <span style={{ color: 'var(--c-green)' }}>[Jimmy]</span>
           {' '}
           <span style={{ color: 'var(--c-blue)' }}>{getLabel(pathname)}</span>
           <span style={{ color: 'var(--c-text)' }}>/</span>

@@ -1,8 +1,8 @@
 /** @type {import("pliny/config").PlinyConfig } */
 const siteMetadata = {
-  title: '我的博客',
-  author: '你的名字',
-  headerTitle: '我的博客',
+  title: "Jimmy's Blog",
+  author: 'Jimmy',
+  headerTitle: "Jimmy's Blog",
   description: '记录想法、技术与生活',
   language: 'zh-CN',
   theme: 'latte', // latte or mocha
@@ -11,8 +11,8 @@ const siteMetadata = {
   siteLogo: `${process.env.BASE_PATH || ''}/static/images/logo.png`,
   socialBanner: `${process.env.BASE_PATH || ''}/static/images/twitter-card.png`,
   mastodon: 'https://mastodon.social/@mastodonuser',
-  email: 'address@yoursite.com',
-  github: 'https://github.com',
+  email: 'loves@sleeprhino.com',
+  github: 'https://github.com/nEvErMoReaken',
   x: 'https://twitter.com/x',
   // twitter: 'https://twitter.com/Twitter',
   facebook: 'https://facebook.com',
