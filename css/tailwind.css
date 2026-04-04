@@ -292,31 +292,70 @@
 /* ─── CLI 风格滚动条 ──────────────────────────────────────────── */
 
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 12px;
+  height: 12px;
 }
 
 ::-webkit-scrollbar-track {
-  background: transparent;
+  background: var(--c-mantle);
+  border-left: 1px solid var(--c-split);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--c-surface1);
+  background: var(--c-surface2);
+  border: 2px solid var(--c-mantle);
   border-radius: 0;
+  box-shadow: inset 1px 1px 0 var(--c-overlay1), inset -1px -1px 0 var(--c-surface0);
 }
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--c-overlay0);
 }
 
+::-webkit-scrollbar-button {
+  display: block;
+  background: var(--c-surface1);
+  border: 1px solid var(--c-split);
+  height: 12px;
+  width: 12px;
+}
+
+::-webkit-scrollbar-button:vertical:decrement {
+  background-color: var(--c-surface1);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='6' height='4' viewBox='0 0 6 4'%3E%3Cpath d='M3 0L6 4H0z' fill='%236c6f85'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+::-webkit-scrollbar-button:vertical:increment {
+  background-color: var(--c-surface1);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='6' height='4' viewBox='0 0 6 4'%3E%3Cpath d='M3 4L0 0H6z' fill='%236c6f85'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+::-webkit-scrollbar-button:horizontal:decrement {
+  background-color: var(--c-surface1);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='6' viewBox='0 0 4 6'%3E%3Cpath d='M0 3L4 0V6z' fill='%236c6f85'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+::-webkit-scrollbar-button:horizontal:increment {
+  background-color: var(--c-surface1);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='6' viewBox='0 0 4 6'%3E%3Cpath d='M4 3L0 0V6z' fill='%236c6f85'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
 ::-webkit-scrollbar-corner {
-  background: transparent;
+  background: var(--c-mantle);
 }
 
 /* Firefox */
 * {
-  scrollbar-width: thin;
-  scrollbar-color: var(--c-surface1) transparent;
+  scrollbar-width: auto;
+  scrollbar-color: var(--c-surface2) var(--c-mantle);
 }
 
 .no-scrollbar::-webkit-scrollbar {
