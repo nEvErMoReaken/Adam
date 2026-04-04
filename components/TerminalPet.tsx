@@ -534,7 +534,7 @@ export default function WalkingPet() {
             transform: dir === 'left' ? 'scaleX(-1)' : 'none',
             animation: hatchPhase === 'born'
               ? 'bornpop 0.5s ease-out'
-              : buddy.shiny ? 'petshine 2s ease-in-out infinite' : undefined,
+              : buddy?.shiny ? 'petshine 2s ease-in-out infinite' : undefined,
             pointerEvents: 'none',
           }}>
             {displayRows.join('\n')}
