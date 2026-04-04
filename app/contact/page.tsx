@@ -29,15 +29,6 @@ export default function ContactPage() {
                 </a>
               </li>
             )}
-            {siteMetadata.x && (
-              <li>
-                <span className="text-[var(--c-blue)]">x / twitter</span>
-                <span className="text-[var(--c-subtext0)]"> = </span>
-                <a href={siteMetadata.x} target="_blank" rel="noopener noreferrer" className="terminal-link">
-                  {siteMetadata.x}
-                </a>
-              </li>
-            )}
           </ul>
         </div>
       </Pane>
