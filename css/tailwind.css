@@ -78,9 +78,9 @@
 /* ─── Tailwind 主题变量 ───────────────────────────────────────── */
 
 @theme {
-  /* 等宽字体：IDE 风格，中文走 Noto Sans SC */
-  --font-sans: var(--font-jetbrains-mono), 'Noto Sans SC', ui-monospace, 'Cascadia Code', 'Fira Code', monospace;
-  --font-mono: var(--font-jetbrains-mono), 'Noto Sans SC', ui-monospace, monospace;
+  /* 正文：Space Grotesk；代码/UI：JetBrains Mono */
+  --font-sans: var(--font-space-grotesk), 'Noto Sans SC', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), 'Noto Sans SC', ui-monospace, 'Cascadia Code', 'Fira Code', monospace;
 
   /* primary 色桥接到 Catppuccin 蓝 */
   --color-primary-50:  color-mix(in srgb, var(--c-blue) 10%, var(--c-base));
