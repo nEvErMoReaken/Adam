@@ -107,7 +107,7 @@ export default function Home({ posts }) {
                 </p>
                 <p className="font-mono text-xs text-[var(--c-overlay0)] italic">
                   {lang === 'zh'
-                    ? '// 前端写完写后端，写完后端写运维，写完运维写 AI'
+                    ? '// Frontend. Backend. DevOps. AI. Yes, all of it.'
                     : '// Frontend. Backend. DevOps. AI. Yes, all of it.'}
                 </p>
               </div>
