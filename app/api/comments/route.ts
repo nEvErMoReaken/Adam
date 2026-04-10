@@ -110,6 +110,7 @@ export async function POST(req: NextRequest) {
       title: slug,
       body: '',
     }, userToken)
+    console.error('[comments] createDiscussion response:', JSON.stringify(createJson))
     discussionId = createJson?.data?.createDiscussion?.discussion?.id ?? null
   }
 
