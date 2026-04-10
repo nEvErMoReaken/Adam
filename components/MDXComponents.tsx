@@ -5,6 +5,10 @@ import type { MDXComponents } from 'mdx/types'
 import Image from './Image'
 import CustomLink from './Link'
 import TableWrapper from './TableWrapper'
+import RingBufferViz from './RingBufferViz'
+import GoGateBufferViz from './GoGateBufferViz'
+import { Admonition } from './Admonition'
+import { Tabs, TabItem } from './Tabs'
 
 export const components: MDXComponents = {
   Image,
@@ -13,4 +17,9 @@ export const components: MDXComponents = {
   pre: Pre,
   table: TableWrapper,
   BlogNewsletterForm,
+  RingBufferViz,
+  GoGateBufferViz,
+  Admonition,
+  Tabs,
+  TabItem,
 }
