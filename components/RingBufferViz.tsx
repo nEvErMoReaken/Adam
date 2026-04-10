@@ -46,7 +46,7 @@ export default function RingBufferViz() {
   const doFill = () => {
     if (free <= 0) { push('  error: buffer full'); return }
     const newW = writePos + free
-    push(`  fill() +${free}B  w:${writePos}→${newW} (idx ${wA}→${newW & MASK})  free→0`)
+    push(`  fill() +${free}B  w:${writePos}→${newW} (idx ${wA}→${newW & MASK})  free->0`)
     setWritePos(newW)
   }
   const doReset = () => {
@@ -54,22 +54,19 @@ export default function RingBufferViz() {
     setLog(['❯ ring-buffer reset', '  readPos=3  writePos=9  avail=6  free=2'])
   }
 
-  const btns = [
-    { label: '← read()',  action: doRead,  disabled: avail <= 0, color: 'text-[var(--c-blue)]   border-[var(--c-blue)]' },
-    { label: 'write() →', action: doWrite, disabled: free <= 0,  color: 'text-[var(--c-mauve)]  border-[var(--c-mauve)]' },
-    { label: 'fill() all',action: doFill,  disabled: free <= 0,  color: 'text-[var(--c-teal)]   border-[var(--c-teal)]' },
-    { label: 'reset',     action: doReset, disabled: false,       color: 'text-[var(--c-overlay0)] border-[var(--c-surface1)]' },
-  ]
-
   return (
-    <div className="my-6 overflow-hidden rounded-md border border-[var(--c-split)] bg-[var(--c-base)] font-mono text-[11px]">
+    <div className="my-6 overflow-hidden rounded-md border font-mono text-[11px]"
+      style={{ borderColor: 'var(--c-split)', background: 'var(--c-base)' }}>
 
       {/* title bar */}
-      <div className="flex items-center gap-1.5 border-b border-[var(--c-split)] bg-[var(--c-mantle)] px-4 py-1.5">
-        <span className="h-2.5 w-2.5 rounded-full bg-[var(--c-red)] opacity-70" />
-        <span className="h-2.5 w-2.5 rounded-full bg-[var(--c-yellow)] opacity-70" />
-        <span className="h-2.5 w-2.5 rounded-full bg-[var(--c-green)] opacity-70" />
-        <span className="ml-2 text-[var(--c-subtext0)]">InteractiveRingBuffer — size={SIZE}  mask=0b{MASK.toString(2).padStart(3,'0')}</span>
+      <div className="flex items-center gap-1.5 border-b px-4 py-1.5"
+        style={{ background: 'var(--c-mantle)', borderColor: 'var(--c-split)' }}>
+        <span className="inline-block h-2.5 w-2.5 rounded-full opacity-70" style={{ background: 'var(--c-red)' }} />
+        <span className="inline-block h-2.5 w-2.5 rounded-full opacity-70" style={{ background: 'var(--c-yellow)' }} />
+        <span className="inline-block h-2.5 w-2.5 rounded-full opacity-70" style={{ background: 'var(--c-green)' }} />
+        <span className="ml-2" style={{ color: 'var(--c-subtext0)' }}>
+          InteractiveRingBuffer — size={SIZE}  mask=0b{MASK.toString(2).padStart(3, '0')}
+        </span>
       </div>
 
       <div className="space-y-4 p-4">
@@ -80,49 +77,68 @@ export default function RingBufferViz() {
             const isR = i === rA
             const isW = i === wA && avail < SIZE
             return (
-              <div key={i} className="flex flex-col items-center gap-0.5">
-                <span className="h-3 text-[9px] font-bold text-[var(--c-blue)]">{isR ? 'r' : ''}</span>
-                <div className={[
-                  'flex h-9 w-12 items-center justify-center rounded text-sm transition-all duration-150',
-                  hasData
-                    ? 'border border-[var(--c-blue)] bg-[color-mix(in_srgb,var(--c-blue)_25%,var(--c-surface0))] text-[var(--c-blue)]'
-                    : 'border border-[var(--c-surface1)] bg-[var(--c-surface0)] text-[var(--c-surface1)]',
-                  isR ? 'ring-1 ring-[var(--c-blue)]' : '',
-                  isW ? 'ring-1 ring-[var(--c-mauve)]' : '',
-                ].join(' ')}>
+              <div key={i} className="flex flex-col items-center" style={{ gap: 2 }}>
+                <span className="flex h-3 items-center justify-center text-[9px] font-bold"
+                  style={{ color: 'var(--c-blue)', visibility: isR ? 'visible' : 'hidden' }}>r</span>
+
+                <div className="flex h-9 w-12 items-center justify-center rounded text-sm transition-colors"
+                  style={{
+                    border: `1px solid ${isR ? 'var(--c-blue)' : isW ? 'var(--c-mauve)' : hasData ? 'var(--c-blue)' : 'var(--c-surface1)'}`,
+                    background: hasData
+                      ? 'color-mix(in srgb, var(--c-blue) 22%, var(--c-surface0))'
+                      : 'var(--c-surface0)',
+                    color: hasData ? 'var(--c-blue)' : 'var(--c-surface1)',
+                    outline: isR ? '2px solid var(--c-blue)' : isW ? '2px solid var(--c-mauve)' : 'none',
+                    outlineOffset: 1,
+                  }}>
                   {hasData ? '█' : '░'}
                 </div>
-                <span className="h-3 text-[9px] font-bold text-[var(--c-mauve)]">{isW ? 'w' : ''}</span>
-                <span className="text-[9px] text-[var(--c-overlay0)]">[{i}]</span>
+
+                <span className="flex h-3 items-center justify-center text-[9px] font-bold"
+                  style={{ color: 'var(--c-mauve)', visibility: isW ? 'visible' : 'hidden' }}>w</span>
+                <span className="text-[9px]" style={{ color: 'var(--c-overlay0)' }}>[{i}]</span>
               </div>
             )
           })}
         </div>
 
         {/* stats */}
-        <div className="grid grid-cols-4 gap-2 rounded bg-[var(--c-surface0)] px-3 py-2">
+        <div className="grid grid-cols-4 gap-2 rounded px-3 py-2"
+          style={{ background: 'var(--c-surface0)' }}>
           {[
-            { label: 'readPos',  val: readPos,         sub: `${readPos}&${MASK}=${rA}`,  color: 'text-[var(--c-blue)]'  },
-            { label: 'writePos', val: writePos,        sub: `${writePos}&${MASK}=${wA}`, color: 'text-[var(--c-mauve)]' },
-            { label: 'avail',    val: Math.max(0,avail), sub: '可读字节',                color: 'text-[var(--c-green)]' },
-            { label: 'free',     val: Math.max(0,free),  sub: '可写字节',                color: 'text-[var(--c-peach)]' },
+            { label: 'readPos',  val: readPos,            sub: `${readPos}&${MASK}=${rA}`,  color: 'var(--c-blue)'  },
+            { label: 'writePos', val: writePos,           sub: `${writePos}&${MASK}=${wA}`, color: 'var(--c-mauve)' },
+            { label: 'avail',    val: Math.max(0, avail), sub: '可读字节',                   color: 'var(--c-green)' },
+            { label: 'free',     val: Math.max(0, free),  sub: '可写字节',                   color: 'var(--c-peach)' },
           ].map(({ label, val, sub, color }) => (
             <div key={label}>
-              <div className="text-[var(--c-overlay0)]">{label}</div>
-              <div className={`text-sm font-bold leading-none ${color}`}>{val}</div>
-              <div className="mt-0.5 text-[9px] text-[var(--c-overlay0)]">{sub}</div>
+              <div className="text-[9px]" style={{ color: 'var(--c-overlay0)' }}>{label}</div>
+              <div className="text-sm font-bold leading-none" style={{ color }}>{val}</div>
+              <div className="mt-0.5 text-[9px]" style={{ color: 'var(--c-overlay0)' }}>{sub}</div>
             </div>
           ))}
         </div>
 
         {/* buttons */}
         <div className="flex flex-wrap gap-1.5">
-          {btns.map(({ label, action, disabled, color }) => (
+          {[
+            { label: '← read()',   action: doRead,  disabled: avail <= 0, color: 'var(--c-blue)'    },
+            { label: 'write() →',  action: doWrite, disabled: free <= 0,  color: 'var(--c-mauve)'   },
+            { label: 'fill() all', action: doFill,  disabled: free <= 0,  color: 'var(--c-teal)'    },
+            { label: 'reset',      action: doReset, disabled: false,      color: 'var(--c-overlay0)' },
+          ].map(({ label, action, disabled, color }) => (
             <button
               key={label}
               onClick={action}
               disabled={disabled}
-              className={`rounded border bg-[var(--c-surface0)] px-3 py-1 font-mono text-[10px] transition-opacity ${color} ${disabled ? 'cursor-not-allowed opacity-40' : 'cursor-pointer hover:opacity-80'}`}
+              className="rounded px-3 py-1 font-mono text-[10px] transition-opacity"
+              style={{
+                border: `1px solid ${disabled ? 'var(--c-surface1)' : color}`,
+                background: 'var(--c-surface0)',
+                color: disabled ? 'var(--c-overlay0)' : color,
+                cursor: disabled ? 'not-allowed' : 'pointer',
+                opacity: disabled ? 0.4 : 1,
+              }}
             >
               {label}
             </button>
@@ -130,9 +146,10 @@ export default function RingBufferViz() {
         </div>
 
         {/* log */}
-        <div className="min-h-[58px] rounded bg-[var(--c-crust)] px-3 py-2 leading-relaxed text-[var(--c-overlay0)]">
+        <div className="min-h-[60px] rounded px-3 py-2 leading-relaxed"
+          style={{ background: 'var(--c-crust)' }}>
           {log.map((line, i) => (
-            <div key={i} className={i === log.length - 1 ? 'text-[var(--c-text)]' : 'text-[var(--c-overlay0)]'}>
+            <div key={i} style={{ color: i === log.length - 1 ? 'var(--c-text)' : 'var(--c-overlay0)' }}>
               {line}
             </div>
           ))}
