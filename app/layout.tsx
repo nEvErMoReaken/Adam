@@ -10,6 +10,7 @@ import Footer from '@/components/Footer'
 import WalkingPet from '@/components/TerminalPet'
 import KeyboardHelp from '@/components/KeyboardHelp'
 import GlobalKeyboardShortcuts from '@/components/GlobalKeyboardShortcuts'
+import PixelLoader from '@/components/PixelLoader'
 import siteMetadata from '@/data/siteMetadata'
 import { ThemeProviders } from './theme-providers'
 import { Metadata } from 'next'
@@ -114,6 +115,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <WalkingPet />
             <KeyboardHelp />
             <GlobalKeyboardShortcuts />
+            <PixelLoader />
           </div>
         </ThemeProviders>
       </body>
