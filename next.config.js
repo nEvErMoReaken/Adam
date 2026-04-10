@@ -67,6 +67,17 @@ module.exports = () => {
     output,
     basePath,
     reactStrictMode: true,
+    experimental: {
+      outputFileTracingExcludes: {
+        '*': [
+          'node_modules/@swc/core-linux-x64-gnu',
+          'node_modules/@swc/core-linux-x64-musl',
+          'node_modules/@esbuild/linux-x64',
+          'node_modules/sharp/vendor',
+          'node_modules/next/dist/compiled/webpack',
+        ],
+      },
+    },
     trailingSlash: true,
     eslint: { ignoreDuringBuilds: true },
     typescript: { ignoreBuildErrors: false },
