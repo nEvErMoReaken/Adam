@@ -32,5 +32,6 @@ jobs:
               -p 3000:3000 \
               -e IINA_TOKEN=${{ secrets.IINA_TOKEN }} \
               -e IINA_USER_ID=${{ secrets.IINA_USER_ID }} \
+              -e GH_TOKEN=${{ secrets.GH_TOKEN }} \
               jimmy-blog:latest
             docker image prune -f

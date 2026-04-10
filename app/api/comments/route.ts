@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 
 const REPO = 'nEvErMoReaken/Adam'
 const CATEGORY_ID = 'DIC_kwDOR42jg84C6gxS'
-const TOKEN = process.env.GITHUB_TOKEN ?? ''
+const TOKEN = process.env.GH_TOKEN ?? ''
 
 export interface GiscusComment {
   author: string
