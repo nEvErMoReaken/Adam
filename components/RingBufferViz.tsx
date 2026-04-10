@@ -114,14 +114,16 @@ export default function RingBufferViz() {
                     ? 'color-mix(in srgb, var(--c-blue) 55%, var(--c-surface0))'
                     : 'var(--c-surface0)'
 
+              // rotate(-90) starts arc at 12 o'clock; each slot adds 360/SIZE degrees
+              const rotateDeg = (i / SIZE) * 360 - 90
               return (
                 <circle key={i}
                   cx={CX} cy={CY} r={R_MID}
                   fill="none"
                   stroke={stroke}
                   strokeWidth={STROKE_W}
-                  strokeDasharray={`${effectiveArc} ${circumference - effectiveArc}`}
-                  strokeDashoffset={circumference / 4 - i * arcPerSlot}
+                  strokeDasharray={`${effectiveArc} ${circumference}`}
+                  transform={`rotate(${rotateDeg} ${CX} ${CY})`}
                   style={{ transition: 'stroke 0.3s ease' }}
                 />
               )
