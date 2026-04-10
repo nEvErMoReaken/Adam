@@ -357,6 +357,16 @@
   scrollbar-color: var(--c-surface2) var(--c-mantle);
 }
 
+/* 移动端隐藏滚动条，节省屏幕空间 */
+@media (max-width: 767px) {
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  * {
+    scrollbar-width: none;
+  }
+}
+
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }

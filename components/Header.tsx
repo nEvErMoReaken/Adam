@@ -47,14 +47,14 @@ export default function Header() {
       </div>
 
       {/* 移动端顶栏 */}
-      <div className="flex h-11 items-center justify-between gap-2 px-2 md:hidden">
+      <div className="flex h-12 items-center justify-between gap-2 px-2 md:hidden">
         <div className="font-mono text-sm font-semibold text-[var(--c-text)]">
           {`| ${activeLink?.index ?? 0}:${activeLink?.title[lang] ?? activeFallback}`}
         </div>
         <div className="flex items-center gap-1">
           <button
             type="button"
-            className="terminal-control h-10 px-2 text-sm"
+            className="terminal-control h-11 px-3 text-sm"
             aria-label={t.openMenu}
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           >
@@ -64,7 +64,7 @@ export default function Header() {
             type="button"
             aria-label={t.toggleLang}
             onClick={() => setLang(lang === 'zh' ? 'en' : 'zh')}
-            className="font-mono text-xs text-[var(--c-subtext0)] transition-colors hover:text-[var(--c-text)]"
+            className="font-mono text-sm text-[var(--c-subtext0)] transition-colors hover:text-[var(--c-text)] px-2 py-1"
           >
             {lang === 'zh' ? '[EN]' : '[中文]'}
           </button>
@@ -78,13 +78,13 @@ export default function Header() {
           className="border-t md:hidden"
           style={{ borderColor: 'var(--c-split)', backgroundColor: 'var(--c-mantle)' }}
         >
-          <div className="grid grid-cols-2 gap-px" style={{ backgroundColor: 'var(--c-split)' }}>
+          <div className="grid grid-cols-2 gap-0.5" style={{ backgroundColor: 'var(--c-split)' }}>
             {headerNavLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
                 onClick={() => setMobileMenuOpen(false)}
-                className={`flex h-10 items-center px-3 font-mono text-sm font-semibold transition-colors ${
+                className={`flex h-11 items-center px-3 font-mono text-sm font-semibold transition-colors ${
                   isActive(link.href)
                     ? 'bg-[var(--c-surface0)] text-[var(--c-text)]'
                     : 'bg-[var(--c-mantle)] text-[var(--c-subtext0)] hover:bg-[var(--c-surface0)] hover:text-[var(--c-text)]'

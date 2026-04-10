@@ -98,7 +98,7 @@ export default function Comments({ slug }: { slug: string }) {
 
   return (
     <div
-      className="mt-8 overflow-hidden rounded-md border font-mono text-[11px]"
+      className="mt-8 overflow-hidden rounded-md border font-mono text-[12px] sm:text-[11px]"
       style={{ borderColor: 'var(--c-split)', background: 'var(--c-base)' }}
     >
       {/* title bar */}
@@ -228,7 +228,7 @@ export default function Comments({ slug }: { slug: string }) {
                   <button
                     onClick={submit}
                     disabled={submitState === 'posting' || !input.trim()}
-                    className="rounded px-3 py-1 transition-colors"
+                    className="rounded px-4 py-2 transition-colors"
                     style={{
                       border: '1px solid var(--c-blue)',
                       background: 'var(--c-surface0)',
@@ -240,7 +240,7 @@ export default function Comments({ slug }: { slug: string }) {
                     }}>
                     {submitState === 'posting' ? 'posting…' : 'git push'}
                   </button>
-                  <span style={{ color: 'var(--c-overlay0)' }}>⌘↵ / Ctrl↵</span>
+                  <span className="hidden sm:inline" style={{ color: 'var(--c-overlay0)' }}>⌘↵ / Ctrl↵</span>
                   {submitState === 'error' && (
                     <span style={{ color: 'var(--c-red)' }}>error: push failed</span>
                   )}

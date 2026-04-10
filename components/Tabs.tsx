@@ -26,7 +26,7 @@ export function Tabs({ children }: { children: React.ReactNode }) {
             key={i}
             onClick={() => setActiveIdx(i)}
             className={[
-              'rounded-t px-3 py-1.5 text-[10px] tracking-wide transition-colors',
+              'rounded-t px-4 sm:px-3 py-2 sm:py-1.5 text-[11px] sm:text-[10px] tracking-wide transition-colors',
               i === activeIdx
                 ? 'border-b-2 border-[var(--c-blue)] bg-[var(--c-base)] text-[var(--c-text)]'
                 : 'border-b-2 border-transparent text-[var(--c-overlay0)] hover:text-[var(--c-subtext0)]',

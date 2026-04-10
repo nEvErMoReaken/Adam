@@ -35,9 +35,9 @@ function Pagination({ totalPages, currentPage }: PaginationProps) {
   const nextPage = currentPage + 1 <= totalPages
 
   return (
-    <nav className="flex items-center justify-between px-4 py-3 font-mono text-xs" style={{ borderTop: '1px solid var(--c-split)' }}>
+    <nav className="flex items-center justify-between px-4 py-4 font-mono text-xs" style={{ borderTop: '1px solid var(--c-split)' }}>
       {prevPage ? (
-        <Link href={currentPage - 1 === 1 ? `/${basePath}/` : `/${basePath}/page/${currentPage - 1}`} rel="prev" className="text-[var(--c-blue)] hover:opacity-75">
+        <Link href={currentPage - 1 === 1 ? `/${basePath}/` : `/${basePath}/page/${currentPage - 1}`} rel="prev" className="py-1 px-2 text-[var(--c-blue)] hover:opacity-75">
           {t.prevPage}
         </Link>
       ) : (
@@ -45,7 +45,7 @@ function Pagination({ totalPages, currentPage }: PaginationProps) {
       )}
       <span className="text-[var(--c-subtext0)]">{currentPage} / {totalPages}</span>
       {nextPage ? (
-        <Link href={`/${basePath}/page/${currentPage + 1}`} rel="next" className="text-[var(--c-blue)] hover:opacity-75">
+        <Link href={`/${basePath}/page/${currentPage + 1}`} rel="next" className="py-1 px-2 text-[var(--c-blue)] hover:opacity-75">
           {t.nextPage}
         </Link>
       ) : (
@@ -123,7 +123,7 @@ export default function ListLayoutWithTags({
               {' '}{activeTag ?? t.tagsPane}
               {activeTag && <span style={{ color: 'var(--c-overlay0)' }}> ({tagCounts[activeTag]})</span>}
             </span>
-            <span style={{ fontSize: 9 }}>{tagsOpen ? '▲' : '▼'}</span>
+            <span style={{ fontSize: 12 }}>{tagsOpen ? '▲' : '▼'}</span>
           </button>
 
           {tagsOpen && (
@@ -145,7 +145,7 @@ export default function ListLayoutWithTags({
                       <Link
                         href={`/tags/${slug(tag)}`}
                         onClick={() => setTagsOpen(false)}
-                        className={`block px-2 py-0.5 font-mono text-xs transition-colors hover:bg-[var(--c-surface0)] ${
+                        className={`block px-2 py-1.5 font-mono text-xs transition-colors hover:bg-[var(--c-surface0)] ${
                           isActive ? 'text-[var(--c-blue)]' : 'text-[var(--c-subtext0)]'
                         }`}
                       >
