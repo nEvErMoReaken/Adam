@@ -46,5 +46,7 @@ jobs:
               -e IINA_TOKEN=${{ secrets.IINA_TOKEN }} \
               -e IINA_USER_ID=${{ secrets.IINA_USER_ID }} \
               -e GH_TOKEN=${{ secrets.GH_TOKEN }} \
+              -e GH_CLIENT_ID=${{ secrets.GH_CLIENT_ID }} \
+              -e GH_CLIENT_SECRET=${{ secrets.GH_CLIENT_SECRET }} \
               jimmy-blog:latest
             docker image prune -f
