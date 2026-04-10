@@ -8,6 +8,6 @@ export async function GET(req: NextRequest) {
   const state = Buffer.from(redirect).toString('base64url')
   const url =
     `https://github.com/login/oauth/authorize` +
-    `?client_id=${CLIENT_ID}&scope=public_repo&state=${state}`
+    `?client_id=${CLIENT_ID}&scope=repo&state=${state}`
   return NextResponse.redirect(url)
 }
