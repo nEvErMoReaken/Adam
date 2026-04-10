@@ -7,16 +7,9 @@ interface Project {
 
 const projectsData: Project[] = [
   {
-    title: '项目名称一',
-    description: `这里是项目描述，介绍这个项目的背景、功能和技术栈。`,
-    imgSrc: '/static/images/google.png',
-    href: 'https://www.google.com',
-  },
-  {
-    title: '项目名称二',
-    description: `这里是另一个项目的描述，你可以替换为真实的项目信息。`,
-    imgSrc: '/static/images/time-machine.jpg',
-    href: '/blog/the-time-machine',
+    title: 'MyRingbuffer_BenchMark',
+    description: `Go 环形缓冲区专用实现：针对 IoT 网关单线程 TCP 流设计，位运算取模 + 零锁 + 懒汉式填充，大数据块吞吐较 bufio 快 61%，较 smallnest 快 156%。附完整五场景基准测试。`,
+    href: 'https://github.com/nEvErMoReaken/MyRingbuffer_BenchMark',
   },
 ]
 
