@@ -11,7 +11,7 @@ export default function PixelLoader() {
   const [active,  setActive]  = useState(false)
   const [filled,  setFilled]  = useState(0)
   const [visible, setVisible] = useState(false)
-  const timer = useRef<ReturnType<typeof setInterval>>()
+  const timer = useRef<ReturnType<typeof setInterval> | undefined>(undefined)
 
   const start = () => {
     clearInterval(timer.current)

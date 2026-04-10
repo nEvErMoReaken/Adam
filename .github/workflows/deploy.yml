@@ -17,6 +17,8 @@ jobs:
         with:
           node-version: '24'
           cache: 'yarn'
+        env:
+          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
       - run: corepack enable && yarn install --immutable
       - run: yarn contentlayer2 build
       - run: yarn tsc --noEmit
