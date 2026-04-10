@@ -18,7 +18,7 @@ jobs:
           script: |
             cd /opt/jimmy-blog
             git pull origin main
-            docker build -t jimmy-blog:latest .
+            docker build --no-cache -t jimmy-blog:latest .
             docker stop jimmy-blog 2>/dev/null || true
             docker rm jimmy-blog 2>/dev/null || true
             docker run -d \
