@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { usePathname } from 'next/navigation'
 
 interface GiscusComment {
@@ -42,10 +42,7 @@ export default function Comments({ slug }: { slug: string }) {
 
   // fetch comment count on mount (lightweight hint)
   useEffect(() => {
-    fetch(`/api/comments?slug=${encodeURIComponent(slug)}&countOnly=1`)
-      .then(r => r.json())
-      .then((d: DiscussionResult) => setCount(d.totalCount))
-      .catch(() => {})
+    loadComments()
   }, [slug])
 
   // fetch current user
@@ -56,16 +53,18 @@ export default function Comments({ slug }: { slug: string }) {
       .catch(() => setUser(null))
   }, [])
 
-  const loadComments = async () => {
+  const loadComments = useCallback(async () => {
     setLoadState('loading')
     try {
       const res = await fetch(`/api/comments?slug=${encodeURIComponent(slug)}`)
-      setData(await res.json())
+      const d: DiscussionResult = await res.json()
+      setData(d)
+      setCount(d.totalCount)
       setLoadState('done')
     } catch {
       setLoadState('error')
     }
-  }
+  }, [slug])
 
   const logout = async () => {
     await fetch('/api/auth/logout', { method: 'POST' })
