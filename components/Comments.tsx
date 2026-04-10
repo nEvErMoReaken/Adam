@@ -34,10 +34,19 @@ export default function Comments({ slug }: { slug: string }) {
   const pathname = usePathname()
   const [loadState, setLoadState] = useState<'idle' | 'loading' | 'done' | 'error'>('idle')
   const [data, setData] = useState<DiscussionResult | null>(null)
-  const [user, setUser] = useState<User | null | undefined>(undefined) // undefined = not fetched
+  const [count, setCount] = useState<number | null>(null)
+  const [user, setUser] = useState<User | null | undefined>(undefined)
   const [input, setInput] = useState('')
   const [submitState, setSubmitState] = useState<'idle' | 'posting' | 'error'>('idle')
   const textareaRef = useRef<HTMLTextAreaElement>(null)
+
+  // fetch comment count on mount (lightweight hint)
+  useEffect(() => {
+    fetch(`/api/comments?slug=${encodeURIComponent(slug)}&countOnly=1`)
+      .then(r => r.json())
+      .then((d: DiscussionResult) => setCount(d.totalCount))
+      .catch(() => {})
+  }, [slug])
 
   // fetch current user
   useEffect(() => {
@@ -101,6 +110,11 @@ export default function Comments({ slug }: { slug: string }) {
         ))}
         <span className="ml-2" style={{ color: 'var(--c-subtext0)' }}>
           git log --comments {slug}
+          {count !== null && (
+            <span style={{ color: count > 0 ? 'var(--c-blue)' : 'var(--c-overlay0)' }}>
+              {' '}· {count} {count === 1 ? 'comment' : 'comments'}
+            </span>
+          )}
         </span>
       </div>
 
@@ -114,6 +128,10 @@ export default function Comments({ slug }: { slug: string }) {
               style={{ color: 'var(--c-blue)', background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'inherit', fontSize: 'inherit' }}>
               git log --oneline --comments
             </button>
+            <span className="animate-pulse" style={{ color: 'var(--c-overlay0)' }}>█</span>
+            {count === 0 && (
+              <span style={{ color: 'var(--c-overlay0)' }}># 还没有评论，来说第一句？</span>
+            )}
           </div>
         )}
 
