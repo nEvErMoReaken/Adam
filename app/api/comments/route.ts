@@ -108,7 +108,7 @@ export async function POST(req: NextRequest) {
       repoId: REPO_ID,
       categoryId: CATEGORY_ID,
       title: slug,
-      body: '',
+      body,
     }, userToken)
     console.error('[comments] createDiscussion response:', JSON.stringify(createJson))
     discussionId = createJson?.data?.createDiscussion?.discussion?.id ?? null
