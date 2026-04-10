@@ -29,39 +29,57 @@ const STEPS = [
   },
 ]
 
-// Ring geometry
-const CX = 150, CY = 150
-const R_MID   = 78   // arc stroke center radius
-const STROKE_W = 34  // arc stroke width  → inner=61, outer=95
-const circumference = 2 * Math.PI * R_MID
-const arcPerSlot    = circumference / SIZE
-const effectiveArc  = arcPerSlot - 5  // 5 px gap between slots
+const CX = 150, CY = 150, OUTER = 92, INNER = 56
 
-/** Label position at center of each arc slot */
-function slotCenter(i: number) {
-  const a = ((i + 0.5) / SIZE) * 2 * Math.PI - Math.PI / 2
-  return { x: CX + Math.cos(a) * R_MID, y: CY + Math.sin(a) * R_MID, a }
+/** Full pie wedge from center to outer radius for slot i */
+function wedgePath(i: number): string {
+  const startA = (i / SIZE) * 2 * Math.PI - Math.PI / 2
+  const endA   = ((i + 1) / SIZE) * 2 * Math.PI - Math.PI / 2
+  const x1 = CX + Math.cos(startA) * OUTER
+  const y1 = CY + Math.sin(startA) * OUTER
+  const x2 = CX + Math.cos(endA) * OUTER
+  const y2 = CY + Math.sin(endA) * OUTER
+  return `M ${CX} ${CY} L ${x1} ${y1} A ${OUTER} ${OUTER} 0 0 1 ${x2} ${y2} Z`
 }
 
-/** Pointer indicator (tick + label) outside the ring */
-function ptrProps(pos: number) {
-  const { a } = slotCenter(pos)
-  const cosA = Math.cos(a), sinA = Math.sin(a)
-  const outerR = R_MID + STROKE_W / 2
+/** Point at radius r at the midpoint of slot i */
+function mid(i: number, r: number) {
+  const a = ((i + 0.5) / SIZE) * 2 * Math.PI - Math.PI / 2
+  return { x: CX + Math.cos(a) * r, y: CY + Math.sin(a) * r, a }
+}
+
+/** Tick + dot + label outside the ring for a pointer at slot pos */
+function tick(pos: number) {
+  const { a } = mid(pos, OUTER)
+  const ca = Math.cos(a), sa = Math.sin(a)
   return {
-    lx1: CX + cosA * (outerR + 3),  ly1: CY + sinA * (outerR + 3),
-    lx2: CX + cosA * (outerR + 16), ly2: CY + sinA * (outerR + 16),
-    tx:  CX + cosA * (outerR + 30), ty:  CY + sinA * (outerR + 30),
-    anchor: cosA > 0.3 ? 'start' : cosA < -0.3 ? 'end' : 'middle',
+    x1: CX + ca * (OUTER + 4),  y1: CY + sa * (OUTER + 4),
+    x2: CX + ca * (OUTER + 18), y2: CY + sa * (OUTER + 18),
+    tx: CX + ca * (OUTER + 32), ty: CY + sa * (OUTER + 32),
+    anchor: ca > 0.3 ? 'start' : ca < -0.3 ? 'end' : 'middle',
   }
+}
+
+// Catppuccin colours used in SVG (must be concrete values, not CSS vars,
+// because SVG fill/stroke attrs are not CSS properties)
+const C = {
+  blue:      '#89b4fa',
+  blueDim:   '#5b8fd4',
+  mauve:     '#cba6f7',
+  surface0:  '#313244',
+  surface1:  '#45475a',
+  overlay0:  '#6c7086',
+  base:      '#1e1e2e',
+  text:      '#cdd6f4',
+  crust:     '#11111b',
 }
 
 export default function RingBufferViz() {
   const [step, setStep] = useState(0)
-  const cur = STEPS[step]
+  const cur  = STEPS[step]
   const avail = cur.data.filter(Boolean).length
-  const rp = ptrProps(cur.r)
-  const wp = ptrProps(cur.w)
+  const rTick = tick(cur.r)
+  const wTick = tick(cur.w)
 
   return (
     <div className="my-6 overflow-hidden rounded-md border font-mono text-[11px]"
@@ -98,77 +116,70 @@ export default function RingBufferViz() {
           ))}
         </div>
 
-        {/* SVG Ring */}
+        {/* SVG ring */}
         <div className="flex justify-center">
           <svg width="300" height="300" viewBox="0 0 300 300">
 
-            {/* Arc slots — one circle per slot, masked by strokeDasharray */}
+            {/* ① Pie wedges — full sector from center, separated by stroke */}
             {cur.data.map((hasData, i) => {
               const isR = i === cur.r
-              const isW = i === cur.w && !(cur.r === cur.w && avail === 0)
-              const stroke = isR
-                ? 'var(--c-blue)'
-                : isW
-                  ? 'var(--c-mauve)'
-                  : hasData
-                    ? 'color-mix(in srgb, var(--c-blue) 55%, var(--c-surface0))'
-                    : 'var(--c-surface0)'
-
-              // rotate(-90) starts arc at 12 o'clock; each slot adds 360/SIZE degrees
-              const rotateDeg = (i / SIZE) * 360 - 90
+              const isW = i === cur.w && !(isR && avail === SIZE) // both same slot when full
+              const fill = isR ? C.blue
+                         : isW ? C.mauve
+                         : hasData ? C.blueDim
+                         : C.surface1
               return (
-                <circle key={i}
-                  cx={CX} cy={CY} r={R_MID}
-                  fill="none"
-                  stroke={stroke}
-                  strokeWidth={STROKE_W}
-                  strokeDasharray={`${effectiveArc} ${circumference}`}
-                  transform={`rotate(${rotateDeg} ${CX} ${CY})`}
-                  style={{ transition: 'stroke 0.3s ease' }}
+                <path key={i} d={wedgePath(i)}
+                  fill={fill}
+                  stroke={C.base}
+                  strokeWidth="3"
+                  style={{ transition: 'fill 0.3s ease' }}
                 />
               )
             })}
 
-            {/* Index numbers inside each arc */}
+            {/* ② Center circle — masks the wedge tips to form a donut */}
+            <circle cx={CX} cy={CY} r={INNER} fill={C.base} />
+
+            {/* ③ Index labels in the ring band */}
             {cur.data.map((hasData, i) => {
-              const { x, y } = slotCenter(i)
-              const isR = i === cur.r
-              const isW = i === cur.w
+              const { x, y } = mid(i, (INNER + OUTER) / 2)
+              const isR = i === cur.r, isW = i === cur.w
               return (
                 <text key={i} x={x} y={y}
                   textAnchor="middle" dominantBaseline="middle"
                   fontSize="11" fontWeight="600"
-                  fill={isR || isW || hasData ? 'var(--c-base)' : 'var(--c-overlay1)'}>
+                  fill={isR || isW || hasData ? C.crust : C.overlay0}>
                   {i}
                 </text>
               )
             })}
 
-            {/* Read pointer */}
-            <line x1={rp.lx1} y1={rp.ly1} x2={rp.lx2} y2={rp.ly2}
-              stroke="var(--c-blue)" strokeWidth="2.5" strokeLinecap="round" />
-            <circle cx={rp.lx2} cy={rp.ly2} r="3.5" fill="var(--c-blue)" />
-            <text x={rp.tx} y={rp.ty}
-              textAnchor={rp.anchor} dominantBaseline="middle"
-              fontSize="11" fontWeight="bold" fill="var(--c-blue)">
+            {/* ④ Read pointer */}
+            <line x1={rTick.x1} y1={rTick.y1} x2={rTick.x2} y2={rTick.y2}
+              stroke={C.blue} strokeWidth="2.5" strokeLinecap="round" />
+            <circle cx={rTick.x2} cy={rTick.y2} r="4" fill={C.blue} />
+            <text x={rTick.tx} y={rTick.ty}
+              textAnchor={rTick.anchor} dominantBaseline="middle"
+              fontSize="11" fontWeight="bold" fill={C.blue}>
               r={cur.r}
             </text>
 
-            {/* Write pointer */}
-            <line x1={wp.lx1} y1={wp.ly1} x2={wp.lx2} y2={wp.ly2}
-              stroke="var(--c-mauve)" strokeWidth="2.5" strokeLinecap="round" />
-            <circle cx={wp.lx2} cy={wp.ly2} r="3.5" fill="var(--c-mauve)" />
-            <text x={wp.tx} y={wp.ty}
-              textAnchor={wp.anchor} dominantBaseline="middle"
-              fontSize="11" fontWeight="bold" fill="var(--c-mauve)">
+            {/* ⑤ Write pointer */}
+            <line x1={wTick.x1} y1={wTick.y1} x2={wTick.x2} y2={wTick.y2}
+              stroke={C.mauve} strokeWidth="2.5" strokeLinecap="round" />
+            <circle cx={wTick.x2} cy={wTick.y2} r="4" fill={C.mauve} />
+            <text x={wTick.tx} y={wTick.ty}
+              textAnchor={wTick.anchor} dominantBaseline="middle"
+              fontSize="11" fontWeight="bold" fill={C.mauve}>
               w={cur.w}
             </text>
 
-            {/* Center text */}
-            <text x={CX} y={CY - 10} textAnchor="middle" fontSize="22" fontWeight="bold"
-              fill="var(--c-text)">{avail}</text>
-            <text x={CX} y={CY + 11} textAnchor="middle" fontSize="10"
-              fill="var(--c-overlay0)">avail bytes</text>
+            {/* ⑥ Center stats */}
+            <text x={CX} y={CY - 9} textAnchor="middle"
+              fontSize="22" fontWeight="bold" fill={C.text}>{avail}</text>
+            <text x={CX} y={CY + 11} textAnchor="middle"
+              fontSize="9" fill={C.overlay0}>avail bytes</text>
 
           </svg>
         </div>
