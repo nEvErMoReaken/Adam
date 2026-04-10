@@ -56,7 +56,7 @@ function tick(pos: number) {
     x1: CX + ca * (OUTER + 4),  y1: CY + sa * (OUTER + 4),
     x2: CX + ca * (OUTER + 18), y2: CY + sa * (OUTER + 18),
     tx: CX + ca * (OUTER + 32), ty: CY + sa * (OUTER + 32),
-    anchor: ca > 0.3 ? 'start' : ca < -0.3 ? 'end' : 'middle',
+    anchor: (ca > 0.3 ? 'start' : ca < -0.3 ? 'end' : 'middle') as 'start' | 'end' | 'middle',
   }
 }
 
