@@ -29,44 +29,59 @@ const STEPS = [
   },
 ]
 
-const CX = 130, CY = 130, OUTER = 88, INNER = 58
+// SVG layout constants
+const CX = 150, CY = 150, OUTER = 95, INNER = 60
 
+/** Annular sector path for slot i */
 function slicePath(i: number): string {
-  const gap = 0.08
+  const gap = 0.06  // radian gap between slices
   const startA = (i / SIZE) * 2 * Math.PI - Math.PI / 2 + gap
-  const endA = ((i + 1) / SIZE) * 2 * Math.PI - Math.PI / 2 - gap
-  const x1o = CX + Math.cos(startA) * OUTER, y1o = CY + Math.sin(startA) * OUTER
-  const x2o = CX + Math.cos(endA) * OUTER,   y2o = CY + Math.sin(endA) * OUTER
-  const x1i = CX + Math.cos(startA) * INNER, y1i = CY + Math.sin(startA) * INNER
-  const x2i = CX + Math.cos(endA) * INNER,   y2i = CY + Math.sin(endA) * INNER
-  return `M ${x1o} ${y1o} A ${OUTER} ${OUTER} 0 0 1 ${x2o} ${y2o} L ${x2i} ${y2i} A ${INNER} ${INNER} 0 0 0 ${x1o} ${y1o} Z`
+  const endA   = ((i + 1) / SIZE) * 2 * Math.PI - Math.PI / 2 - gap
+  const cos1 = Math.cos(startA), sin1 = Math.sin(startA)
+  const cos2 = Math.cos(endA),   sin2 = Math.sin(endA)
+  const x1o = CX + cos1 * OUTER, y1o = CY + sin1 * OUTER
+  const x2o = CX + cos2 * OUTER, y2o = CY + sin2 * OUTER
+  const x1i = CX + cos1 * INNER, y1i = CY + sin1 * INNER
+  const x2i = CX + cos2 * INNER, y2i = CY + sin2 * INNER
+  // outer arc (clockwise) → line to inner end → inner arc (counter-clockwise) → close
+  return [
+    `M ${x1o} ${y1o}`,
+    `A ${OUTER} ${OUTER} 0 0 1 ${x2o} ${y2o}`,
+    `L ${x2i} ${y2i}`,
+    `A ${INNER} ${INNER} 0 0 0 ${x1i} ${y1i}`,  // ← correct: end at inner START
+    'Z',
+  ].join(' ')
 }
 
+/** Center of a slice, for index labels */
 function labelPos(i: number) {
   const midA = ((i + 0.5) / SIZE) * 2 * Math.PI - Math.PI / 2
   const r = (OUTER + INNER) / 2
   return { x: CX + Math.cos(midA) * r, y: CY + Math.sin(midA) * r }
 }
 
-function pointerLine(pos: number, label: string, color: string) {
+/** Pointer line + label outside the ring */
+function pointerProps(pos: number) {
   const midA = ((pos + 0.5) / SIZE) * 2 * Math.PI - Math.PI / 2
+  const cosA = Math.cos(midA), sinA = Math.sin(midA)
   return {
-    x1: CX + Math.cos(midA) * (INNER - 8),
-    y1: CY + Math.sin(midA) * (INNER - 8),
-    x2: CX + Math.cos(midA) * (OUTER + 14),
-    y2: CY + Math.sin(midA) * (OUTER + 14),
-    tx: CX + Math.cos(midA) * (OUTER + 30),
-    ty: CY + Math.sin(midA) * (OUTER + 30),
-    color, label,
+    x1: CX + cosA * (INNER - 6),
+    y1: CY + sinA * (INNER - 6),
+    x2: CX + cosA * (OUTER + 12),
+    y2: CY + sinA * (OUTER + 12),
+    tx: CX + cosA * (OUTER + 30),
+    ty: CY + sinA * (OUTER + 30),
+    anchor: cosA > 0.3 ? 'start' : cosA < -0.3 ? 'end' : 'middle',
   }
 }
 
 export default function RingBufferViz() {
   const [step, setStep] = useState(0)
   const cur = STEPS[step]
-  const rPtr = pointerLine(cur.r, `r=${cur.r}`, 'var(--c-blue)')
-  const wPtr = pointerLine(cur.w, `w=${cur.w}`, 'var(--c-mauve)')
   const avail = cur.data.filter(Boolean).length
+
+  const rProp = pointerProps(cur.r)
+  const wProp = pointerProps(cur.w)
 
   return (
     <div className="my-6 overflow-hidden rounded-md border font-mono text-[11px]"
@@ -103,15 +118,16 @@ export default function RingBufferViz() {
           ))}
         </div>
 
-        {/* SVG Ring */}
+        {/* SVG Ring — viewBox has enough padding for pointer labels */}
         <div className="flex justify-center">
-          <svg width="280" height="280" viewBox="20 20 220 220">
+          <svg width="300" height="300" viewBox="0 0 300 300">
+
             {/* Slices */}
             {cur.data.map((hasData, i) => (
               <path key={i} d={slicePath(i)}
                 style={{ transition: 'fill 0.3s ease' }}
                 fill={hasData
-                  ? 'color-mix(in srgb, var(--c-blue) 60%, var(--c-surface0))'
+                  ? 'color-mix(in srgb, var(--c-blue) 65%, var(--c-surface0))'
                   : 'var(--c-surface0)'}
                 stroke="var(--c-base)"
                 strokeWidth="1.5"
@@ -122,33 +138,41 @@ export default function RingBufferViz() {
             {cur.data.map((hasData, i) => {
               const { x, y } = labelPos(i)
               return (
-                <text key={i} x={x} y={y} textAnchor="middle" dominantBaseline="middle"
-                  fontSize="9" fontWeight="500"
-                  fill={hasData ? 'var(--c-base)' : 'var(--c-overlay0)'}>
+                <text key={i} x={x} y={y}
+                  textAnchor="middle" dominantBaseline="middle"
+                  fontSize="10" fontWeight="500"
+                  fill={hasData ? 'var(--c-base)' : 'var(--c-overlay1)'}>
                   {i}
                 </text>
               )
             })}
 
             {/* Read pointer */}
-            <line x1={rPtr.x1} y1={rPtr.y1} x2={rPtr.x2} y2={rPtr.y2}
-              stroke="var(--c-blue)" strokeWidth="2" />
-            <circle cx={rPtr.x2} cy={rPtr.y2} r="3.5" fill="var(--c-blue)" />
-            <text x={rPtr.tx} y={rPtr.ty} textAnchor="middle" dominantBaseline="middle"
-              fontSize="10" fontWeight="bold" fill="var(--c-blue)">{rPtr.label}</text>
+            <line x1={rProp.x1} y1={rProp.y1} x2={rProp.x2} y2={rProp.y2}
+              stroke="var(--c-blue)" strokeWidth="2.5" strokeLinecap="round" />
+            <circle cx={rProp.x2} cy={rProp.y2} r="4" fill="var(--c-blue)" />
+            <text x={rProp.tx} y={rProp.ty}
+              textAnchor={rProp.anchor} dominantBaseline="middle"
+              fontSize="11" fontWeight="bold" fill="var(--c-blue)">
+              r={cur.r}
+            </text>
 
             {/* Write pointer */}
-            <line x1={wPtr.x1} y1={wPtr.y1} x2={wPtr.x2} y2={wPtr.y2}
-              stroke="var(--c-mauve)" strokeWidth="2" />
-            <circle cx={wPtr.x2} cy={wPtr.y2} r="3.5" fill="var(--c-mauve)" />
-            <text x={wPtr.tx} y={wPtr.ty} textAnchor="middle" dominantBaseline="middle"
-              fontSize="10" fontWeight="bold" fill="var(--c-mauve)">{wPtr.label}</text>
+            <line x1={wProp.x1} y1={wProp.y1} x2={wProp.x2} y2={wProp.y2}
+              stroke="var(--c-mauve)" strokeWidth="2.5" strokeLinecap="round" />
+            <circle cx={wProp.x2} cy={wProp.y2} r="4" fill="var(--c-mauve)" />
+            <text x={wProp.tx} y={wProp.ty}
+              textAnchor={wProp.anchor} dominantBaseline="middle"
+              fontSize="11" fontWeight="bold" fill="var(--c-mauve)">
+              w={cur.w}
+            </text>
 
             {/* Center */}
-            <text x={CX} y={CY - 9} textAnchor="middle" fontSize="18" fontWeight="bold"
+            <text x={CX} y={CY - 10} textAnchor="middle" fontSize="20" fontWeight="bold"
               fill="var(--c-text)">{avail}</text>
-            <text x={CX} y={CY + 9} textAnchor="middle" fontSize="9"
+            <text x={CX} y={CY + 10} textAnchor="middle" fontSize="10"
               fill="var(--c-overlay0)">avail</text>
+
           </svg>
         </div>
 
@@ -160,7 +184,7 @@ export default function RingBufferViz() {
           <div style={{ color: 'var(--c-subtext0)' }}>{cur.desc}</div>
           {step === 2 && (
             <div className="mt-1.5" style={{ color: 'var(--c-green)' }}>
-              ← 写指针越过末尾后自然回到索引 0，无需移动任何数据
+              ↻ 写指针越过末尾后自然回到索引 0，无需移动任何数据
             </div>
           )}
         </div>
@@ -168,8 +192,8 @@ export default function RingBufferViz() {
         {/* Prev / Next */}
         <div className="flex justify-between">
           {[
-            { label: '← 上一步', fn: () => setStep(s => s - 1), dis: step === 0, color: 'var(--c-overlay0)' },
-            { label: '下一步 →', fn: () => setStep(s => s + 1), dis: step === STEPS.length - 1, color: 'var(--c-green)' },
+            { label: '← 上一步', fn: () => setStep(s => s - 1), dis: step === 0,               color: 'var(--c-overlay0)' },
+            { label: '下一步 →', fn: () => setStep(s => s + 1), dis: step === STEPS.length - 1, color: 'var(--c-green)'   },
           ].map(({ label, fn, dis, color }) => (
             <button key={label} onClick={fn} disabled={dis}
               className="rounded px-4 py-1.5 font-mono text-[10px]"
