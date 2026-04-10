@@ -12,6 +12,7 @@ import siteMetadata from '@/data/siteMetadata'
 import tagData from 'app/tag-data.json'
 import { Pane, PaneLayout } from '@/components/PaneLayout'
 import { useLang } from '@/lib/i18n'
+import { track } from '@/lib/umami'
 
 interface PaginationProps {
   totalPages: number
@@ -175,7 +176,8 @@ export default function ListLayoutWithTags({
                       {formatDate(date, siteMetadata.locale)}
                     </time>
                   </div>
-                  <Link href={`/${path}`} className="font-mono text-sm font-semibold text-[var(--c-text)] hover:text-[var(--c-blue)]">
+                  <Link href={`/${path}`} className="font-mono text-sm font-semibold text-[var(--c-text)] hover:text-[var(--c-blue)]"
+                    onClick={() => track('article-click', { title, path })}>
                     {title}
                   </Link>
                   {summary && (
@@ -217,6 +219,7 @@ export default function ListLayoutWithTags({
                     className={`block px-2 py-0.5 font-mono text-xs transition-colors hover:bg-[var(--c-surface0)] ${
                       isActive ? 'text-[var(--c-blue)]' : 'text-[var(--c-subtext0)]'
                     }`}
+                    onClick={() => track('tag-filter', { tag })}
                   >
                     #{tag} <span style={{ color: 'var(--c-overlay0)' }}>({tagCounts[tag]})</span>
                   </Link>

@@ -12,6 +12,7 @@ import {
   Medium,
   Bluesky,
 } from './icons'
+import { track } from '@/lib/umami'
 
 const components = {
   mail: Mail,
@@ -49,6 +50,7 @@ const SocialIcon = ({ kind, href, size = 8 }: SocialIconProps) => {
       target="_blank"
       rel="noopener noreferrer"
       href={href}
+      onClick={() => track('social-click', { platform: kind })}
     >
       <span className="sr-only">{kind}</span>
       <SocialSvg

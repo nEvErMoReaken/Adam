@@ -1,5 +1,4 @@
 import TOCInline from 'pliny/ui/TOCInline'
-import Pre from 'pliny/ui/Pre'
 import BlogNewsletterForm from 'pliny/ui/BlogNewsletterForm'
 import type { MDXComponents } from 'mdx/types'
 import Image from './Image'
@@ -9,12 +8,13 @@ import RingBufferViz from './RingBufferViz'
 import GoGateBufferViz from './GoGateBufferViz'
 import { Admonition } from './Admonition'
 import { Tabs, TabItem } from './Tabs'
+import TrackedPre from './TrackedPre'
 
 export const components: MDXComponents = {
   Image,
   TOCInline,
   a: CustomLink,
-  pre: Pre,
+  pre: TrackedPre,
   table: TableWrapper,
   BlogNewsletterForm,
   RingBufferViz,

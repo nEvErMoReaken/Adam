@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { usePathname } from 'next/navigation'
+import { track } from '@/lib/umami'
 
 interface GiscusComment {
   author: string
@@ -89,6 +90,7 @@ export default function Comments({ slug }: { slug: string }) {
       } : prev)
       setInput('')
       setSubmitState('idle')
+      track('comment-submit', { slug })
     } catch {
       setSubmitState('error')
     }
@@ -188,7 +190,8 @@ export default function Comments({ slug }: { slug: string }) {
               <div className="flex items-center gap-2">
                 <span style={{ color: 'var(--c-green)' }}>❯</span>
                 <a href={`/api/auth/github?redirect=${encodeURIComponent(pathname)}`}
-                  style={{ color: 'var(--c-blue)' }}>
+                  style={{ color: 'var(--c-blue)' }}
+                  onClick={() => track('comment-login-click')}>
                   git auth login
                 </a>
                 <span style={{ color: 'var(--c-overlay0)' }}># GitHub 账号登录后可留言</span>
