@@ -50,5 +50,6 @@ jobs:
               -e GH_TOKEN=${{ secrets.GH_TOKEN }} \
               -e GH_CLIENT_ID=${{ secrets.GH_CLIENT_ID }} \
               -e GH_CLIENT_SECRET=${{ secrets.GH_CLIENT_SECRET }} \
+              -e NEXT_UMAMI_ID=${{ secrets.NEXT_UMAMI_ID }} \
               jimmy-blog:latest
             docker image prune -f
