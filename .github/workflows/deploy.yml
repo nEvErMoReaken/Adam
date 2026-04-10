@@ -44,7 +44,7 @@ jobs:
             docker run -d \
               --name jimmy-blog \
               --restart unless-stopped \
-              -p 3000:3000 \
+              --network nginx-ui_default \
               -e IINA_TOKEN=${{ secrets.IINA_TOKEN }} \
               -e IINA_USER_ID=${{ secrets.IINA_USER_ID }} \
               -e GH_TOKEN=${{ secrets.GH_TOKEN }} \
