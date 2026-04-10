@@ -25,7 +25,7 @@ export default function GoGateBufferViz() {
   const wA = writePos & MASK
   const cells = getDataCells(readPos, writePos)
 
-  const doRead = () => { if (avail > 0) setReadPos((r) => r + 1) }
+  const doRead  = () => { if (avail > 0) setReadPos((r) => r + 1) }
   const doWrite = () => { if (free > 0) setWritePos((w) => w + 1) }
   const doReset = () => { setReadPos(3); setWritePos(9) }
 
@@ -66,32 +66,86 @@ export default function GoGateBufferViz() {
         </div>
 
         {/* buffer cells */}
-        <div className="flex justify-center gap-1">
-          {cells.map((hasData, i) => {
-            const isR = i === rA
-            const isW = i === wA && avail < SIZE
-            return (
-              <div key={i} className="flex flex-col items-center" style={{ gap: 2 }}>
-                <span className="flex h-3 items-center justify-center text-[9px] font-bold"
-                  style={{ color: 'var(--c-blue)', visibility: isR ? 'visible' : 'hidden' }}>r</span>
-                <div className="flex h-8 w-11 items-center justify-center rounded text-sm transition-colors"
-                  style={{
-                    border: `1px solid ${isR ? 'var(--c-blue)' : isW ? 'var(--c-mauve)' : hasData ? 'var(--c-blue)' : 'var(--c-surface1)'}`,
-                    background: hasData
-                      ? 'color-mix(in srgb, var(--c-blue) 22%, var(--c-surface0))'
-                      : 'var(--c-surface0)',
-                    color: hasData ? 'var(--c-blue)' : 'var(--c-surface1)',
-                    outline: isR ? '2px solid var(--c-blue)' : isW ? '2px solid var(--c-mauve)' : 'none',
-                    outlineOffset: 1,
-                  }}>
-                  {hasData ? '█' : '░'}
+        <div className="rounded px-4 py-3" style={{ background: 'var(--c-surface0)' }}>
+          <div className="mb-3 text-[9px] uppercase tracking-widest" style={{ color: 'var(--c-overlay0)' }}>
+            BUFFER SLOTS
+          </div>
+          <div className="flex justify-center gap-1.5">
+            {cells.map((hasData, i) => {
+              const isR = i === rA
+              const isW = i === wA && avail < SIZE
+              const borderColor = isR
+                ? 'var(--c-blue)'
+                : isW
+                  ? 'var(--c-mauve)'
+                  : hasData
+                    ? 'var(--c-blue)'
+                    : 'var(--c-surface2)'
+              const bg = hasData
+                ? 'color-mix(in srgb, var(--c-blue) 28%, var(--c-surface0))'
+                : 'var(--c-base)'
+              return (
+                <div key={i} className="flex flex-col items-center" style={{ gap: 3 }}>
+                  {/* r pointer */}
+                  <div className="flex h-3.5 w-10 items-center justify-center rounded-sm text-[9px] font-bold"
+                    style={{
+                      background: isR ? 'color-mix(in srgb, var(--c-blue) 18%, transparent)' : 'transparent',
+                      color: 'var(--c-blue)',
+                      visibility: isR ? 'visible' : 'hidden',
+                    }}>
+                    r
+                  </div>
+
+                  {/* cell */}
+                  <div className="flex h-9 w-10 flex-col items-center justify-center gap-0.5 rounded"
+                    style={{
+                      border: `1.5px solid ${borderColor}`,
+                      background: bg,
+                      outline: isR ? '2px solid var(--c-blue)' : isW ? '2px solid var(--c-mauve)' : 'none',
+                      outlineOffset: 2,
+                    }}>
+                    <div className="h-1.5 w-5 rounded-full"
+                      style={{ background: hasData ? 'var(--c-blue)' : 'var(--c-surface2)' }} />
+                    <div className="h-1.5 w-5 rounded-full"
+                      style={{ background: hasData ? 'color-mix(in srgb, var(--c-blue) 60%, transparent)' : 'var(--c-surface1)' }} />
+                  </div>
+
+                  {/* w pointer */}
+                  <div className="flex h-3.5 w-10 items-center justify-center rounded-sm text-[9px] font-bold"
+                    style={{
+                      background: isW ? 'color-mix(in srgb, var(--c-mauve) 18%, transparent)' : 'transparent',
+                      color: 'var(--c-mauve)',
+                      visibility: isW ? 'visible' : 'hidden',
+                    }}>
+                    w
+                  </div>
+
+                  {/* index */}
+                  <span className="text-[9px]" style={{ color: 'var(--c-overlay0)' }}>[{i}]</span>
                 </div>
-                <span className="flex h-3 items-center justify-center text-[9px] font-bold"
-                  style={{ color: 'var(--c-mauve)', visibility: isW ? 'visible' : 'hidden' }}>w</span>
-                <span className="text-[9px]" style={{ color: 'var(--c-overlay0)' }}>[{i}]</span>
-              </div>
-            )
-          })}
+              )
+            })}
+          </div>
+
+          {/* legend */}
+          <div className="mt-3 flex justify-center gap-4">
+            <div className="flex items-center gap-1.5">
+              <div className="h-2.5 w-4 rounded-full" style={{ background: 'var(--c-blue)' }} />
+              <span style={{ color: 'var(--c-overlay0)' }}>occupied</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <div className="h-2.5 w-4 rounded-full" style={{ background: 'var(--c-surface2)' }} />
+              <span style={{ color: 'var(--c-overlay0)' }}>free</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <div className="h-2.5 w-2.5 rounded-sm" style={{ border: '2px solid var(--c-blue)' }} />
+              <span style={{ color: 'var(--c-overlay0)' }}>readPos</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <div className="h-2.5 w-2.5 rounded-sm" style={{ border: '2px solid var(--c-mauve)' }} />
+              <span style={{ color: 'var(--c-overlay0)' }}>writePos</span>
+            </div>
+          </div>
         </div>
 
         {/* bit operation — updates live */}
