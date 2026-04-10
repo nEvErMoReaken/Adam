@@ -1,58 +1,72 @@
 'use client'
 import { useState } from 'react'
 
-const SIZE = 8
-const MASK = SIZE - 1
+const SIZE = 10
+const STEPS = [
+  {
+    title: '初始状态',
+    desc: '数组长度10，r=5，w=8，可读数据3字节（位置 5、6、7）',
+    r: 5, w: 8,
+    data: [0,0,0,0,0,1,1,1,0,0] as number[],
+  },
+  {
+    title: 'read(4) 请求',
+    desc: '需要4字节但只有3字节可用，触发 fill() 从网络补充数据',
+    r: 5, w: 8,
+    data: [0,0,0,0,0,1,1,1,0,0] as number[],
+  },
+  {
+    title: '写指针自然环绕',
+    desc: '写指针 8→9→0→1→2→3→4→5 自然回绕，无需 memmove，整个缓冲区填满',
+    r: 5, w: 5,
+    data: [1,1,1,1,1,1,1,1,1,1] as number[],
+  },
+  {
+    title: '返回4字节',
+    desc: '数据充足，返回4字节，读指针 r: 5→9，位置 5~8 变为空闲',
+    r: 9, w: 5,
+    data: [1,1,1,1,1,0,0,0,0,1] as number[],
+  },
+]
 
-function getDataCells(readPos: number, writePos: number): boolean[] {
-  return Array.from({ length: SIZE }, (_, i) => {
-    const avail = writePos - readPos
-    if (avail <= 0) return false
-    if (avail >= SIZE) return true
-    const rA = readPos & MASK
-    const wA = writePos & MASK
-    return rA < wA ? i >= rA && i < wA : i >= rA || i < wA
-  })
+const CX = 130, CY = 130, OUTER = 88, INNER = 58
+
+function slicePath(i: number): string {
+  const gap = 0.08
+  const startA = (i / SIZE) * 2 * Math.PI - Math.PI / 2 + gap
+  const endA = ((i + 1) / SIZE) * 2 * Math.PI - Math.PI / 2 - gap
+  const x1o = CX + Math.cos(startA) * OUTER, y1o = CY + Math.sin(startA) * OUTER
+  const x2o = CX + Math.cos(endA) * OUTER,   y2o = CY + Math.sin(endA) * OUTER
+  const x1i = CX + Math.cos(startA) * INNER, y1i = CY + Math.sin(startA) * INNER
+  const x2i = CX + Math.cos(endA) * INNER,   y2i = CY + Math.sin(endA) * INNER
+  return `M ${x1o} ${y1o} A ${OUTER} ${OUTER} 0 0 1 ${x2o} ${y2o} L ${x2i} ${y2i} A ${INNER} ${INNER} 0 0 0 ${x1o} ${y1o} Z`
+}
+
+function labelPos(i: number) {
+  const midA = ((i + 0.5) / SIZE) * 2 * Math.PI - Math.PI / 2
+  const r = (OUTER + INNER) / 2
+  return { x: CX + Math.cos(midA) * r, y: CY + Math.sin(midA) * r }
+}
+
+function pointerLine(pos: number, label: string, color: string) {
+  const midA = ((pos + 0.5) / SIZE) * 2 * Math.PI - Math.PI / 2
+  return {
+    x1: CX + Math.cos(midA) * (INNER - 8),
+    y1: CY + Math.sin(midA) * (INNER - 8),
+    x2: CX + Math.cos(midA) * (OUTER + 14),
+    y2: CY + Math.sin(midA) * (OUTER + 14),
+    tx: CX + Math.cos(midA) * (OUTER + 30),
+    ty: CY + Math.sin(midA) * (OUTER + 30),
+    color, label,
+  }
 }
 
 export default function RingBufferViz() {
-  const [readPos, setReadPos] = useState(3)
-  const [writePos, setWritePos] = useState(9)
-  const [log, setLog] = useState<string[]>([
-    '❯ ring-buffer init --size=8 --mask=0b0111',
-    '  readPos=3  writePos=9  avail=6  free=2',
-  ])
-
-  const avail = writePos - readPos
-  const free = SIZE - avail
-  const rA = readPos & MASK
-  const wA = writePos & MASK
-  const cells = getDataCells(readPos, writePos)
-
-  const push = (msg: string) => setLog((l) => [...l.slice(-7), msg])
-
-  const doRead = () => {
-    if (avail <= 0) { push('  error: buffer empty'); return }
-    const newR = readPos + 1
-    push(`  read 1B  r:${readPos}→${newR} (idx ${rA}→${newR & MASK})  avail:${avail}→${avail - 1}`)
-    setReadPos(newR)
-  }
-  const doWrite = () => {
-    if (free <= 0) { push('  error: buffer full'); return }
-    const newW = writePos + 1
-    push(`  write 1B  w:${writePos}→${newW} (idx ${wA}→${newW & MASK})  free:${free}→${free - 1}`)
-    setWritePos(newW)
-  }
-  const doFill = () => {
-    if (free <= 0) { push('  error: buffer full'); return }
-    const newW = writePos + free
-    push(`  fill() +${free}B  w:${writePos}→${newW} (idx ${wA}→${newW & MASK})  free->0`)
-    setWritePos(newW)
-  }
-  const doReset = () => {
-    setReadPos(3); setWritePos(9)
-    setLog(['❯ ring-buffer reset', '  readPos=3  writePos=9  avail=6  free=2'])
-  }
+  const [step, setStep] = useState(0)
+  const cur = STEPS[step]
+  const rPtr = pointerLine(cur.r, `r=${cur.r}`, 'var(--c-blue)')
+  const wPtr = pointerLine(cur.w, `w=${cur.w}`, 'var(--c-mauve)')
+  const avail = cur.data.filter(Boolean).length
 
   return (
     <div className="my-6 overflow-hidden rounded-md border font-mono text-[11px]"
@@ -65,93 +79,109 @@ export default function RingBufferViz() {
         <span className="inline-block h-2.5 w-2.5 rounded-full opacity-70" style={{ background: 'var(--c-yellow)' }} />
         <span className="inline-block h-2.5 w-2.5 rounded-full opacity-70" style={{ background: 'var(--c-green)' }} />
         <span className="ml-2" style={{ color: 'var(--c-subtext0)' }}>
-          InteractiveRingBuffer — size={SIZE}  mask=0b{MASK.toString(2).padStart(3, '0')}
+          InteractiveRingBuffer — size={SIZE}
         </span>
       </div>
 
-      <div className="space-y-4 p-4">
+      <div className="space-y-3 p-4">
 
-        {/* cells */}
-        <div className="flex justify-center gap-1">
-          {cells.map((hasData, i) => {
-            const isR = i === rA
-            const isW = i === wA && avail < SIZE
-            return (
-              <div key={i} className="flex flex-col items-center" style={{ gap: 2 }}>
-                <span className="flex h-3 items-center justify-center text-[9px] font-bold"
-                  style={{ color: 'var(--c-blue)', visibility: isR ? 'visible' : 'hidden' }}>r</span>
-
-                <div className="flex h-9 w-12 items-center justify-center rounded text-sm transition-colors"
-                  style={{
-                    border: `1px solid ${isR ? 'var(--c-blue)' : isW ? 'var(--c-mauve)' : hasData ? 'var(--c-blue)' : 'var(--c-surface1)'}`,
-                    background: hasData
-                      ? 'color-mix(in srgb, var(--c-blue) 22%, var(--c-surface0))'
-                      : 'var(--c-surface0)',
-                    color: hasData ? 'var(--c-blue)' : 'var(--c-surface1)',
-                    outline: isR ? '2px solid var(--c-blue)' : isW ? '2px solid var(--c-mauve)' : 'none',
-                    outlineOffset: 1,
-                  }}>
-                  {hasData ? '█' : '░'}
-                </div>
-
-                <span className="flex h-3 items-center justify-center text-[9px] font-bold"
-                  style={{ color: 'var(--c-mauve)', visibility: isW ? 'visible' : 'hidden' }}>w</span>
-                <span className="text-[9px]" style={{ color: 'var(--c-overlay0)' }}>[{i}]</span>
-              </div>
-            )
-          })}
-        </div>
-
-        {/* stats */}
-        <div className="grid grid-cols-4 gap-2 rounded px-3 py-2"
-          style={{ background: 'var(--c-surface0)' }}>
-          {[
-            { label: 'readPos',  val: readPos,            sub: `${readPos}&${MASK}=${rA}`,  color: 'var(--c-blue)'  },
-            { label: 'writePos', val: writePos,           sub: `${writePos}&${MASK}=${wA}`, color: 'var(--c-mauve)' },
-            { label: 'avail',    val: Math.max(0, avail), sub: '可读字节',                   color: 'var(--c-green)' },
-            { label: 'free',     val: Math.max(0, free),  sub: '可写字节',                   color: 'var(--c-peach)' },
-          ].map(({ label, val, sub, color }) => (
-            <div key={label}>
-              <div className="text-[9px]" style={{ color: 'var(--c-overlay0)' }}>{label}</div>
-              <div className="text-sm font-bold leading-none" style={{ color }}>{val}</div>
-              <div className="mt-0.5 text-[9px]" style={{ color: 'var(--c-overlay0)' }}>{sub}</div>
-            </div>
-          ))}
-        </div>
-
-        {/* buttons */}
+        {/* Step selector */}
         <div className="flex flex-wrap gap-1.5">
-          {[
-            { label: '← read()',   action: doRead,  disabled: avail <= 0, color: 'var(--c-blue)'    },
-            { label: 'write() →',  action: doWrite, disabled: free <= 0,  color: 'var(--c-mauve)'   },
-            { label: 'fill() all', action: doFill,  disabled: free <= 0,  color: 'var(--c-teal)'    },
-            { label: 'reset',      action: doReset, disabled: false,      color: 'var(--c-overlay0)' },
-          ].map(({ label, action, disabled, color }) => (
-            <button
-              key={label}
-              onClick={action}
-              disabled={disabled}
-              className="rounded px-3 py-1 font-mono text-[10px] transition-opacity"
+          {STEPS.map((s, i) => (
+            <button key={i} onClick={() => setStep(i)}
+              className="rounded px-2.5 py-1 text-[10px] transition-colors"
               style={{
-                border: `1px solid ${disabled ? 'var(--c-surface1)' : color}`,
-                background: 'var(--c-surface0)',
-                color: disabled ? 'var(--c-overlay0)' : color,
-                cursor: disabled ? 'not-allowed' : 'pointer',
-                opacity: disabled ? 0.4 : 1,
-              }}
-            >
-              {label}
+                background: i === step
+                  ? 'color-mix(in srgb, var(--c-blue) 18%, var(--c-surface0))'
+                  : 'var(--c-surface0)',
+                border: `1px solid ${i === step ? 'var(--c-blue)' : 'var(--c-surface2)'}`,
+                color: i === step ? 'var(--c-blue)' : 'var(--c-subtext0)',
+                cursor: 'pointer',
+              }}>
+              {i + 1}. {s.title}
             </button>
           ))}
         </div>
 
-        {/* log */}
-        <div className="min-h-[60px] rounded px-3 py-2 leading-relaxed"
-          style={{ background: 'var(--c-crust)' }}>
-          {log.map((line, i) => (
-            <div key={i} style={{ color: i === log.length - 1 ? 'var(--c-text)' : 'var(--c-overlay0)' }}>
-              {line}
+        {/* SVG Ring */}
+        <div className="flex justify-center">
+          <svg width="280" height="280" viewBox="20 20 220 220">
+            {/* Slices */}
+            {cur.data.map((hasData, i) => (
+              <path key={i} d={slicePath(i)}
+                style={{ transition: 'fill 0.3s ease' }}
+                fill={hasData
+                  ? 'color-mix(in srgb, var(--c-blue) 60%, var(--c-surface0))'
+                  : 'var(--c-surface0)'}
+                stroke="var(--c-base)"
+                strokeWidth="1.5"
+              />
+            ))}
+
+            {/* Index labels inside slices */}
+            {cur.data.map((hasData, i) => {
+              const { x, y } = labelPos(i)
+              return (
+                <text key={i} x={x} y={y} textAnchor="middle" dominantBaseline="middle"
+                  fontSize="9" fontWeight="500"
+                  fill={hasData ? 'var(--c-base)' : 'var(--c-overlay0)'}>
+                  {i}
+                </text>
+              )
+            })}
+
+            {/* Read pointer */}
+            <line x1={rPtr.x1} y1={rPtr.y1} x2={rPtr.x2} y2={rPtr.y2}
+              stroke="var(--c-blue)" strokeWidth="2" />
+            <circle cx={rPtr.x2} cy={rPtr.y2} r="3.5" fill="var(--c-blue)" />
+            <text x={rPtr.tx} y={rPtr.ty} textAnchor="middle" dominantBaseline="middle"
+              fontSize="10" fontWeight="bold" fill="var(--c-blue)">{rPtr.label}</text>
+
+            {/* Write pointer */}
+            <line x1={wPtr.x1} y1={wPtr.y1} x2={wPtr.x2} y2={wPtr.y2}
+              stroke="var(--c-mauve)" strokeWidth="2" />
+            <circle cx={wPtr.x2} cy={wPtr.y2} r="3.5" fill="var(--c-mauve)" />
+            <text x={wPtr.tx} y={wPtr.ty} textAnchor="middle" dominantBaseline="middle"
+              fontSize="10" fontWeight="bold" fill="var(--c-mauve)">{wPtr.label}</text>
+
+            {/* Center */}
+            <text x={CX} y={CY - 9} textAnchor="middle" fontSize="18" fontWeight="bold"
+              fill="var(--c-text)">{avail}</text>
+            <text x={CX} y={CY + 9} textAnchor="middle" fontSize="9"
+              fill="var(--c-overlay0)">avail</text>
+          </svg>
+        </div>
+
+        {/* Step description */}
+        <div className="rounded px-4 py-3" style={{ background: 'var(--c-surface0)' }}>
+          <div className="mb-1 font-bold" style={{ color: 'var(--c-blue)' }}>
+            步骤 {step + 1}：{cur.title}
+          </div>
+          <div style={{ color: 'var(--c-subtext0)' }}>{cur.desc}</div>
+          {step === 2 && (
+            <div className="mt-1.5" style={{ color: 'var(--c-green)' }}>
+              ← 写指针越过末尾后自然回到索引 0，无需移动任何数据
             </div>
+          )}
+        </div>
+
+        {/* Prev / Next */}
+        <div className="flex justify-between">
+          {[
+            { label: '← 上一步', fn: () => setStep(s => s - 1), dis: step === 0, color: 'var(--c-overlay0)' },
+            { label: '下一步 →', fn: () => setStep(s => s + 1), dis: step === STEPS.length - 1, color: 'var(--c-green)' },
+          ].map(({ label, fn, dis, color }) => (
+            <button key={label} onClick={fn} disabled={dis}
+              className="rounded px-4 py-1.5 font-mono text-[10px]"
+              style={{
+                border: `1px solid ${dis ? 'var(--c-surface1)' : color}`,
+                background: 'var(--c-surface0)',
+                color: dis ? 'var(--c-overlay0)' : color,
+                cursor: dis ? 'not-allowed' : 'pointer',
+                opacity: dis ? 0.4 : 1,
+              }}>
+              {label}
+            </button>
           ))}
         </div>
 
