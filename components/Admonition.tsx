@@ -8,30 +8,22 @@ interface AdmonitionProps {
   children: React.ReactNode
 }
 
-const STYLES: Record<AdmonitionType, { color: string; icon: string }> = {
-  info:    { color: 'var(--c-blue)',    icon: 'ℹ' },
-  tip:     { color: 'var(--c-green)',   icon: '▶' },
-  warning: { color: 'var(--c-peach)',   icon: '⚠' },
-  note:    { color: 'var(--c-overlay0)', icon: '·' },
-  success: { color: 'var(--c-green)',   icon: '✓' },
+const STYLES: Record<AdmonitionType, { border: string; icon: string; label: string }> = {
+  info:    { border: 'border-[var(--c-blue)]',    icon: 'ℹ', label: 'text-[var(--c-blue)]'    },
+  tip:     { border: 'border-[var(--c-green)]',   icon: '▶', label: 'text-[var(--c-green)]'   },
+  warning: { border: 'border-[var(--c-peach)]',   icon: '⚠', label: 'text-[var(--c-peach)]'   },
+  note:    { border: 'border-[var(--c-overlay0)]',icon: '·', label: 'text-[var(--c-overlay0)]' },
+  success: { border: 'border-[var(--c-green)]',   icon: '✓', label: 'text-[var(--c-green)]'   },
 }
 
 export function Admonition({ type = 'info', title, children }: AdmonitionProps) {
-  const { color, icon } = STYLES[type]
+  const { border, icon, label } = STYLES[type]
   return (
-    <div style={{
-      margin: '1rem 0',
-      padding: '12px 16px',
-      borderLeft: `3px solid ${color}`,
-      background: 'var(--c-surface0)',
-      borderRadius: '0 4px 4px 0',
-      fontFamily: 'monospace',
-      fontSize: '12px',
-    }}>
-      <div style={{ color, fontSize: '10px', marginBottom: '6px', letterSpacing: '1px', fontWeight: 'bold' }}>
-        {icon} {(title ?? type).toUpperCase()}
+    <div className={`my-4 rounded-r border-l-4 bg-[var(--c-surface0)] px-4 py-3 font-mono text-[12px] ${border}`}>
+      <div className={`mb-1.5 text-[10px] font-bold uppercase tracking-widest ${label}`}>
+        {icon} {title ?? type}
       </div>
-      <div style={{ color: 'var(--c-subtext0)', lineHeight: '1.7' }}>
+      <div className="leading-relaxed text-[var(--c-subtext0)]">
         {children}
       </div>
     </div>

@@ -11,55 +11,33 @@ export function TabItem({ children }: TabItemProps) {
   return <>{children}</>
 }
 
-interface TabsProps {
-  children: React.ReactNode
-}
-
-export function Tabs({ children }: TabsProps) {
+export function Tabs({ children }: { children: React.ReactNode }) {
   const items = Children.toArray(children).filter(
     (child): child is ReactElement<TabItemProps> => isValidElement(child)
   )
   const [activeIdx, setActiveIdx] = useState(0)
 
   return (
-    <div style={{ margin: '1rem 0', fontFamily: 'monospace' }}>
+    <div className="my-4 overflow-hidden rounded-md border border-[var(--c-split)] font-mono">
       {/* tab bar */}
-      <div style={{
-        display: 'flex',
-        borderBottom: '1px solid var(--c-split)',
-        background: 'var(--c-mantle)',
-        borderRadius: '4px 4px 0 0',
-        padding: '0 4px',
-        gap: '2px',
-      }}>
+      <div className="flex gap-px border-b border-[var(--c-split)] bg-[var(--c-mantle)] px-1 pt-1">
         {items.map((item, i) => (
           <button
             key={i}
             onClick={() => setActiveIdx(i)}
-            style={{
-              padding: '6px 14px',
-              fontSize: '10px',
-              fontFamily: 'monospace',
-              background: 'transparent',
-              color: i === activeIdx ? 'var(--c-text)' : 'var(--c-overlay0)',
-              border: 'none',
-              borderBottom: i === activeIdx ? '2px solid var(--c-blue)' : '2px solid transparent',
-              cursor: 'pointer',
-              letterSpacing: '0.5px',
-              transition: 'color 0.1s',
-            }}
+            className={[
+              'rounded-t px-3 py-1.5 text-[10px] tracking-wide transition-colors',
+              i === activeIdx
+                ? 'border-b-2 border-[var(--c-blue)] bg-[var(--c-base)] text-[var(--c-text)]'
+                : 'border-b-2 border-transparent text-[var(--c-overlay0)] hover:text-[var(--c-subtext0)]',
+            ].join(' ')}
           >
             {item.props.label}
           </button>
         ))}
       </div>
       {/* content */}
-      <div style={{
-        border: '1px solid var(--c-split)',
-        borderTop: 'none',
-        borderRadius: '0 0 4px 4px',
-        background: 'var(--c-base)',
-      }}>
+      <div className="bg-[var(--c-base)]">
         {items[activeIdx]}
       </div>
     </div>
