@@ -1,7 +1,19 @@
 'use client'
 
 import { useState } from 'react'
-import type { DiscussionResult } from '@/app/api/comments/route'
+
+interface GiscusComment {
+  author: string
+  body: string
+  createdAt: string
+  url: string
+}
+
+interface DiscussionResult {
+  url: string | null
+  totalCount: number
+  comments: GiscusComment[]
+}
 
 function formatDate(iso: string) {
   return new Date(iso).toISOString().slice(0, 16).replace('T', ' ')
