@@ -119,7 +119,7 @@ export default function Comments({ slug }: { slug: string }) {
                 <div style={{ color: 'var(--c-overlay0)' }}>
                   <span style={{ color: 'var(--c-green)' }}>❯</span>{' '}
                   <a
-                    href={`https://github.com/${process.env.NEXT_PUBLIC_GISCUS_REPO}/discussions`}
+                    href={`https://github.com/nEvErMoReaken/Adam/discussions`}
                     target="_blank" rel="noopener noreferrer"
                     style={{ color: 'var(--c-blue)' }}>
                     git commit --comment  <span style={{ color: 'var(--c-overlay0)' }}># start discussion →</span>

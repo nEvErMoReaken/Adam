@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-const REPO = process.env.NEXT_PUBLIC_GISCUS_REPO ?? ''
-const CATEGORY_ID = process.env.NEXT_PUBLIC_GISCUS_CATEGORY_ID ?? ''
+const REPO = 'nEvErMoReaken/Adam'
+const CATEGORY_ID = 'DIC_kwDOR42jg84C6gxS'
 const TOKEN = process.env.GITHUB_TOKEN ?? ''
 
 export interface GiscusComment {
@@ -18,7 +18,7 @@ export interface DiscussionResult {
 }
 
 const QUERY = `
-query($query: String!) {
+query($query: String!, $categoryId: ID!) {
   search(query: $query, type: DISCUSSION, first: 1) {
     nodes {
       ... on Discussion {
@@ -53,7 +53,7 @@ export async function GET(req: NextRequest) {
       Authorization: `Bearer ${TOKEN}`,
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ query: QUERY, variables: { query: searchQuery } }),
+    body: JSON.stringify({ query: QUERY, variables: { query: searchQuery, categoryId: CATEGORY_ID } }),
     next: { revalidate: 60 },
   })
 
