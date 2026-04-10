@@ -16,6 +16,7 @@ jobs:
           password: ${{ secrets.VPS_PASSWORD }}
           port: ${{ secrets.VPS_PORT }}
           script: |
+            set -e
             cd /opt/jimmy-blog
             git pull origin main
             docker build --no-cache -t jimmy-blog:latest .
