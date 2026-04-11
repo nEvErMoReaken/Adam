@@ -68,16 +68,4 @@ yarn dev   # http://localhost:3000
 
 ## Changelog
 
-**2026-04**
-- feat: Discord 实时状态（Lanyard WebSocket）
-- feat: 主页个人信息 KV 面板 + robot hint
-- feat: About 页 nvidia-smi 终端风格面板（双语）
-- feat: Docker 部署 + GitHub Actions CI/CD
-
-**2026-03**
-- feat: IDE 终端分屏布局（PaneLayout）
-- feat: Catppuccin 主题系统（Latte / Mocha / Old Hope）
-- feat: 全站中英文切换、斜杠命令面板
-- feat: TerminalPet 桌面宠物
-- feat: Footer 状态栏、`llms-full.txt`
-- chore: 迁移历史博客文章，替换示例内容
+详见博客文章 [sleeprhino.com/blog/changelog](https://sleeprhino.com/blog/changelog)

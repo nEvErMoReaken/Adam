@@ -67,16 +67,4 @@ Secrets required: `VPS_HOST` `VPS_USER` `VPS_PASSWORD` `VPS_PORT`
 
 ## Changelog
 
-**2026-04**
-- feat: Discord live status (Lanyard WebSocket)
-- feat: Homepage personal info KV panel + robot hint
-- feat: About page nvidia-smi terminal panel (bilingual)
-- feat: Docker deployment + GitHub Actions CI/CD
-
-**2026-03**
-- feat: IDE terminal split-pane layout (PaneLayout)
-- feat: Catppuccin theme system (Latte / Mocha / Old Hope)
-- feat: Global zh/en language switch, slash command panel
-- feat: TerminalPet desktop companion
-- feat: Footer status bar, `llms-full.txt`
-- chore: Migrated blog posts, replaced sample content
+See blog post [sleeprhino.com/blog/changelog](https://sleeprhino.com/blog/changelog)

@@ -1,0 +1,84 @@
+---
+title: 'Changelog — sleeprhino.com'
+date: '2026-04-11'
+tags: ['meta', 'changelog']
+summary: '站点迭代记录：从空白模板到现在，每一个 commit 背后的想法。'
+---
+
+> 这不是 `git log`，是一份有点像日记的迭代记录。
+
+---
+
+## 2026-04
+
+**`/search` 接入全文搜索 · Ctrl+K 修复**
+
+命令面板里的 `/search` 一直只是跳转到 `/blog`，算是一个占位符。这次把它真正接入了 kbar，执行后会弹出全文搜索框，可以搜索所有文章的标题、标签和正文摘要。顺带修了 Ctrl+K 无法打开面板的问题——原因是 `Footer` 不在 `SearchProvider` 内，`useKBar()` 拿不到 context。
+
+**Umami 埋点**
+
+接入 Umami 做行为分析，导航点击、主题切换、语言切换、评论发送、标签跳转都有 track。不收集个人信息，只是想知道有没有人真的点了那些快捷键。
+
+**移动端体验优化**
+
+发现在手机上布局会有一些奇怪的溢出和遮挡问题，这次专门修了一遍。
+
+**像素风格 loading 进度条**
+
+路由跳转时顶部会出现一条像素风格的进度条，分块像素 + 发光头部，算是整体终端美学的一部分。
+
+**GitHub OAuth 评论系统**
+
+基于 GitHub Discussions 的评论系统，终端风格，`git push` 发评论。整个设计围绕 `git log` 的视觉语言展开——评论条目看起来像 commit，发评论的按钮写的是 `git push`。后端调 GitHub API 读写 Discussion。
+
+**`/tokens` 页面**
+
+记录 AI token 用量的统计页，给自己看的。
+
+**Code::Stats 面板**
+
+主页接入 Code::Stats，实时显示各语言的编码时长，CLI 风格面板。
+
+---
+
+## 2026-03
+
+**Catppuccin 主题系统**
+
+整个博客的视觉基础。用 CSS 自定义属性（`--c-*`）替换了默认的 Tailwind 色板，实现了 Latte（浅色）/ Mocha（深色）/ An Old Hope 三套配色。字体换成 JetBrains Mono + Space Grotesk，代码区域保留 Mono。
+
+**i18n 中英双语**
+
+没用任何外部 i18n 库，自己写了一个轻量的 `LangProvider` + `useLang()` hook，localStorage 持久化。大约 35 个 UI 字符串都有完整中英翻译。
+
+**PaneLayout — IDE 分屏布局**
+
+最核心的视觉改动。所有页面改为双栏分屏，左侧主内容，右侧 meta / 导航。文章列表用 Unix 文件权限格式（`-rw-r--r--`）渲染，右侧是标签筛选侧栏。
+
+**SlashCommandPanel**
+
+底部状态栏里的命令面板。按 `/` 激活，输入命令跳转页面或切换主题。灵感来自 VS Code 的命令面板，但更轻量，融合在 Footer 里。
+
+**TerminalPet**
+
+右下角的桌面宠物，随机生成，有 5 种稀有度（普通到传说）、8 种帽子、5 项属性。传说级有概率出现闪光变体。孵化时有破壳动画。
+
+**全键盘导航**
+
+`g` + 字母跳转页面，`j/k` 上下浏览文章，`[/]` 翻页，`n/p` 前后篇，`u` 返回列表，`?` 显示快捷键面板。没有鼠标也能完整操作。
+
+**环形缓冲区博客 + 交互可视化**
+
+移植并重写了几个交互组件（`RingBufferViz`、`GoGateBufferViz`），配合环形缓冲区文章使用。`GoGateBufferViz` 支持手动 read / write，可以直观演示位运算取模的工作原理。
+
+**About 页 nvidia-smi 风格**
+
+关于页面模拟 `nvidia-smi` 的终端输出格式，有 ASCII 进度条、技能利用率、项目进程表。双语。
+
+**Discord 实时状态**
+
+主页通过 Lanyard WebSocket 显示 Discord 在线状态和当前活动，状态实时更新。
+
+**Docker + GitHub Actions CI/CD**
+
+推送到 `main` 自动触发 Actions，SSH 进 VPS，`docker build`，重启容器。部署一次大概 3 分钟。
