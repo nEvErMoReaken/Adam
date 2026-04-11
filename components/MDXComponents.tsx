@@ -9,6 +9,7 @@ import GoGateBufferViz from './GoGateBufferViz'
 import { Admonition } from './Admonition'
 import { Tabs, TabItem } from './Tabs'
 import TrackedPre from './TrackedPre'
+import { ChangelogCard } from './ChangelogCard'
 
 export const components: MDXComponents = {
   Image,
@@ -22,4 +23,5 @@ export const components: MDXComponents = {
   Admonition,
   Tabs,
   TabItem,
+  ChangelogCard,
 }
