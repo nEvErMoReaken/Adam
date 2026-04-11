@@ -110,8 +110,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <SearchProvider searchConfig={siteMetadata.search as SearchConfig}>
               <Header />
               <main className="min-h-0 flex-1 overflow-y-auto">{children}</main>
+              <Footer />
             </SearchProvider>
-            <Footer />
             <WalkingPet />
             <KeyboardHelp />
             <GlobalKeyboardShortcuts />

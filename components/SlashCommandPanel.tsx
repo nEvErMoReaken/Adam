@@ -4,12 +4,14 @@ import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useTheme } from 'next-themes'
 import { Command } from 'cmdk'
+import { useKBar } from 'kbar'
 import { useLang } from '@/lib/i18n'
 
 export default function SlashCommandPanel() {
   const router = useRouter()
   const { setTheme, theme } = useTheme()
   const { t } = useLang()
+  const { query } = useKBar()
   const [value, setValue] = useState('')
   const [open, setOpen] = useState(false)
   const [focused, setFocused] = useState(false)
@@ -22,6 +24,13 @@ export default function SlashCommandPanel() {
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
       const tag = (e.target as HTMLElement).tagName
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault()
+        inputRef.current?.focus()
+        setFocused(true)
+        setOpen(true)
+        return
+      }
       if (tag === 'INPUT' || tag === 'TEXTAREA') return
       if (e.key === '/') {
         e.preventDefault()
@@ -50,7 +59,8 @@ export default function SlashCommandPanel() {
     if (action === 'theme') {
       setTheme(theme === 'latte' ? 'mocha' : 'latte')
     } else if (action === 'search') {
-      navigate('/blog')
+      close()
+      query.toggle()
       return
     }
     close()
@@ -155,6 +165,7 @@ export default function SlashCommandPanel() {
             onFocus={() => setFocused(true)}
             onBlur={() => setTimeout(() => { setFocused(false); if (!value) setOpen(false) }, 150)}
             placeholder="Type /command"
+            data-cmd-input
             className="flex-1 border-0 bg-transparent text-xs outline-none focus:ring-0"
             style={{
               color: 'var(--c-text)',

@@ -18,14 +18,7 @@ export default function GlobalKeyboardShortcuts() {
       const editable = (document.activeElement as HTMLElement)?.isContentEditable
       const inInput = tag === 'INPUT' || tag === 'TEXTAREA' || editable
 
-      // Ctrl+K → 聚焦命令面板输入框
-      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
-        e.preventDefault()
-        const input = document.querySelector<HTMLInputElement>('[data-cmd-input]')
-        input?.focus()
-        return
-      }
-
+      // Ctrl+K → 由 SlashCommandPanel 自身处理
       if (inInput) return
 
       // g → 等待第二键
