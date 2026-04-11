@@ -182,7 +182,8 @@ C 想与 S 通信，需要先获得 S 的公钥。若 S 直接在网络上发送
     B->>CA: ① 提交 pub_Bob + 身份信息
     CA->>B: ② 签发证书: pub_Bob + Sign(priv_CA, Hash)
     B->>A: ③ 发送证书
-    Note over A: ④ 用预装的 pub_CA 验签\n✓ 信任根：pub_CA 由 OS/浏览器厂商预装
+    Note over A: ④ 用预装的 pub_CA 验签
+    Note over A: ✓ 信任根由 OS/浏览器厂商预装
 `} />
 
 ### SSL/TLS 完整握手

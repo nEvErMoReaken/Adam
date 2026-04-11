@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useTheme } from 'next-themes'
 
 interface MermaidProps {
@@ -10,9 +10,14 @@ interface MermaidProps {
 export function Mermaid({ chart }: MermaidProps) {
   const ref = useRef<HTMLDivElement>(null)
   const { resolvedTheme } = useTheme()
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
-    if (!ref.current) return
+    setMounted(true)
+  }, [])
+
+  useEffect(() => {
+    if (!mounted || !ref.current) return
 
     const render = async () => {
       const mermaid = (await import('mermaid')).default
@@ -22,7 +27,7 @@ export function Mermaid({ chart }: MermaidProps) {
         theme: isDark ? 'dark' : 'default',
         themeVariables: isDark
           ? {
-              background: 'var(--c-base)',
+              background: '#1e1e2e',
               primaryColor: '#313244',
               primaryTextColor: '#cdd6f4',
               primaryBorderColor: '#585b70',
@@ -47,7 +52,7 @@ export function Mermaid({ chart }: MermaidProps) {
               noteTextColor: '#cdd6f4',
             }
           : {},
-        fontFamily: 'var(--font-mono, monospace)',
+        fontFamily: 'ui-monospace, monospace',
         sequence: {
           diagramMarginX: 20,
           diagramMarginY: 10,
@@ -64,7 +69,9 @@ export function Mermaid({ chart }: MermaidProps) {
     }
 
     render().catch(console.error)
-  }, [chart, resolvedTheme])
+  }, [chart, resolvedTheme, mounted])
+
+  if (!mounted) return null
 
   return (
     <div
