@@ -22,71 +22,23 @@ HTTP 以 TCP 作为底层协议，通信流程如下：
 4. 浏览器（HTTP 客户端）与 Web 服务器（HTTP 服务器）交换 HTTP 报文
 5. 关闭 TCP 连接
 
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 300" style={{display:'block',margin:'1.5rem auto',fontFamily:'monospace',fontSize:'12px'}}>
-  {/* background */}
-  <rect width="620" height="300" fill="var(--c-base)" rx="6"/>
-  {/* title bar */}
-  <rect width="620" height="24" fill="var(--c-mantle)" rx="6"/>
-  <rect y="18" width="620" height="6" fill="var(--c-mantle)"/>
-  <circle cx="16" cy="12" r="4" fill="var(--c-red)" opacity="0.7"/>
-  <circle cx="30" cy="12" r="4" fill="var(--c-yellow)" opacity="0.7"/>
-  <circle cx="44" cy="12" r="4" fill="var(--c-green)" opacity="0.7"/>
-  <text x="310" y="16" textAnchor="middle" fill="var(--c-subtext0)" fontSize="11">HTTP 通信时序</text>
+<Mermaid chart={`sequenceDiagram
+    participant B as Browser (Client)
+    participant S as Web Server
 
-  {/* columns */}
-  <text x="120" y="52" textAnchor="middle" fill="var(--c-blue)" fontSize="12" fontWeight="bold">Browser</text>
-  <text x="120" y="65" textAnchor="middle" fill="var(--c-overlay0)" fontSize="10">(HTTP Client)</text>
-  <line x1="120" y1="70" x2="120" y2="285" stroke="var(--c-surface1)" strokeWidth="1" strokeDasharray="4,3"/>
+    B->>S: TCP SYN (port 80)
+    S->>B: TCP SYN-ACK
+    B->>S: TCP ACK (连接建立)
 
-  <text x="500" y="52" textAnchor="middle" fill="var(--c-mauve)" fontSize="12" fontWeight="bold">Server</text>
-  <text x="500" y="65" textAnchor="middle" fill="var(--c-overlay0)" fontSize="10">(:80)</text>
-  <line x1="500" y1="70" x2="500" y2="285" stroke="var(--c-surface1)" strokeWidth="1" strokeDasharray="4,3"/>
+    B->>S: HTTP GET /index.html
+    S->>B: HTTP 200 OK + HTML
 
-  {/* step 1 TCP SYN */}
-  <line x1="120" y1="95" x2="490" y2="110" stroke="var(--c-green)" strokeWidth="1.5" markerEnd="url(#arr)"/>
-  <text x="305" y="98" textAnchor="middle" fill="var(--c-green)" fontSize="11">TCP SYN  ─────────────────►</text>
+    B->>S: HTTP GET /style.css
+    S->>B: HTTP 200 OK + CSS
 
-  {/* step 2 SYN-ACK */}
-  <line x1="500" y1="120" x2="130" y2="135" stroke="var(--c-green)" strokeWidth="1.5" markerEnd="url(#arrl)"/>
-  <text x="305" y="118" textAnchor="middle" fill="var(--c-green)" fontSize="11">◄─────────────────  SYN-ACK</text>
-
-  {/* step 3 ACK */}
-  <line x1="120" y1="145" x2="490" y2="158" stroke="var(--c-green)" strokeWidth="1.5" markerEnd="url(#arr)"/>
-  <text x="305" y="143" textAnchor="middle" fill="var(--c-green)" fontSize="11">ACK  ─────────────────────►</text>
-
-  {/* divider */}
-  <line x1="80" y1="170" x2="540" y2="170" stroke="var(--c-split)" strokeWidth="1" strokeDasharray="2,4"/>
-  <text x="310" y="168" textAnchor="middle" fill="var(--c-overlay0)" fontSize="10">TCP 连接已建立</text>
-
-  {/* step 4 HTTP GET */}
-  <line x1="120" y1="188" x2="490" y2="200" stroke="var(--c-blue)" strokeWidth="1.5" markerEnd="url(#arr)"/>
-  <text x="305" y="186" textAnchor="middle" fill="var(--c-blue)" fontSize="11">GET /index.html HTTP/1.1  ──►</text>
-
-  {/* step 5 200 OK */}
-  <line x1="500" y1="212" x2="130" y2="224" stroke="var(--c-blue)" strokeWidth="1.5" markerEnd="url(#arrl)"/>
-  <text x="305" y="210" textAnchor="middle" fill="var(--c-blue)" fontSize="11">◄──  HTTP/1.1 200 OK + body</text>
-
-  {/* step 6 FIN */}
-  <line x1="120" y1="245" x2="490" y2="257" stroke="var(--c-overlay0)" strokeWidth="1" strokeDasharray="5,3" markerEnd="url(#arrd)"/>
-  <text x="305" y="243" textAnchor="middle" fill="var(--c-overlay0)" fontSize="11">FIN / 关闭连接  ──────────►</text>
-
-  {/*明文警告 */}
-  <rect x="200" y="265" width="220" height="18" rx="3" fill="var(--c-surface0)"/>
-  <text x="310" y="277" textAnchor="middle" fill="var(--c-peach)" fontSize="10">⚠  全程明文传输，无加密</text>
-
-  {/* arrowhead markers */}
-  <defs>
-    <marker id="arr" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
-      <path d="M0,0 L6,3 L0,6 Z" fill="var(--c-blue)"/>
-    </marker>
-    <marker id="arrl" markerWidth="6" markerHeight="6" refX="1" refY="3" orient="auto">
-      <path d="M6,0 L0,3 L6,6 Z" fill="var(--c-blue)"/>
-    </marker>
-    <marker id="arrd" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
-      <path d="M0,0 L6,3 L0,6 Z" fill="var(--c-overlay0)"/>
-    </marker>
-  </defs>
-</svg>
+    B->>S: TCP FIN (关闭连接)
+    S->>B: TCP FIN-ACK
+`} />
 
 # HTTPS
 
@@ -131,59 +83,11 @@ SSL（Secure Sockets Layer）首次公开发布是 3.0 版本（1996 年），1.
 - 常用算法：DES、3DES、**AES**
 - 缺陷：密钥本身需要通过网络传递，存在被中间人截获的风险
 
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 180" style={{display:'block',margin:'1.5rem auto',fontFamily:'monospace',fontSize:'12px'}}>
-  <rect width="620" height="180" fill="var(--c-base)" rx="6"/>
-  <rect width="620" height="24" fill="var(--c-mantle)" rx="6"/>
-  <rect y="18" width="620" height="6" fill="var(--c-mantle)"/>
-  <circle cx="16" cy="12" r="4" fill="var(--c-red)" opacity="0.7"/>
-  <circle cx="30" cy="12" r="4" fill="var(--c-yellow)" opacity="0.7"/>
-  <circle cx="44" cy="12" r="4" fill="var(--c-green)" opacity="0.7"/>
-  <text x="310" y="16" textAnchor="middle" fill="var(--c-subtext0)" fontSize="11">对称加密</text>
-
-  {/* Alice */}
-  <rect x="20" y="40" width="130" height="60" rx="4" fill="var(--c-surface0)" stroke="var(--c-blue)" strokeWidth="1"/>
-  <text x="85" y="58" textAnchor="middle" fill="var(--c-blue)" fontSize="12" fontWeight="bold">Alice</text>
-  <text x="85" y="74" textAnchor="middle" fill="var(--c-subtext0)" fontSize="10">plaintext</text>
-  <text x="85" y="88" textAnchor="middle" fill="var(--c-green)" fontSize="10">key: K</text>
-
-  {/* encrypt box */}
-  <rect x="190" y="52" width="80" height="36" rx="4" fill="var(--c-surface1)"/>
-  <text x="230" y="67" textAnchor="middle" fill="var(--c-text)" fontSize="11">encrypt</text>
-  <text x="230" y="81" textAnchor="middle" fill="var(--c-overlay0)" fontSize="10">AES(K)</text>
-
-  {/* arrow alice→encrypt */}
-  <line x1="150" y1="70" x2="188" y2="70" stroke="var(--c-blue)" strokeWidth="1.5" markerEnd="url(#a1)"/>
-
-  {/* ciphertext */}
-  <rect x="310" y="52" width="100" height="36" rx="4" fill="var(--c-crust)" stroke="var(--c-overlay0)" strokeWidth="1" strokeDasharray="3,2"/>
-  <text x="360" y="67" textAnchor="middle" fill="var(--c-overlay0)" fontSize="11">ciphertext</text>
-  <text x="360" y="81" textAnchor="middle" fill="var(--c-overlay0)" fontSize="10">Ek(plaintext)</text>
-  <line x1="270" y1="70" x2="308" y2="70" stroke="var(--c-overlay0)" strokeWidth="1.5" markerEnd="url(#a2)"/>
-
-  {/* decrypt box */}
-  <rect x="450" y="52" width="80" height="36" rx="4" fill="var(--c-surface1)"/>
-  <text x="490" y="67" textAnchor="middle" fill="var(--c-text)" fontSize="11">decrypt</text>
-  <text x="490" y="81" textAnchor="middle" fill="var(--c-overlay0)" fontSize="10">AES(K)</text>
-  <line x1="410" y1="70" x2="448" y2="70" stroke="var(--c-overlay0)" strokeWidth="1.5" markerEnd="url(#a2)"/>
-
-  {/* Bob */}
-  <rect x="540" y="40" width="65" height="60" rx="4" fill="var(--c-surface0)" stroke="var(--c-mauve)" strokeWidth="1"/>
-  <text x="572" y="58" textAnchor="middle" fill="var(--c-mauve)" fontSize="12" fontWeight="bold">Bob</text>
-  <text x="572" y="74" textAnchor="middle" fill="var(--c-subtext0)" fontSize="10">plaintext</text>
-  <text x="572" y="88" textAnchor="middle" fill="var(--c-green)" fontSize="10">key: K</text>
-  <line x1="530" y1="70" x2="538" y2="70" stroke="var(--c-mauve)" strokeWidth="1.5" markerEnd="url(#a3)"/>
-
-  {/* shared key label */}
-  <text x="310" y="130" textAnchor="middle" fill="var(--c-green)" fontSize="11">双方持有同一密钥 K</text>
-  <rect x="130" y="138" width="360" height="18" rx="3" fill="var(--c-surface0)"/>
-  <text x="310" y="151" textAnchor="middle" fill="var(--c-peach)" fontSize="10">⚠  密钥 K 若在网络中传输，有被截获风险</text>
-
-  <defs>
-    <marker id="a1" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="var(--c-blue)"/></marker>
-    <marker id="a2" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="var(--c-overlay0)"/></marker>
-    <marker id="a3" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="var(--c-mauve)"/></marker>
-  </defs>
-</svg>
+<Mermaid chart={`flowchart LR
+    A[Alice\nkey: K] -->|plaintext| E[encrypt\nAES&#40;K&#41;]
+    E -->|ciphertext\nEk&#40;plaintext&#41;| D[decrypt\nAES&#40;K&#41;]
+    D -->|plaintext| B[Bob\nkey: K]
+`} />
 
 ##### 非对称加密
 
@@ -205,61 +109,18 @@ C 想与 S 通信，需要先获得 S 的公钥。若 S 直接在网络上发送
 
 即使对公钥本身加密，也无法解决信任问题：谁来保证加密公钥所用的密钥是可信的？
 
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 260" style={{display:'block',margin:'1.5rem auto',fontFamily:'monospace',fontSize:'12px'}}>
-  <rect width="620" height="260" fill="var(--c-base)" rx="6"/>
-  <rect width="620" height="24" fill="var(--c-mantle)" rx="6"/>
-  <rect y="18" width="620" height="6" fill="var(--c-mantle)"/>
-  <circle cx="16" cy="12" r="4" fill="var(--c-red)" opacity="0.7"/>
-  <circle cx="30" cy="12" r="4" fill="var(--c-yellow)" opacity="0.7"/>
-  <circle cx="44" cy="12" r="4" fill="var(--c-green)" opacity="0.7"/>
-  <text x="310" y="16" textAnchor="middle" fill="var(--c-subtext0)" fontSize="11">中间人攻击（MITM）</text>
+<Mermaid chart={`sequenceDiagram
+    participant C as C (Client)
+    participant A as A (攻击者)
+    participant S as S (Server)
 
-  {/* C */}
-  <rect x="20" y="44" width="90" height="52" rx="4" fill="var(--c-surface0)" stroke="var(--c-blue)" strokeWidth="1"/>
-  <text x="65" y="64" textAnchor="middle" fill="var(--c-blue)" fontSize="13" fontWeight="bold">C</text>
-  <text x="65" y="80" textAnchor="middle" fill="var(--c-subtext0)" fontSize="10">Client</text>
-  <text x="65" y="92" textAnchor="middle" fill="var(--c-overlay0)" fontSize="9">以为在跟 S 说话</text>
-
-  {/* A */}
-  <rect x="240" y="36" width="140" height="68" rx="4" fill="var(--c-surface0)" stroke="var(--c-red)" strokeWidth="1.5"/>
-  <text x="310" y="58" textAnchor="middle" fill="var(--c-red)" fontSize="13" fontWeight="bold">A（攻击者）</text>
-  <text x="310" y="74" textAnchor="middle" fill="var(--c-subtext0)" fontSize="10">pub_A / priv_A</text>
-  <text x="310" y="88" textAnchor="middle" fill="var(--c-overlay0)" fontSize="9">冒充 S 发送 pub_A</text>
-  <text x="310" y="100" textAnchor="middle" fill="var(--c-overlay0)" fontSize="9">截获后用 priv_A 解密</text>
-
-  {/* S */}
-  <rect x="510" y="44" width="90" height="52" rx="4" fill="var(--c-surface0)" stroke="var(--c-mauve)" strokeWidth="1"/>
-  <text x="555" y="64" textAnchor="middle" fill="var(--c-mauve)" fontSize="13" fontWeight="bold">S</text>
-  <text x="555" y="80" textAnchor="middle" fill="var(--c-subtext0)" fontSize="10">Server</text>
-  <text x="555" y="92" textAnchor="middle" fill="var(--c-overlay0)" fontSize="9">pub_S / priv_S</text>
-
-  {/* step 1: S sends pub_S, A intercepts */}
-  <text x="310" y="130" textAnchor="middle" fill="var(--c-overlay0)" fontSize="10">① S 发出 pub_S</text>
-  <line x1="508" y1="136" x2="392" y2="136" stroke="var(--c-mauve)" strokeWidth="1.5" strokeDasharray="4,2" markerEnd="url(#ml)"/>
-  <text x="450" y="148" textAnchor="middle" fill="var(--c-red)" fontSize="10">A 截获 pub_S</text>
-
-  {/* step 2: A sends pub_A to C */}
-  <text x="155" y="165" textAnchor="middle" fill="var(--c-overlay0)" fontSize="10">② A 冒充 S 发出 pub_A</text>
-  <line x1="238" y1="170" x2="113" y2="170" stroke="var(--c-red)" strokeWidth="1.5" markerEnd="url(#ml2)"/>
-
-  {/* step 3: C encrypts with pub_A */}
-  <text x="155" y="195" textAnchor="middle" fill="var(--c-overlay0)" fontSize="10">③ C 用 pub_A 加密数据发出</text>
-  <line x1="112" y1="200" x2="238" y2="200" stroke="var(--c-blue)" strokeWidth="1.5" markerEnd="url(#mr)"/>
-
-  {/* step 4: A decrypts */}
-  <rect x="240" y="210" width="140" height="20" rx="3" fill="var(--c-crust)"/>
-  <text x="310" y="224" textAnchor="middle" fill="var(--c-red)" fontSize="10">④ A 用 priv_A 解密，窃听成功</text>
-
-  {/* C/S unaware */}
-  <rect x="60" y="240" width="500" height="16" rx="3" fill="var(--c-surface0)"/>
-  <text x="310" y="252" textAnchor="middle" fill="var(--c-peach)" fontSize="10">⚠  C 和 S 均不知情 —— 根源：无法验证公钥归属</text>
-
-  <defs>
-    <marker id="ml" markerWidth="6" markerHeight="6" refX="1" refY="3" orient="auto"><path d="M6,0 L0,3 L6,6 Z" fill="var(--c-mauve)"/></marker>
-    <marker id="ml2" markerWidth="6" markerHeight="6" refX="1" refY="3" orient="auto"><path d="M6,0 L0,3 L6,6 Z" fill="var(--c-red)"/></marker>
-    <marker id="mr" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="var(--c-blue)"/></marker>
-  </defs>
-</svg>
+    S->>A: ① 发出 pub_S
+    Note over A: 截获 pub_S
+    A->>C: ② 冒充 S，发出 pub_A
+    C->>A: ③ 用 pub_A 加密数据
+    Note over A: ④ 用 priv_A 解密，窃听成功
+    Note over C,S: C 和 S 均不知情——根源：无法验证公钥归属
+`} />
 
 #### 数字签名
 
@@ -273,95 +134,21 @@ C 想与 S 通信，需要先获得 S 的公钥。若 S 直接在网络上发送
 
 若 A == B，则数据未被篡改，且确实由 Bob（私钥持有者）发出。
 
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 310" style={{display:'block',margin:'1.5rem auto',fontFamily:'monospace',fontSize:'12px'}}>
-  <rect width="620" height="310" fill="var(--c-base)" rx="6"/>
-  <rect width="620" height="24" fill="var(--c-mantle)" rx="6"/>
-  <rect y="18" width="620" height="6" fill="var(--c-mantle)"/>
-  <circle cx="16" cy="12" r="4" fill="var(--c-red)" opacity="0.7"/>
-  <circle cx="30" cy="12" r="4" fill="var(--c-yellow)" opacity="0.7"/>
-  <circle cx="44" cy="12" r="4" fill="var(--c-green)" opacity="0.7"/>
-  <text x="310" y="16" textAnchor="middle" fill="var(--c-subtext0)" fontSize="11">数字签名：签名 & 验签</text>
-
-  {/* ── SIGN side (left) ── */}
-  <text x="155" y="46" textAnchor="middle" fill="var(--c-blue)" fontSize="11" fontWeight="bold">Bob 签名</text>
-
-  <rect x="20" y="54" width="80" height="28" rx="4" fill="var(--c-surface0)" stroke="var(--c-surface1)" strokeWidth="1"/>
-  <text x="60" y="68" textAnchor="middle" fill="var(--c-text)" fontSize="11">data</text>
-  <text x="60" y="78" textAnchor="middle" fill="var(--c-overlay0)" fontSize="9">原始数据</text>
-
-  {/* data → hash */}
-  <line x1="100" y1="68" x2="118" y2="68" stroke="var(--c-overlay0)" strokeWidth="1.2" markerEnd="url(#ds1)"/>
-  <rect x="120" y="54" width="70" height="28" rx="4" fill="var(--c-surface1)"/>
-  <text x="155" y="68" textAnchor="middle" fill="var(--c-text)" fontSize="11">Hash()</text>
-  <text x="155" y="78" textAnchor="middle" fill="var(--c-overlay0)" fontSize="9">SHA-256</text>
-
-  {/* hash → digest */}
-  <line x1="190" y1="68" x2="208" y2="68" stroke="var(--c-overlay0)" strokeWidth="1.2" markerEnd="url(#ds1)"/>
-  <rect x="210" y="54" width="70" height="28" rx="4" fill="var(--c-surface0)" stroke="var(--c-yellow)" strokeWidth="1"/>
-  <text x="245" y="68" textAnchor="middle" fill="var(--c-yellow)" fontSize="11">digest</text>
-  <text x="245" y="78" textAnchor="middle" fill="var(--c-overlay0)" fontSize="9">摘要</text>
-
-  {/* digest + priv_Bob → sign */}
-  <line x1="245" y1="82" x2="245" y2="108" stroke="var(--c-overlay0)" strokeWidth="1.2" markerEnd="url(#ds1)"/>
-  <rect x="200" y="110" width="90" height="28" rx="4" fill="var(--c-surface1)"/>
-  <text x="245" y="124" textAnchor="middle" fill="var(--c-text)" fontSize="11">Encrypt</text>
-  <text x="245" y="134" textAnchor="middle" fill="var(--c-overlay0)" fontSize="9">priv_Bob</text>
-
-  {/* → signature */}
-  <line x1="245" y1="138" x2="245" y2="158" stroke="var(--c-overlay0)" strokeWidth="1.2" markerEnd="url(#ds1)"/>
-  <rect x="200" y="160" width="90" height="28" rx="4" fill="var(--c-surface0)" stroke="var(--c-green)" strokeWidth="1"/>
-  <text x="245" y="174" textAnchor="middle" fill="var(--c-green)" fontSize="11">signature</text>
-  <text x="245" y="184" textAnchor="middle" fill="var(--c-overlay0)" fontSize="9">数字签名</text>
-
-  {/* send: data + signature */}
-  <text x="155" y="218" textAnchor="middle" fill="var(--c-overlay0)" fontSize="10">发送：data + signature</text>
-  <line x1="60" y1="224" x2="60" y2="234" stroke="var(--c-overlay0)" strokeWidth="1"/>
-  <line x1="245" y1="188" x2="245" y2="234" stroke="var(--c-overlay0)" strokeWidth="1"/>
-  <line x1="60" y1="234" x2="380" y2="234" stroke="var(--c-blue)" strokeWidth="1.5" markerEnd="url(#ds2)"/>
-
-  {/* ── VERIFY side (right) ── */}
-  <text x="500" y="46" textAnchor="middle" fill="var(--c-mauve)" fontSize="11" fontWeight="bold">Alice 验签</text>
-
-  {/* signature → decrypt → digest_A */}
-  <rect x="390" y="54" width="75" height="28" rx="4" fill="var(--c-surface0)" stroke="var(--c-green)" strokeWidth="1"/>
-  <text x="427" y="68" textAnchor="middle" fill="var(--c-green)" fontSize="11">signature</text>
-  <line x1="465" y1="68" x2="483" y2="68" stroke="var(--c-overlay0)" strokeWidth="1.2" markerEnd="url(#ds1)"/>
-  <rect x="485" y="54" width="75" height="28" rx="4" fill="var(--c-surface1)"/>
-  <text x="522" y="68" textAnchor="middle" fill="var(--c-text)" fontSize="11">Decrypt</text>
-  <text x="522" y="78" textAnchor="middle" fill="var(--c-overlay0)" fontSize="9">pub_Bob</text>
-
-  <line x1="522" y1="82" x2="522" y2="104" stroke="var(--c-overlay0)" strokeWidth="1.2" markerEnd="url(#ds1)"/>
-  <rect x="482" y="106" width="80" height="24" rx="4" fill="var(--c-surface0)" stroke="var(--c-yellow)" strokeWidth="1"/>
-  <text x="522" y="122" textAnchor="middle" fill="var(--c-yellow)" fontSize="11">digest_A</text>
-
-  {/* data → hash → digest_B */}
-  <rect x="390" y="140" width="60" height="24" rx="4" fill="var(--c-surface0)" stroke="var(--c-surface1)" strokeWidth="1"/>
-  <text x="420" y="156" textAnchor="middle" fill="var(--c-text)" fontSize="11">data</text>
-  <line x1="450" y1="152" x2="468" y2="152" stroke="var(--c-overlay0)" strokeWidth="1.2" markerEnd="url(#ds1)"/>
-  <rect x="470" y="140" width="55" height="24" rx="4" fill="var(--c-surface1)"/>
-  <text x="497" y="156" textAnchor="middle" fill="var(--c-text)" fontSize="11">Hash()</text>
-  <line x1="525" y1="152" x2="543" y2="152" stroke="var(--c-overlay0)" strokeWidth="1.2" markerEnd="url(#ds1)"/>
-  <rect x="545" y="140" width="60" height="24" rx="4" fill="var(--c-surface0)" stroke="var(--c-yellow)" strokeWidth="1"/>
-  <text x="575" y="156" textAnchor="middle" fill="var(--c-yellow)" fontSize="11">digest_B</text>
-
-  {/* compare */}
-  <line x1="522" y1="130" x2="522" y2="184" stroke="var(--c-overlay0)" strokeWidth="1" strokeDasharray="3,2"/>
-  <line x1="575" y1="164" x2="575" y2="184" stroke="var(--c-overlay0)" strokeWidth="1" strokeDasharray="3,2"/>
-  <line x1="515" y1="184" x2="582" y2="184" stroke="var(--c-overlay0)" strokeWidth="1"/>
-  <line x1="548" y1="184" x2="548" y2="196" stroke="var(--c-overlay0)" strokeWidth="1.2" markerEnd="url(#ds1)"/>
-  <rect x="490" y="198" width="116" height="28" rx="4" fill="var(--c-surface0)" stroke="var(--c-green)" strokeWidth="1.2"/>
-  <text x="548" y="212" textAnchor="middle" fill="var(--c-green)" fontSize="11">digest_A == digest_B</text>
-  <text x="548" y="222" textAnchor="middle" fill="var(--c-green)" fontSize="9">✓ 验签通过</text>
-
-  {/* bottom note */}
-  <rect x="60" y="258" width="500" height="16" rx="3" fill="var(--c-surface0)"/>
-  <text x="310" y="270" textAnchor="middle" fill="var(--c-overlay0)" fontSize="10">签名 = Hash(data) 用私钥加密；验签 = 用公钥解签名，与本地 Hash 对比</text>
-
-  <defs>
-    <marker id="ds1" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="var(--c-overlay0)"/></marker>
-    <marker id="ds2" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="var(--c-blue)"/></marker>
-  </defs>
-</svg>
+<Mermaid chart={`flowchart LR
+    subgraph Bob签名
+        direction TB
+        d1[data] --> h1[Hash\nSHA-256] --> dg[digest]
+        dg --> enc[Encrypt\npriv_Bob] --> sig[signature]
+    end
+    subgraph Alice验签
+        direction TB
+        sig2[signature] --> dec[Decrypt\npub_Bob] --> da[digest_A]
+        d2[data] --> h2[Hash\nSHA-256] --> db[digest_B]
+        da & db --> cmp{A == B?}
+        cmp -->|✓| ok[验签通过]
+    end
+    Bob签名 -->|发送 data + signature| Alice验签
+`} />
 
 **为什么无法伪造？**
 
@@ -387,66 +174,16 @@ C 想与 S 通信，需要先获得 S 的公钥。若 S 直接在网络上发送
 
 系统/浏览器出厂时预装了受信任 CA 的根证书（含其公钥），从而终结了信任循环——CA 公钥的可信性由操作系统/浏览器厂商背书。
 
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 300" style={{display:'block',margin:'1.5rem auto',fontFamily:'monospace',fontSize:'12px'}}>
-  <rect width="620" height="300" fill="var(--c-base)" rx="6"/>
-  <rect width="620" height="24" fill="var(--c-mantle)" rx="6"/>
-  <rect y="18" width="620" height="6" fill="var(--c-mantle)"/>
-  <circle cx="16" cy="12" r="4" fill="var(--c-red)" opacity="0.7"/>
-  <circle cx="30" cy="12" r="4" fill="var(--c-yellow)" opacity="0.7"/>
-  <circle cx="44" cy="12" r="4" fill="var(--c-green)" opacity="0.7"/>
-  <text x="310" y="16" textAnchor="middle" fill="var(--c-subtext0)" fontSize="11">CA 证书链与信任根</text>
+<Mermaid chart={`sequenceDiagram
+    participant B as Bob (Server)
+    participant CA as CA
+    participant A as Alice (Client)
 
-  {/* CA */}
-  <rect x="230" y="36" width="160" height="52" rx="4" fill="var(--c-surface0)" stroke="var(--c-yellow)" strokeWidth="1.5"/>
-  <text x="310" y="56" textAnchor="middle" fill="var(--c-yellow)" fontSize="13" fontWeight="bold">CA</text>
-  <text x="310" y="72" textAnchor="middle" fill="var(--c-subtext0)" fontSize="10">priv_CA / pub_CA</text>
-  <text x="310" y="84" textAnchor="middle" fill="var(--c-overlay0)" fontSize="9">预装于系统 / 浏览器</text>
-
-  {/* Bob */}
-  <rect x="20" y="150" width="130" height="52" rx="4" fill="var(--c-surface0)" stroke="var(--c-mauve)" strokeWidth="1"/>
-  <text x="85" y="170" textAnchor="middle" fill="var(--c-mauve)" fontSize="12" fontWeight="bold">Bob (Server)</text>
-  <text x="85" y="186" textAnchor="middle" fill="var(--c-subtext0)" fontSize="10">pub_Bob / priv_Bob</text>
-  <text x="85" y="198" textAnchor="middle" fill="var(--c-overlay0)" fontSize="9">申请证书</text>
-
-  {/* Alice */}
-  <rect x="470" y="150" width="130" height="52" rx="4" fill="var(--c-surface0)" stroke="var(--c-blue)" strokeWidth="1"/>
-  <text x="535" y="170" textAnchor="middle" fill="var(--c-blue)" fontSize="12" fontWeight="bold">Alice (Client)</text>
-  <text x="535" y="186" textAnchor="middle" fill="var(--c-subtext0)" fontSize="10">持有 pub_CA（预装）</text>
-  <text x="535" y="198" textAnchor="middle" fill="var(--c-overlay0)" fontSize="9">验证证书</text>
-
-  {/* Bob → CA: apply */}
-  <line x1="148" y1="158" x2="228" y2="100" stroke="var(--c-mauve)" strokeWidth="1.2" strokeDasharray="4,2" markerEnd="url(#ca1)"/>
-  <text x="168" y="128" fill="var(--c-overlay0)" fontSize="9">① 提交 pub_Bob + 身份</text>
-
-  {/* CA → Bob: cert */}
-  <line x1="230" y1="108" x2="152" y2="162" stroke="var(--c-yellow)" strokeWidth="1.5" markerEnd="url(#ca2)"/>
-  <text x="142" y="142" fill="var(--c-yellow)" fontSize="9">② 签发证书</text>
-
-  {/* certificate box */}
-  <rect x="180" y="218" width="260" height="44" rx="4" fill="var(--c-crust)" stroke="var(--c-yellow)" strokeWidth="1"/>
-  <text x="310" y="237" textAnchor="middle" fill="var(--c-yellow)" fontSize="11" fontWeight="bold">Certificate</text>
-  <text x="310" y="252" textAnchor="middle" fill="var(--c-subtext0)" fontSize="10">[ pub_Bob | Sign(priv_CA, Hash(pub_Bob+info)) ]</text>
-
-  {/* Bob → Alice: send cert */}
-  <line x1="150" y1="195" x2="310" y2="218" stroke="var(--c-mauve)" strokeWidth="1.2" markerEnd="url(#ca3)"/>
-  <line x1="310" y1="218" x2="468" y2="195" stroke="var(--c-blue)" strokeWidth="1.2" markerEnd="url(#ca4)"/>
-  <text x="310" y="213" textAnchor="middle" fill="var(--c-overlay0)" fontSize="9">③ 发送证书</text>
-
-  {/* Alice verify */}
-  <line x1="392" y1="100" x2="470" y2="155" stroke="var(--c-yellow)" strokeWidth="1.2" strokeDasharray="3,2" markerEnd="url(#ca4)"/>
-  <text x="462" y="128" textAnchor="end" fill="var(--c-overlay0)" fontSize="9">④ pub_CA 验签</text>
-
-  {/* trust root note */}
-  <rect x="60" y="278" width="500" height="16" rx="3" fill="var(--c-surface0)"/>
-  <text x="310" y="290" textAnchor="middle" fill="var(--c-green)" fontSize="10">✓ 信任根：pub_CA 由 OS/浏览器厂商预装，终结信任循环</text>
-
-  <defs>
-    <marker id="ca1" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="var(--c-mauve)"/></marker>
-    <marker id="ca2" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="var(--c-yellow)"/></marker>
-    <marker id="ca3" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="var(--c-mauve)"/></marker>
-    <marker id="ca4" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="var(--c-blue)"/></marker>
-  </defs>
-</svg>
+    B->>CA: ① 提交 pub_Bob + 身份信息
+    CA->>B: ② 签发证书: pub_Bob + Sign(priv_CA, Hash)
+    B->>A: ③ 发送证书
+    Note over A: ④ 用预装的 pub_CA 验签\n✓ 信任根：pub_CA 由 OS/浏览器厂商预装
+`} />
 
 ### SSL/TLS 完整握手
 
@@ -459,78 +196,24 @@ C 想与 S 通信，需要先获得 S 的公钥。若 S 直接在网络上发送
 3. 接收方用 RSA 私钥解密，得到 AES Key
 4. 双方此后用 AES Key 进行所有数据的加解密传输
 
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 370" style={{display:'block',margin:'1.5rem auto',fontFamily:'monospace',fontSize:'12px'}}>
-  <rect width="620" height="370" fill="var(--c-base)" rx="6"/>
-  <rect width="620" height="24" fill="var(--c-mantle)" rx="6"/>
-  <rect y="18" width="620" height="6" fill="var(--c-mantle)"/>
-  <circle cx="16" cy="12" r="4" fill="var(--c-red)" opacity="0.7"/>
-  <circle cx="30" cy="12" r="4" fill="var(--c-yellow)" opacity="0.7"/>
-  <circle cx="44" cy="12" r="4" fill="var(--c-green)" opacity="0.7"/>
-  <text x="310" y="16" textAnchor="middle" fill="var(--c-subtext0)" fontSize="11">TLS 握手：混合加密全流程</text>
+<Mermaid chart={`sequenceDiagram
+    participant C as Client
+    participant S as Server
 
-  {/* columns */}
-  <text x="110" y="46" textAnchor="middle" fill="var(--c-blue)" fontSize="12" fontWeight="bold">Client</text>
-  <line x1="110" y1="50" x2="110" y2="355" stroke="var(--c-surface1)" strokeWidth="1" strokeDasharray="4,3"/>
-  <text x="510" y="46" textAnchor="middle" fill="var(--c-mauve)" fontSize="12" fontWeight="bold">Server</text>
-  <line x1="510" y1="50" x2="510" y2="355" stroke="var(--c-surface1)" strokeWidth="1" strokeDasharray="4,3"/>
+    Note over C,S: Phase 1 · 身份验证
+    C->>S: ClientHello（支持的加密套件）
+    S->>C: ServerHello + Certificate（pub_Server）
+    Note over C: ✓ 用 pub_CA 验证证书
 
-  {/* phase labels */}
-  <rect x="240" y="52" width="140" height="16" rx="3" fill="var(--c-surface0)"/>
-  <text x="310" y="63" textAnchor="middle" fill="var(--c-overlay0)" fontSize="9">Phase 1 · 身份验证</text>
+    Note over C,S: Phase 2 · 密钥交换
+    Note over C: 生成随机 AES Key
+    C->>S: Encrypt(pub_Server, AES_Key)
+    Note over S: priv_Server 解密，得 AES Key
 
-  {/* 1. ClientHello */}
-  <line x1="112" y1="80" x2="506" y2="80" stroke="var(--c-blue)" strokeWidth="1.3" markerEnd="url(#tl1)"/>
-  <text x="310" y="76" textAnchor="middle" fill="var(--c-blue)" fontSize="10">ClientHello  (支持的加密套件)</text>
-
-  {/* 2. ServerHello + Cert */}
-  <line x1="508" y1="100" x2="114" y2="100" stroke="var(--c-mauve)" strokeWidth="1.3" markerEnd="url(#tl2)"/>
-  <text x="310" y="96" textAnchor="middle" fill="var(--c-mauve)" fontSize="10">ServerHello + Certificate (pub_Server)</text>
-
-  {/* 3. verify cert */}
-  <rect x="20" y="108" width="175" height="22" rx="3" fill="var(--c-surface0)"/>
-  <text x="107" y="122" textAnchor="middle" fill="var(--c-green)" fontSize="10">✓ 用 pub_CA 验证证书</text>
-
-  {/* phase 2 */}
-  <rect x="240" y="138" width="140" height="16" rx="3" fill="var(--c-surface0)"/>
-  <text x="310" y="149" textAnchor="middle" fill="var(--c-overlay0)" fontSize="9">Phase 2 · 密钥交换</text>
-
-  {/* 4. gen AES key */}
-  <rect x="20" y="158" width="175" height="22" rx="3" fill="var(--c-surface0)"/>
-  <text x="107" y="172" textAnchor="middle" fill="var(--c-yellow)" fontSize="10">生成随机 AES Key</text>
-
-  {/* 5. send enc AES key */}
-  <line x1="112" y1="192" x2="506" y2="192" stroke="var(--c-yellow)" strokeWidth="1.3" markerEnd="url(#tl3)"/>
-  <text x="310" y="188" textAnchor="middle" fill="var(--c-yellow)" fontSize="10">Encrypt(pub_Server, AES_Key)  ──────►</text>
-
-  {/* 6. server decrypt */}
-  <rect x="425" y="200" width="175" height="22" rx="3" fill="var(--c-surface0)"/>
-  <text x="512" y="214" textAnchor="middle" fill="var(--c-yellow)" fontSize="10">priv_Server 解密，得 AES Key</text>
-
-  {/* phase 3 */}
-  <rect x="240" y="232" width="140" height="16" rx="3" fill="var(--c-surface0)"/>
-  <text x="310" y="243" textAnchor="middle" fill="var(--c-overlay0)" fontSize="9">Phase 3 · 对称加密传输</text>
-
-  {/* 7. data */}
-  <line x1="112" y1="260" x2="506" y2="260" stroke="var(--c-green)" strokeWidth="1.5" markerEnd="url(#tl4)"/>
-  <text x="310" y="256" textAnchor="middle" fill="var(--c-green)" fontSize="10">AES_Encrypt(AES_Key, HTTP data)  ──►</text>
-
-  <line x1="508" y1="278" x2="114" y2="278" stroke="var(--c-green)" strokeWidth="1.5" markerEnd="url(#tl5)"/>
-  <text x="310" y="274" textAnchor="middle" fill="var(--c-green)" fontSize="10">◄──  AES_Encrypt(AES_Key, response)</text>
-
-  {/* summary box */}
-  <rect x="60" y="302" width="500" height="52" rx="4" fill="var(--c-surface0)" stroke="var(--c-split)" strokeWidth="1"/>
-  <text x="310" y="320" textAnchor="middle" fill="var(--c-subtext0)" fontSize="10">RSA（慢）：仅用于交换 AES Key，一次性</text>
-  <text x="310" y="336" textAnchor="middle" fill="var(--c-green)" fontSize="10">AES（快）：用于后续所有数据传输，高效安全</text>
-  <text x="310" y="350" textAnchor="middle" fill="var(--c-overlay0)" fontSize="9">两者结合 = 混合加密，兼顾安全性与性能</text>
-
-  <defs>
-    <marker id="tl1" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="var(--c-blue)"/></marker>
-    <marker id="tl2" markerWidth="6" markerHeight="6" refX="1" refY="3" orient="auto"><path d="M6,0 L0,3 L6,6 Z" fill="var(--c-mauve)"/></marker>
-    <marker id="tl3" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="var(--c-yellow)"/></marker>
-    <marker id="tl4" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="var(--c-green)"/></marker>
-    <marker id="tl5" markerWidth="6" markerHeight="6" refX="1" refY="3" orient="auto"><path d="M6,0 L0,3 L6,6 Z" fill="var(--c-green)"/></marker>
-  </defs>
-</svg>
+    Note over C,S: Phase 3 · 对称加密传输
+    C->>S: AES_Encrypt(AES_Key, HTTP data)
+    S->>C: AES_Encrypt(AES_Key, response)
+`} />
 
 私钥签名在此过程中用于验证身份合法性（验签），防止中间人冒充服务器。
 

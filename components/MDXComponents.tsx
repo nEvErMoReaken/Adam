@@ -10,6 +10,7 @@ import { Admonition } from './Admonition'
 import { Tabs, TabItem } from './Tabs'
 import TrackedPre from './TrackedPre'
 import { ChangelogCard } from './ChangelogCard'
+import { Mermaid } from './Mermaid'
 
 export const components: MDXComponents = {
   Image,
@@ -24,4 +25,5 @@ export const components: MDXComponents = {
   Tabs,
   TabItem,
   ChangelogCard,
+  Mermaid,
 }
