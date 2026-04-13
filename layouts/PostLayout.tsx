@@ -34,7 +34,7 @@ interface LayoutProps {
 }
 
 export default function PostLayout({ content, authorDetails, next, prev, children }: LayoutProps) {
-  const { filePath, path, slug, date, title, tags } = content
+  const { filePath, path, slug, date, title, tags, readingTime } = content
   const basePath = path.split('/')[0]
   const router = useRouter()
   const { t } = useLang()
@@ -64,13 +64,16 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
         {/* 主内容 pane */}
         <Pane title={title} index={0}>
           <article className="p-6">
-            {/* 日期 */}
-            <p className="mb-6 font-mono text-xs text-[var(--c-subtext0)]">
-              <time dateTime={date}>
-                {new Date(date).toLocaleDateString(siteMetadata.locale, postDateTemplate)}
-              </time>
+            {/* 日期 / 阅读时长 / PV */}
+            <div className="mb-6 flex items-center justify-between font-mono text-xs text-[var(--c-subtext0)]">
+              <span className="flex items-center gap-3">
+                <time dateTime={date}>
+                  {new Date(date).toLocaleDateString(siteMetadata.locale, postDateTemplate)}
+                </time>
+                <span style={{ color: 'var(--c-overlay0)' }}>{readingTime.text}</span>
+              </span>
               <PageViews slug={`/blog/${slug}/`} />
-            </p>
+            </div>
 
             {/* 文章内容 */}
             <div className="prose dark:prose-invert max-w-none">{children}</div>
