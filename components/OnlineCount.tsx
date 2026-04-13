@@ -9,7 +9,7 @@ export default function OnlineCount() {
     const fetch_ = () =>
       fetch('/api/umami?type=active')
         .then((r) => r.json())
-        .then((d) => setCount(d.count))
+        .then((d) => setCount(d.count ?? null))
         .catch(() => {})
 
     fetch_()
@@ -17,7 +17,7 @@ export default function OnlineCount() {
     return () => clearInterval(id)
   }, [])
 
-  if (count === null) return null
+  if (!count) return null
 
   return (
     <span
