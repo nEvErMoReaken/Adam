@@ -13,6 +13,7 @@ import siteMetadata from '@/data/siteMetadata'
 import ScrollTopAndComment from '@/components/ScrollTopAndComment'
 import { Pane, PaneLayout } from '@/components/PaneLayout'
 import { useLang } from '@/lib/i18n'
+import PageViews from '@/components/PageViews'
 
 const editUrl = (path) => `${siteMetadata.siteRepo}/blob/main/data/${path}`
 const discussUrl = (path) =>
@@ -68,6 +69,7 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
               <time dateTime={date}>
                 {new Date(date).toLocaleDateString(siteMetadata.locale, postDateTemplate)}
               </time>
+              <PageViews slug={`/blog/${slug}/`} />
             </p>
 
             {/* 文章内容 */}

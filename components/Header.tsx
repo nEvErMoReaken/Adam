@@ -6,6 +6,7 @@ import Link from './Link'
 import headerNavLinks from '@/data/headerNavLinks'
 import SearchButton from './SearchButton'
 import { useLang } from '@/lib/i18n'
+import OnlineCount from './OnlineCount'
 
 export default function Header() {
   const pathname = usePathname()
@@ -35,6 +36,7 @@ export default function Header() {
         ))}
         <span className="ml-auto flex items-center gap-2 pr-2">
           <SearchButton />
+          <OnlineCount />
           <button
             type="button"
             aria-label={t.toggleLang}
