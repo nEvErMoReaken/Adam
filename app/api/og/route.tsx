@@ -131,18 +131,14 @@ export async function GET(req: NextRequest) {
           style={{
             display: 'flex',
             alignItems: 'center',
-            gap: '24px',
+            gap: '16px',
             color: MOCHA.subtext0,
             fontSize: '15px',
           }}
         >
-          {date && <span>{date}</span>}
-          {readingTime && (
-            <>
-              <span style={{ color: MOCHA.overlay0 }}>·</span>
-              <span>{readingTime}</span>
-            </>
-          )}
+          {date && <span style={{ display: 'flex' }}>{date}</span>}
+          {date && readingTime && <span style={{ display: 'flex', color: MOCHA.overlay0 }}>·</span>}
+          {readingTime && <span style={{ display: 'flex' }}>{readingTime}</span>}
         </div>
       </div>
 
