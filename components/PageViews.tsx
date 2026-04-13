@@ -8,7 +8,7 @@ export default function PageViews({ slug }: { slug: string }) {
   useEffect(() => {
     fetch(`/api/umami?type=pageviews&slug=${encodeURIComponent(slug)}`)
       .then(r => r.json())
-      .then(d => setViews(d.views))
+      .then(d => setViews(d.views ?? null))
       .catch(() => {})
   }, [slug])
 
