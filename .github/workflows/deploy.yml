@@ -41,3 +41,4 @@ jobs:
               -e NEXT_UMAMI_ID=${{ secrets.NEXT_UMAMI_ID }} \
               jimmy-blog:latest
             docker image prune -f
+            docker builder prune --keep-storage 2gb -f
