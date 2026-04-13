@@ -107,90 +107,92 @@ function Heatmap({ dates }: { dates: DatesData }) {
   })
 
   return (
-    <div ref={ref} className="relative select-none">
-      {/* month row */}
-      <div className="mb-[3px] flex" style={{ paddingLeft: 18 }}>
-        {weeks.map((_, wi) => {
-          const ml = monthLabels.find((m) => m.col === wi)
-          return (
-            <div
-              key={wi}
-              style={{ width: CELL + GAP, flexShrink: 0, fontSize: 9 }}
-              className="font-mono leading-none text-[var(--c-overlay0)]"
-            >
-              {ml?.label ?? ''}
-            </div>
-          )
-        })}
-      </div>
+    <div className="overflow-x-auto">
+      <div ref={ref} className="relative select-none" style={{ minWidth: 'max-content' }}>
+        {/* month row */}
+        <div className="mb-[3px] flex" style={{ paddingLeft: 18 }}>
+          {weeks.map((_, wi) => {
+            const ml = monthLabels.find((m) => m.col === wi)
+            return (
+              <div
+                key={wi}
+                style={{ width: CELL + GAP, flexShrink: 0, fontSize: 9 }}
+                className="font-mono leading-none text-[var(--c-overlay0)]"
+              >
+                {ml?.label ?? ''}
+              </div>
+            )
+          })}
+        </div>
 
-      <div className="flex" style={{ gap: GAP }}>
-        {/* day-of-week col */}
-        <div className="flex shrink-0 flex-col" style={{ gap: GAP, marginRight: 2 }}>
-          {DOW_LABELS.map((label, i) => (
-            <div
-              key={i}
-              style={{ width: 12, height: CELL, fontSize: 9, lineHeight: 1 }}
-              className="flex items-center justify-end font-mono text-[var(--c-overlay0)]"
-            >
-              {label}
+        <div className="flex" style={{ gap: GAP }}>
+          {/* day-of-week col */}
+          <div className="flex shrink-0 flex-col" style={{ gap: GAP, marginRight: 2 }}>
+            {DOW_LABELS.map((label, i) => (
+              <div
+                key={i}
+                style={{ width: 12, height: CELL, fontSize: 9, lineHeight: 1 }}
+                className="flex items-center justify-end font-mono text-[var(--c-overlay0)]"
+              >
+                {label}
+              </div>
+            ))}
+          </div>
+
+          {/* week columns */}
+          {weeks.map((week, wi) => (
+            <div key={wi} className="flex flex-col" style={{ gap: GAP }}>
+              {week.map((day, di) => {
+                const intensity = xpToIntensity(day.xp, maxXP)
+                const isFuture = day.date > todayS
+                return (
+                  <div
+                    key={di}
+                    style={{
+                      width: CELL,
+                      height: CELL,
+                      borderRadius: 2,
+                      backgroundColor: isFuture ? 'transparent' : CELL_BG[intensity],
+                      transition: 'opacity 0.12s',
+                      opacity: isFuture ? 0 : 1,
+                    }}
+                    onMouseEnter={(e) => {
+                      if (isFuture || day.xp === 0) return
+                      const cr = ref.current?.getBoundingClientRect()
+                      const el = (e.target as HTMLElement).getBoundingClientRect()
+                      setTip({
+                        x: el.left - (cr?.left ?? 0) + CELL / 2,
+                        y: el.top - (cr?.top ?? 0) - 6,
+                        text: `${day.date}  ${formatXP(day.xp)} xp`,
+                      })
+                    }}
+                    onMouseLeave={() => setTip(null)}
+                  />
+                )
+              })}
             </div>
           ))}
         </div>
 
-        {/* week columns */}
-        {weeks.map((week, wi) => (
-          <div key={wi} className="flex flex-col" style={{ gap: GAP }}>
-            {week.map((day, di) => {
-              const intensity = xpToIntensity(day.xp, maxXP)
-              const isFuture = day.date > todayS
-              return (
-                <div
-                  key={di}
-                  style={{
-                    width: CELL,
-                    height: CELL,
-                    borderRadius: 2,
-                    backgroundColor: isFuture ? 'transparent' : CELL_BG[intensity],
-                    transition: 'opacity 0.12s',
-                    opacity: isFuture ? 0 : 1,
-                  }}
-                  onMouseEnter={(e) => {
-                    if (isFuture || day.xp === 0) return
-                    const cr = ref.current?.getBoundingClientRect()
-                    const el = (e.target as HTMLElement).getBoundingClientRect()
-                    setTip({
-                      x: el.left - (cr?.left ?? 0) + CELL / 2,
-                      y: el.top - (cr?.top ?? 0) - 6,
-                      text: `${day.date}  ${formatXP(day.xp)} xp`,
-                    })
-                  }}
-                  onMouseLeave={() => setTip(null)}
-                />
-              )
-            })}
+        {tip && (
+          <div
+            className="pointer-events-none absolute z-20 font-mono whitespace-nowrap"
+            style={{
+              left: tip.x,
+              top: tip.y,
+              transform: 'translate(-50%, -100%)',
+              fontSize: 10,
+              padding: '2px 6px',
+              borderRadius: 3,
+              border: '1px solid var(--c-split)',
+              backgroundColor: 'var(--c-crust)',
+              color: 'var(--c-text)',
+            }}
+          >
+            {tip.text}
           </div>
-        ))}
+        )}
       </div>
-
-      {tip && (
-        <div
-          className="pointer-events-none absolute z-20 font-mono whitespace-nowrap"
-          style={{
-            left: tip.x,
-            top: tip.y,
-            transform: 'translate(-50%, -100%)',
-            fontSize: 10,
-            padding: '2px 6px',
-            borderRadius: 3,
-            border: '1px solid var(--c-split)',
-            backgroundColor: 'var(--c-crust)',
-            color: 'var(--c-text)',
-          }}
-        >
-          {tip.text}
-        </div>
-      )}
     </div>
   )
 }

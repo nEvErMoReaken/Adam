@@ -104,10 +104,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="bg-[var(--c-base)] pl-[calc(100vw-100%)] text-[var(--c-text)] antialiased">
         <ThemeProviders>
           <Analytics analyticsConfig={siteMetadata.analytics as AnalyticsConfig} />
-          <div className="flex h-dvh flex-col overflow-hidden">
+          <div className="flex flex-col overflow-hidden lg:h-dvh">
             <SearchProvider searchConfig={siteMetadata.search as SearchConfig}>
               <Header />
-              <main className="min-h-0 flex-1 overflow-y-auto">{children}</main>
+              <main className="flex-1 overflow-y-auto lg:min-h-0">{children}</main>
               <Footer />
             </SearchProvider>
             <WalkingPet />

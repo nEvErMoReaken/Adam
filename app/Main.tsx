@@ -48,7 +48,7 @@ function PaneShell({
   return (
     // eslint-disable-next-line jsx-a11y/no-static-element-interactions
     <section
-      className={`flex min-h-0 flex-col bg-[var(--c-base)] transition-colors ${className}`}
+      className={`flex flex-col bg-[var(--c-base)] transition-colors lg:min-h-0 ${className}`}
       style={{
         border: active ? '1px solid var(--c-blue)' : '1px solid transparent',
         boxShadow: active ? 'inset 0 0 0 1px var(--c-blue)' : undefined,
@@ -92,9 +92,9 @@ export default function Home({ posts }) {
 
   return (
     <FocusCtx.Provider value={{ focused, setFocused }}>
-      <div className="h-full">
+      <div className="lg:h-full">
         <div
-          className="grid h-full grid-cols-1 gap-px lg:grid-cols-[minmax(0,1.4fr)_minmax(20rem,1fr)]"
+          className="grid grid-cols-1 gap-px lg:h-full lg:grid-cols-[minmax(0,1.4fr)_minmax(20rem,1fr)]"
           style={{ backgroundColor: 'var(--c-split)' }}
         >
           {/* ── pane 0: whoami ── */}
@@ -213,7 +213,7 @@ export default function Home({ posts }) {
 
           {/* ── right column: two stacked panes ── */}
           <div
-            className="flex min-h-0 flex-col gap-px"
+            className="flex flex-col gap-px lg:min-h-0"
             style={{ backgroundColor: 'var(--c-split)' }}
           >
             {/* pane 1: quickstart */}
