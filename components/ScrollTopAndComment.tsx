@@ -7,24 +7,30 @@ const ScrollTopAndComment = () => {
   const [show, setShow] = useState(false)
 
   useEffect(() => {
-    const handleWindowScroll = () => {
-      if (window.scrollY > 50) setShow(true)
-      else setShow(false)
+    const main = document.querySelector('main')
+    const handleScroll = () => {
+      const scrollTop = (main?.scrollTop ?? 0) + window.scrollY
+      setShow(scrollTop > 50)
     }
-
-    window.addEventListener('scroll', handleWindowScroll)
-    return () => window.removeEventListener('scroll', handleWindowScroll)
+    window.addEventListener('scroll', handleScroll)
+    main?.addEventListener('scroll', handleScroll)
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+      main?.removeEventListener('scroll', handleScroll)
+    }
   }, [])
 
   const handleScrollTop = () => {
-    window.scrollTo({ top: 0 })
+    const main = document.querySelector('main')
+    if (main && main.scrollTop > 0) main.scrollTo({ top: 0, behavior: 'smooth' })
+    else window.scrollTo({ top: 0, behavior: 'smooth' })
   }
   const handleScrollToComment = () => {
-    document.getElementById('comment')?.scrollIntoView()
+    document.getElementById('comment')?.scrollIntoView({ behavior: 'smooth' })
   }
   return (
     <div
-      className={`fixed right-4 bottom-4 flex flex-col gap-3 transition-opacity md:right-8 md:bottom-8 ${show ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'}`}
+      className={`fixed right-4 bottom-4 z-50 flex flex-col gap-3 transition-opacity md:right-8 md:bottom-8 ${show ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'}`}
     >
       {siteMetadata.comments?.provider && (
         <button
