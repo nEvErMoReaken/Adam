@@ -39,15 +39,14 @@ export async function generateMetadata(props: {
   const publishedAt = new Date(post.date).toISOString()
   const modifiedAt = new Date(post.lastmod || post.date).toISOString()
   const authors = authorDetails.map((author) => author.name)
-  let imageList = [siteMetadata.socialBanner]
-  if (post.images) {
-    imageList = typeof post.images === 'string' ? [post.images] : post.images
-  }
-  const ogImages = imageList.map((img) => {
-    return {
-      url: img && img.includes('http') ? img : siteMetadata.siteUrl + img,
-    }
-  })
+
+  const ogUrl = new URL(`${siteMetadata.siteUrl}/api/og`)
+  ogUrl.searchParams.set('title', post.title)
+  ogUrl.searchParams.set('date', new Date(post.date).toLocaleDateString('zh-CN'))
+  if (post.readingTime?.text) ogUrl.searchParams.set('readingTime', post.readingTime.text)
+  if (post.tags?.length) ogUrl.searchParams.set('tags', post.tags.slice(0, 4).join(','))
+
+  const ogImages = [{ url: ogUrl.toString() }]
 
   return {
     title: post.title,
@@ -68,7 +67,7 @@ export async function generateMetadata(props: {
       card: 'summary_large_image',
       title: post.title,
       description: post.summary,
-      images: imageList,
+      images: [ogUrl.toString()],
     },
   }
 }
