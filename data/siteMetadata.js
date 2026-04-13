@@ -21,7 +21,7 @@ const siteMetadata = {
     // supports Plausible, Simple Analytics, Umami, Posthog or Google Analytics.
     umamiAnalytics: {
       umamiWebsiteId: '88651a0c-381a-483e-88d0-4ad165f084b4',
-      src: 'https://cloud.umami.is/script.js',
+      src: 'https://umami.sleeprhino.com/script.js',
     },
     // plausibleAnalytics: {
     //   plausibleDataDomain: '', // e.g. tailwind-nextjs-starter-blog.vercel.app
