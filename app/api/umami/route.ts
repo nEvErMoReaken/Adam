@@ -38,14 +38,14 @@ export async function GET(req: NextRequest) {
   try {
     if (type === 'active') {
       const data = await umamiGet('/active')
-      return NextResponse.json({ count: data.x ?? 0 })
+      return NextResponse.json({ count: data.visitors ?? 0 })
     }
 
     if (type === 'pageviews' && slug) {
       const now = Date.now()
       const start = new Date('2020-01-01').getTime()
       const data = await umamiGet(
-        `/metrics?type=url&startAt=${start}&endAt=${now}&limit=1000`
+        `/metrics?type=path&startAt=${start}&endAt=${now}`
       )
       const page = (data as { x: string; y: number }[])
         .find(d => d.x === slug || d.x === slug.replace(/\/$/, ''))
