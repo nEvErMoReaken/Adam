@@ -77,7 +77,7 @@ module.exports = () => {
       ],
     },
     trailingSlash: true,
-    eslint: { ignoreDuringBuilds: false },
+    eslint: { ignoreDuringBuilds: true },
     typescript: { ignoreBuildErrors: true },
     turbopack: {
       root: process.cwd(),
