@@ -22,7 +22,10 @@ export default function Header() {
   const activeFallback = lang === 'zh' ? '主页' : 'home'
 
   return (
-    <header className="z-50 shrink-0 border-b bg-[var(--c-mantle)]" style={{ borderColor: 'var(--c-split)' }}>
+    <header
+      className="z-50 shrink-0 border-b bg-[var(--c-mantle)]"
+      style={{ borderColor: 'var(--c-split)' }}
+    >
       {/* 桌面端 */}
       <div className="hidden h-9 items-center gap-0 overflow-x-auto px-2 md:flex">
         {headerNavLinks.map((link) => (
@@ -66,7 +69,7 @@ export default function Header() {
             type="button"
             aria-label={t.toggleLang}
             onClick={() => setLang(lang === 'zh' ? 'en' : 'zh')}
-            className="font-mono text-sm text-[var(--c-subtext0)] transition-colors hover:text-[var(--c-text)] px-2 py-1"
+            className="px-2 py-1 font-mono text-sm text-[var(--c-subtext0)] transition-colors hover:text-[var(--c-text)]"
           >
             {lang === 'zh' ? '[EN]' : '[中文]'}
           </button>

@@ -4,7 +4,7 @@ const API_BASE = 'https://iina.ai'
 const TOKEN = process.env.IINA_TOKEN ?? ''
 const USER_ID = process.env.IINA_USER_ID ?? '3'
 const PAGE_SIZE = 500
-const MAX_PAGES = 10  // cap at 5000 records
+const MAX_PAGES = 10 // cap at 5000 records
 
 interface LogItem {
   model_name: string
@@ -38,23 +38,28 @@ export async function GET() {
     const totalPages = Math.min(Math.ceil(first.total / PAGE_SIZE), MAX_PAGES)
 
     // fetch remaining pages in parallel
-    const rest = totalPages > 1
-      ? await Promise.all(
-          Array.from({ length: totalPages - 1 }, (_, i) => fetchPage(i + 2))
-        )
-      : []
+    const rest =
+      totalPages > 1
+        ? await Promise.all(Array.from({ length: totalPages - 1 }, (_, i) => fetchPage(i + 2)))
+        : []
 
-    const allItems: LogItem[] = [first.items, ...rest.map(r => r.items)].flat()
+    const allItems: LogItem[] = [first.items, ...rest.map((r) => r.items)].flat()
 
     // aggregate by model
     const map = new Map<string, ModelStat>()
     for (const item of allItems) {
       const key = item.model_name
-      const existing = map.get(key) ?? { model: key, prompt: 0, completion: 0, total: 0, requests: 0 }
-      existing.prompt     += item.prompt_tokens
+      const existing = map.get(key) ?? {
+        model: key,
+        prompt: 0,
+        completion: 0,
+        total: 0,
+        requests: 0,
+      }
+      existing.prompt += item.prompt_tokens
       existing.completion += item.completion_tokens
-      existing.total      += item.prompt_tokens + item.completion_tokens
-      existing.requests   += 1
+      existing.total += item.prompt_tokens + item.completion_tokens
+      existing.requests += 1
       map.set(key, existing)
     }
 

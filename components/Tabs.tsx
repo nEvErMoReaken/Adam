@@ -12,8 +12,8 @@ export function TabItem({ children }: TabItemProps) {
 }
 
 export function Tabs({ children }: { children: React.ReactNode }) {
-  const items = Children.toArray(children).filter(
-    (child): child is ReactElement<TabItemProps> => isValidElement(child)
+  const items = Children.toArray(children).filter((child): child is ReactElement<TabItemProps> =>
+    isValidElement(child)
   )
   const [activeIdx, setActiveIdx] = useState(0)
 
@@ -26,7 +26,7 @@ export function Tabs({ children }: { children: React.ReactNode }) {
             key={i}
             onClick={() => setActiveIdx(i)}
             className={[
-              'rounded-t px-4 sm:px-3 py-2 sm:py-1.5 text-[11px] sm:text-[10px] tracking-wide transition-colors',
+              'rounded-t px-4 py-2 text-[11px] tracking-wide transition-colors sm:px-3 sm:py-1.5 sm:text-[10px]',
               i === activeIdx
                 ? 'border-b-2 border-[var(--c-blue)] bg-[var(--c-base)] text-[var(--c-text)]'
                 : 'border-b-2 border-transparent text-[var(--c-overlay0)] hover:text-[var(--c-subtext0)]',
@@ -37,9 +37,7 @@ export function Tabs({ children }: { children: React.ReactNode }) {
         ))}
       </div>
       {/* content */}
-      <div className="bg-[var(--c-base)]">
-        {items[activeIdx]}
-      </div>
+      <div className="bg-[var(--c-base)]">{items[activeIdx]}</div>
     </div>
   )
 }

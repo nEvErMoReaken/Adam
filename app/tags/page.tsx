@@ -16,9 +16,7 @@ export default async function Page() {
     <PaneLayout cols="grid-cols-1">
       <Pane title="tags" index={0}>
         <div className="p-4 font-mono">
-          {tagKeys.length === 0 && (
-            <p className="text-xs text-[var(--c-subtext0)]">暂无标签</p>
-          )}
+          {tagKeys.length === 0 && <p className="text-xs text-[var(--c-subtext0)]">暂无标签</p>}
           <ul className="space-y-1">
             {sortedTags.map((t) => (
               <li key={t}>

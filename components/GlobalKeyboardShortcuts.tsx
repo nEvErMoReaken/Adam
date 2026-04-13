@@ -4,7 +4,11 @@ import { useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 
 const GOTO_MAP: Record<string, string> = {
-  h: '/', b: '/blog', p: '/projects', a: '/about', c: '/contact',
+  h: '/',
+  b: '/blog',
+  p: '/projects',
+  a: '/about',
+  c: '/contact',
 }
 
 export default function GlobalKeyboardShortcuts() {
@@ -25,7 +29,9 @@ export default function GlobalKeyboardShortcuts() {
       if (e.key === 'g' && !e.ctrlKey && !e.metaKey) {
         gPending.current = true
         if (timer.current) clearTimeout(timer.current)
-        timer.current = setTimeout(() => { gPending.current = false }, 1000)
+        timer.current = setTimeout(() => {
+          gPending.current = false
+        }, 1000)
         return
       }
 

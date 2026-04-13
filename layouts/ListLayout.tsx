@@ -33,21 +33,34 @@ function Pagination({ totalPages, currentPage }: PaginationProps) {
   const nextPage = currentPage + 1 <= totalPages
 
   return (
-    <nav className="flex items-center justify-between px-4 py-3 font-mono text-xs" style={{ borderTop: '1px solid var(--c-split)' }}>
+    <nav
+      className="flex items-center justify-between px-4 py-3 font-mono text-xs"
+      style={{ borderTop: '1px solid var(--c-split)' }}
+    >
       {prevPage ? (
-        <Link href={currentPage - 1 === 1 ? `/${basePath}/` : `/${basePath}/page/${currentPage - 1}`} rel="prev" className="text-[var(--c-blue)] hover:opacity-75">
+        <Link
+          href={currentPage - 1 === 1 ? `/${basePath}/` : `/${basePath}/page/${currentPage - 1}`}
+          rel="prev"
+          className="text-[var(--c-blue)] hover:opacity-75"
+        >
           {t.prevPage}
         </Link>
       ) : (
-        <span className="opacity-30 text-[var(--c-subtext0)]">{t.prevPage}</span>
+        <span className="text-[var(--c-subtext0)] opacity-30">{t.prevPage}</span>
       )}
-      <span className="text-[var(--c-subtext0)]">{currentPage} / {totalPages}</span>
+      <span className="text-[var(--c-subtext0)]">
+        {currentPage} / {totalPages}
+      </span>
       {nextPage ? (
-        <Link href={`/${basePath}/page/${currentPage + 1}`} rel="next" className="text-[var(--c-blue)] hover:opacity-75">
+        <Link
+          href={`/${basePath}/page/${currentPage + 1}`}
+          rel="next"
+          className="text-[var(--c-blue)] hover:opacity-75"
+        >
           {t.nextPage}
         </Link>
       ) : (
-        <span className="opacity-30 text-[var(--c-subtext0)]">{t.nextPage}</span>
+        <span className="text-[var(--c-subtext0)] opacity-30">{t.nextPage}</span>
       )}
     </nav>
   )
@@ -89,9 +102,7 @@ export default function ListLayout({
 
         <ul>
           {!filteredBlogPosts.length && (
-            <li className="px-4 py-3 font-mono text-xs text-[var(--c-subtext0)]">
-              {t.noResults}
-            </li>
+            <li className="px-4 py-3 font-mono text-xs text-[var(--c-subtext0)]">{t.noResults}</li>
           )}
           {displayPosts.map((post) => {
             const { path, date, title, summary, tags } = post
@@ -104,7 +115,10 @@ export default function ListLayout({
                       {formatDate(date, siteMetadata.locale)}
                     </time>
                   </div>
-                  <Link href={`/${path}`} className="font-mono text-sm font-semibold text-[var(--c-text)] hover:text-[var(--c-blue)]">
+                  <Link
+                    href={`/${path}`}
+                    className="font-mono text-sm font-semibold text-[var(--c-text)] hover:text-[var(--c-blue)]"
+                  >
                     {title}
                   </Link>
                   {summary && (
@@ -112,7 +126,9 @@ export default function ListLayout({
                   )}
                   {tags && tags.length > 0 && (
                     <div className="flex flex-wrap gap-2 pt-0.5">
-                      {tags.map((tag) => <Tag key={tag} text={tag} />)}
+                      {tags.map((tag) => (
+                        <Tag key={tag} text={tag} />
+                      ))}
                     </div>
                   )}
                 </div>

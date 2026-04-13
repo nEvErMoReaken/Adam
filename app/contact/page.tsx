@@ -8,7 +8,7 @@ export default function ContactPage() {
   return (
     <PaneLayout cols="grid-cols-1">
       <Pane title="contact" index={0}>
-        <div className="p-6 space-y-4 font-mono text-sm">
+        <div className="space-y-4 p-6 font-mono text-sm">
           <p className="text-[var(--c-subtext0)]">$ contact --list</p>
           <ul className="space-y-2">
             {siteMetadata.email && (
@@ -24,7 +24,12 @@ export default function ContactPage() {
               <li>
                 <span className="text-[var(--c-blue)]">github</span>
                 <span className="text-[var(--c-subtext0)]"> = </span>
-                <a href={siteMetadata.github} target="_blank" rel="noopener noreferrer" className="terminal-link">
+                <a
+                  href={siteMetadata.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="terminal-link"
+                >
                   {siteMetadata.github}
                 </a>
               </li>

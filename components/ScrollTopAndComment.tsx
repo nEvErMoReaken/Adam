@@ -24,13 +24,13 @@ const ScrollTopAndComment = () => {
   }
   return (
     <div
-      className={`fixed right-4 bottom-4 md:right-8 md:bottom-8 flex flex-col gap-3 transition-opacity ${show ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
+      className={`fixed right-4 bottom-4 flex flex-col gap-3 transition-opacity md:right-8 md:bottom-8 ${show ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'}`}
     >
       {siteMetadata.comments?.provider && (
         <button
           aria-label="Scroll To Comment"
           onClick={handleScrollToComment}
-          className="rounded-full bg-gray-200 p-3 md:p-2 text-gray-500 transition-all hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-400 dark:hover:bg-gray-600"
+          className="rounded-full bg-gray-200 p-3 text-gray-500 transition-all hover:bg-gray-300 md:p-2 dark:bg-gray-700 dark:text-gray-400 dark:hover:bg-gray-600"
         >
           <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
             <path
@@ -44,7 +44,7 @@ const ScrollTopAndComment = () => {
       <button
         aria-label="Scroll To Top"
         onClick={handleScrollTop}
-        className="rounded-full bg-gray-200 p-3 md:p-2 text-gray-500 transition-all hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-400 dark:hover:bg-gray-600"
+        className="rounded-full bg-gray-200 p-3 text-gray-500 transition-all hover:bg-gray-300 md:p-2 dark:bg-gray-700 dark:text-gray-400 dark:hover:bg-gray-600"
       >
         <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
           <path

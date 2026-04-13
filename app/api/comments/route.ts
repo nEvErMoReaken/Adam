@@ -74,12 +74,14 @@ export async function GET(req: NextRequest) {
     return NextResponse.json<DiscussionResult>({ id: null, url: null, totalCount: 0, comments: [] })
   }
 
-  const comments: GiscusComment[] = (discussion.comments.nodes ?? []).map((c: any) => ({
-    author: c.author?.login ?? 'ghost',
-    body: c.body as string,
-    createdAt: c.createdAt as string,
-    url: c.url as string,
-  }))
+  const comments: GiscusComment[] = (discussion.comments.nodes ?? []).map(
+    (c: { author?: { login?: string }; body: string; createdAt: string; url: string }) => ({
+      author: c.author?.login ?? 'ghost',
+      body: c.body,
+      createdAt: c.createdAt,
+      url: c.url,
+    })
+  )
 
   return NextResponse.json<DiscussionResult>({
     id: discussion.id,
@@ -94,27 +96,36 @@ export async function POST(req: NextRequest) {
   const userToken = jar.get('gh_token')?.value
   if (!userToken) return NextResponse.json({ error: 'unauthorized' }, { status: 401 })
 
-  const { slug, body } = await req.json() as { slug: string; body: string }
+  const { slug, body } = (await req.json()) as { slug: string; body: string }
   if (!slug || !body?.trim()) return NextResponse.json({ error: 'invalid' }, { status: 400 })
 
   // find existing discussion
   let discussionId: string | null = null
-  const searchJson = await ghGraphQL(SEARCH_QUERY, { q: `repo:${REPO} ${slug} in:title` }, userToken)
+  const searchJson = await ghGraphQL(
+    SEARCH_QUERY,
+    { q: `repo:${REPO} ${slug} in:title` },
+    userToken
+  )
   discussionId = searchJson?.data?.search?.nodes?.[0]?.id ?? null
 
   // create if not found
   if (!discussionId) {
-    const createJson = await ghGraphQL(CREATE_DISCUSSION, {
-      repoId: REPO_ID,
-      categoryId: CATEGORY_ID,
-      title: slug,
-      body,
-    }, userToken)
+    const createJson = await ghGraphQL(
+      CREATE_DISCUSSION,
+      {
+        repoId: REPO_ID,
+        categoryId: CATEGORY_ID,
+        title: slug,
+        body,
+      },
+      userToken
+    )
     console.error('[comments] createDiscussion response:', JSON.stringify(createJson))
     discussionId = createJson?.data?.createDiscussion?.discussion?.id ?? null
   }
 
-  if (!discussionId) return NextResponse.json({ error: 'could not create discussion' }, { status: 500 })
+  if (!discussionId)
+    return NextResponse.json({ error: 'could not create discussion' }, { status: 500 })
 
   const commentJson = await ghGraphQL(ADD_COMMENT, { discussionId, body }, userToken)
   const comment = commentJson?.data?.addDiscussionComment?.comment

@@ -36,21 +36,34 @@ function Pagination({ totalPages, currentPage }: PaginationProps) {
   const nextPage = currentPage + 1 <= totalPages
 
   return (
-    <nav className="flex items-center justify-between px-4 py-4 font-mono text-xs" style={{ borderTop: '1px solid var(--c-split)' }}>
+    <nav
+      className="flex items-center justify-between px-4 py-4 font-mono text-xs"
+      style={{ borderTop: '1px solid var(--c-split)' }}
+    >
       {prevPage ? (
-        <Link href={currentPage - 1 === 1 ? `/${basePath}/` : `/${basePath}/page/${currentPage - 1}`} rel="prev" className="py-1 px-2 text-[var(--c-blue)] hover:opacity-75">
+        <Link
+          href={currentPage - 1 === 1 ? `/${basePath}/` : `/${basePath}/page/${currentPage - 1}`}
+          rel="prev"
+          className="px-2 py-1 text-[var(--c-blue)] hover:opacity-75"
+        >
           {t.prevPage}
         </Link>
       ) : (
-        <span className="opacity-30 text-[var(--c-subtext0)]">{t.prevPage}</span>
+        <span className="text-[var(--c-subtext0)] opacity-30">{t.prevPage}</span>
       )}
-      <span className="text-[var(--c-subtext0)]">{currentPage} / {totalPages}</span>
+      <span className="text-[var(--c-subtext0)]">
+        {currentPage} / {totalPages}
+      </span>
       {nextPage ? (
-        <Link href={`/${basePath}/page/${currentPage + 1}`} rel="next" className="py-1 px-2 text-[var(--c-blue)] hover:opacity-75">
+        <Link
+          href={`/${basePath}/page/${currentPage + 1}`}
+          rel="next"
+          className="px-2 py-1 text-[var(--c-blue)] hover:opacity-75"
+        >
           {t.nextPage}
         </Link>
       ) : (
-        <span className="opacity-30 text-[var(--c-subtext0)]">{t.nextPage}</span>
+        <span className="text-[var(--c-subtext0)] opacity-30">{t.nextPage}</span>
       )}
     </nav>
   )
@@ -71,9 +84,7 @@ export default function ListLayoutWithTags({
   const sortedTags = Object.keys(tagCounts).sort((a, b) => tagCounts[b] - tagCounts[a])
   const displayPosts = initialDisplayPosts.length > 0 ? initialDisplayPosts : posts
 
-  const activeTag = sortedTags.find(
-    (tag) => decodeURI(pathname.split('/tags/')[1]) === slug(tag)
-  )
+  const activeTag = sortedTags.find((tag) => decodeURI(pathname.split('/tags/')[1]) === slug(tag))
 
   // j/k/Enter/[/] keyboard navigation
   useEffect(() => {
@@ -84,22 +95,31 @@ export default function ListLayoutWithTags({
 
       if (e.key === 'j') {
         e.preventDefault()
-        setSelectedIdx(i => Math.min(i + 1, displayPosts.length - 1))
+        setSelectedIdx((i) => Math.min(i + 1, displayPosts.length - 1))
       } else if (e.key === 'k') {
         e.preventDefault()
-        setSelectedIdx(i => Math.max(i - 1, 0))
+        setSelectedIdx((i) => Math.max(i - 1, 0))
       } else if (e.key === 'Enter' && selectedIdx >= 0) {
         e.preventDefault()
         router.push(`/${displayPosts[selectedIdx].path}`)
       } else if (e.key === '[') {
         if (pagination && pagination.currentPage > 1) {
-          const basePath = pathname.replace(/^\//, '').replace(/\/page\/\d+\/?$/, '').replace(/\/$/, '')
-          const target = pagination.currentPage - 1 === 1 ? `/${basePath}/` : `/${basePath}/page/${pagination.currentPage - 1}`
+          const basePath = pathname
+            .replace(/^\//, '')
+            .replace(/\/page\/\d+\/?$/, '')
+            .replace(/\/$/, '')
+          const target =
+            pagination.currentPage - 1 === 1
+              ? `/${basePath}/`
+              : `/${basePath}/page/${pagination.currentPage - 1}`
           router.push(target)
         }
       } else if (e.key === ']') {
         if (pagination && pagination.currentPage < pagination.totalPages) {
-          const basePath = pathname.replace(/^\//, '').replace(/\/page\/\d+\/?$/, '').replace(/\/$/, '')
+          const basePath = pathname
+            .replace(/^\//, '')
+            .replace(/\/page\/\d+\/?$/, '')
+            .replace(/\/$/, '')
           router.push(`/${basePath}/page/${pagination.currentPage + 1}`)
         }
       }
@@ -115,14 +135,15 @@ export default function ListLayoutWithTags({
         {/* 手机端标签折叠栏 */}
         <div className="lg:hidden" style={{ borderBottom: '1px solid var(--c-split)' }}>
           <button
-            onClick={() => setTagsOpen(o => !o)}
+            onClick={() => setTagsOpen((o) => !o)}
             className="flex w-full items-center justify-between px-4 py-2 font-mono text-xs transition-colors hover:bg-[var(--c-surface0)]"
             style={{ color: 'var(--c-subtext0)' }}
           >
             <span>
-              <span style={{ color: 'var(--c-blue)' }}>#</span>
-              {' '}{activeTag ?? t.tagsPane}
-              {activeTag && <span style={{ color: 'var(--c-overlay0)' }}> ({tagCounts[activeTag]})</span>}
+              <span style={{ color: 'var(--c-blue)' }}>#</span> {activeTag ?? t.tagsPane}
+              {activeTag && (
+                <span style={{ color: 'var(--c-overlay0)' }}> ({tagCounts[activeTag]})</span>
+              )}
             </span>
             <span style={{ fontSize: 12 }}>{tagsOpen ? '▲' : '▼'}</span>
           </button>
@@ -150,7 +171,8 @@ export default function ListLayoutWithTags({
                           isActive ? 'text-[var(--c-blue)]' : 'text-[var(--c-subtext0)]'
                         }`}
                       >
-                        #{tag} <span style={{ color: 'var(--c-overlay0)' }}>({tagCounts[tag]})</span>
+                        #{tag}{' '}
+                        <span style={{ color: 'var(--c-overlay0)' }}>({tagCounts[tag]})</span>
                       </Link>
                     </li>
                   )
@@ -168,7 +190,15 @@ export default function ListLayoutWithTags({
               <li key={path} className="group" style={{ borderBottom: '1px solid var(--c-split)' }}>
                 <div
                   className="flex flex-col gap-1 px-4 py-3 transition-colors hover:bg-[var(--c-surface0)]"
-                  style={isSelected ? { backgroundColor: 'var(--c-surface0)', outline: '1px solid var(--c-blue)', outlineOffset: '-1px' } : {}}
+                  style={
+                    isSelected
+                      ? {
+                          backgroundColor: 'var(--c-surface0)',
+                          outline: '1px solid var(--c-blue)',
+                          outlineOffset: '-1px',
+                        }
+                      : {}
+                  }
                 >
                   <div className="flex items-baseline gap-3 font-mono text-xs text-[var(--c-subtext0)]">
                     <span>-rw-r--r--</span>
@@ -176,8 +206,11 @@ export default function ListLayoutWithTags({
                       {formatDate(date, siteMetadata.locale)}
                     </time>
                   </div>
-                  <Link href={`/${path}`} className="font-mono text-sm font-semibold text-[var(--c-text)] hover:text-[var(--c-blue)]"
-                    onClick={() => track('article-click', { title, path })}>
+                  <Link
+                    href={`/${path}`}
+                    className="font-mono text-sm font-semibold text-[var(--c-text)] hover:text-[var(--c-blue)]"
+                    onClick={() => track('article-click', { title, path })}
+                  >
                     {title}
                   </Link>
                   {summary && (
@@ -185,7 +218,9 @@ export default function ListLayoutWithTags({
                   )}
                   {tags && tags.length > 0 && (
                     <div className="flex flex-wrap gap-2 pt-0.5">
-                      {tags.map((tag) => <Tag key={tag} text={tag} />)}
+                      {tags.map((tag) => (
+                        <Tag key={tag} text={tag} />
+                      ))}
                     </div>
                   )}
                 </div>

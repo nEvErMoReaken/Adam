@@ -44,11 +44,10 @@ export async function GET(req: NextRequest) {
     if (type === 'pageviews' && slug) {
       const now = Date.now()
       const start = new Date('2020-01-01').getTime()
-      const data = await umamiGet(
-        `/metrics?type=path&startAt=${start}&endAt=${now}`
+      const data = await umamiGet(`/metrics?type=path&startAt=${start}&endAt=${now}`)
+      const page = (data as { x: string; y: number }[]).find(
+        (d) => d.x === slug || d.x === slug.replace(/\/$/, '')
       )
-      const page = (data as { x: string; y: number }[])
-        .find(d => d.x === slug || d.x === slug.replace(/\/$/, ''))
       return NextResponse.json({ views: page?.y ?? 0 })
     }
 

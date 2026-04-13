@@ -40,7 +40,9 @@ export function useGotoKeys() {
     if (e.key === 'g' && !e.ctrlKey && !e.metaKey) {
       pending.current = true
       if (timer.current) clearTimeout(timer.current)
-      timer.current = setTimeout(() => { pending.current = false }, 1000)
+      timer.current = setTimeout(() => {
+        pending.current = false
+      }, 1000)
       return
     }
     if (!pending.current) return
@@ -48,7 +50,11 @@ export function useGotoKeys() {
     if (timer.current) clearTimeout(timer.current)
 
     const map: Record<string, string> = {
-      h: '/', b: '/blog', p: '/projects', a: '/about', c: '/contact',
+      h: '/',
+      b: '/blog',
+      p: '/projects',
+      a: '/about',
+      c: '/contact',
     }
     if (map[e.key]) {
       e.preventDefault()

@@ -6,10 +6,10 @@ import { usePathname } from 'next/navigation'
 const BLOCKS = 40
 
 export default function PixelLoader() {
-  const pathname  = usePathname()
-  const prevPath  = useRef(pathname)
-  const [active,  setActive]  = useState(false)
-  const [filled,  setFilled]  = useState(0)
+  const pathname = usePathname()
+  const prevPath = useRef(pathname)
+  const [active, setActive] = useState(false)
+  const [filled, setFilled] = useState(0)
   const [visible, setVisible] = useState(false)
   const timer = useRef<ReturnType<typeof setInterval> | undefined>(undefined)
 
@@ -53,8 +53,8 @@ export default function PixelLoader() {
   useEffect(() => {
     if (!active) return
     timer.current = setInterval(() => {
-      setFilled(f => {
-        const ceiling = BLOCKS - 6          // stall before end
+      setFilled((f) => {
+        const ceiling = BLOCKS - 6 // stall before end
         if (f >= ceiling) return ceiling
         const step = Math.random() < 0.3 ? 2 : 1
         return Math.min(f + step, ceiling)
@@ -84,8 +84,8 @@ export default function PixelLoader() {
                 background: isHead
                   ? 'var(--c-text)'
                   : isFill
-                  ? 'var(--c-blue)'
-                  : 'color-mix(in srgb, var(--c-surface0) 60%, transparent)',
+                    ? 'var(--c-blue)'
+                    : 'color-mix(in srgb, var(--c-surface0) 60%, transparent)',
                 boxShadow: isHead ? '0 0 6px var(--c-blue)' : undefined,
                 transition: isFill ? 'background 0.05s' : 'none',
               }}

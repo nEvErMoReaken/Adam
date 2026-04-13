@@ -21,12 +21,11 @@ export function Pane({ title, index, children, className = '' }: PaneProps) {
   const isFocused = focused === index
 
   return (
+    // eslint-disable-next-line jsx-a11y/no-static-element-interactions
     <section
       className={`flex min-h-0 flex-col bg-[var(--c-base)] transition-colors ${className}`}
       style={{
-        border: isFocused
-          ? '1px solid var(--c-blue)'
-          : '1px solid var(--c-split)',
+        border: isFocused ? '1px solid var(--c-blue)' : '1px solid var(--c-split)',
         boxShadow: isFocused ? 'inset 0 0 0 1px var(--c-blue)' : undefined,
         outline: 'none',
       }}
@@ -39,9 +38,7 @@ export function Pane({ title, index, children, className = '' }: PaneProps) {
         >
           {title}
         </span>
-        <span style={{ color: isFocused ? 'var(--c-blue)' : 'var(--c-subtext0)' }}>
-          {index}
-        </span>
+        <span style={{ color: isFocused ? 'var(--c-blue)' : 'var(--c-subtext0)' }}>{index}</span>
       </div>
       <div className="min-h-0 flex-1 overflow-y-auto">{children}</div>
     </section>

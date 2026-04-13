@@ -41,7 +41,10 @@ export default function PostSimple({ content, next, prev, children }: LayoutProp
               </div>
             )}
 
-            <div className="mt-8 pt-4 font-mono text-xs" style={{ borderTop: '1px solid var(--c-split)' }}>
+            <div
+              className="mt-8 pt-4 font-mono text-xs"
+              style={{ borderTop: '1px solid var(--c-split)' }}
+            >
               <div className="flex justify-between">
                 {prev && prev.path && (
                   <Link href={`/${prev.path}`} className="text-[var(--c-blue)] hover:opacity-75">
@@ -49,7 +52,10 @@ export default function PostSimple({ content, next, prev, children }: LayoutProp
                   </Link>
                 )}
                 {next && next.path && (
-                  <Link href={`/${next.path}`} className="text-[var(--c-blue)] hover:opacity-75 ml-auto">
+                  <Link
+                    href={`/${next.path}`}
+                    className="ml-auto text-[var(--c-blue)] hover:opacity-75"
+                  >
                     {next.title} →
                   </Link>
                 )}
@@ -67,4 +73,3 @@ export default function PostSimple({ content, next, prev, children }: LayoutProp
     </>
   )
 }
-

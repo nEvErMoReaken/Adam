@@ -79,8 +79,15 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
             <div className="prose dark:prose-invert max-w-none">{children}</div>
 
             {/* 底部操作链接 */}
-            <div className="mt-8 pt-4 font-mono text-xs text-[var(--c-subtext0)]" style={{ borderTop: '1px solid var(--c-split)' }}>
-              <Link href={discussUrl(path)} rel="nofollow" className="text-[var(--c-blue)] hover:opacity-75 mr-4">
+            <div
+              className="mt-8 pt-4 font-mono text-xs text-[var(--c-subtext0)]"
+              style={{ borderTop: '1px solid var(--c-split)' }}
+            >
+              <Link
+                href={discussUrl(path)}
+                rel="nofollow"
+                className="mr-4 text-[var(--c-blue)] hover:opacity-75"
+              >
                 [在 X 上讨论]
               </Link>
               <Link href={editUrl(filePath)} className="text-[var(--c-blue)] hover:opacity-75">
@@ -99,7 +106,7 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
 
         {/* 侧边 pane：作者、标签、导航 */}
         <Pane title="meta" index={1}>
-          <div className="p-4 space-y-6 font-mono text-sm">
+          <div className="space-y-6 p-4 font-mono text-sm">
             {/* 作者 */}
             {authorDetails.map((author) => (
               <div key={author.name} className="flex items-center gap-3">
@@ -119,7 +126,9 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
                       href={author.twitter}
                       className="text-xs text-[var(--c-blue)] hover:opacity-75"
                     >
-                      {author.twitter.replace('https://twitter.com/', '@').replace('https://x.com/', '@')}
+                      {author.twitter
+                        .replace('https://twitter.com/', '@')
+                        .replace('https://x.com/', '@')}
                     </Link>
                   )}
                 </div>
@@ -131,7 +140,9 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
               <div>
                 <p className="mb-1.5 text-xs text-[var(--c-subtext0)]">{t.tagsLabel}</p>
                 <div className="flex flex-wrap gap-1.5">
-                  {tags.map((tag) => <Tag key={tag} text={tag} />)}
+                  {tags.map((tag) => (
+                    <Tag key={tag} text={tag} />
+                  ))}
                 </div>
               </div>
             )}
@@ -141,7 +152,10 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
               {prev && prev.path && (
                 <div>
                   <p className="text-xs text-[var(--c-subtext0)]">{t.prevPost}</p>
-                  <Link href={`/${prev.path}`} className="text-xs text-[var(--c-blue)] hover:opacity-75 line-clamp-2">
+                  <Link
+                    href={`/${prev.path}`}
+                    className="line-clamp-2 text-xs text-[var(--c-blue)] hover:opacity-75"
+                  >
                     ← {prev.title}
                   </Link>
                 </div>
@@ -149,7 +163,10 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
               {next && next.path && (
                 <div>
                   <p className="text-xs text-[var(--c-subtext0)]">{t.nextPost}</p>
-                  <Link href={`/${next.path}`} className="text-xs text-[var(--c-blue)] hover:opacity-75 line-clamp-2">
+                  <Link
+                    href={`/${next.path}`}
+                    className="line-clamp-2 text-xs text-[var(--c-blue)] hover:opacity-75"
+                  >
                     {next.title} →
                   </Link>
                 </div>

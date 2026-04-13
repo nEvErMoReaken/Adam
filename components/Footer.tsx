@@ -7,11 +7,11 @@ import SlashCommandPanel from './SlashCommandPanel'
 
 function getLabel(pathname: string) {
   const pathMap: Record<string, string> = {
-    '/':         '~',
-    '/blog':     '~/blog',
+    '/': '~',
+    '/blog': '~/blog',
     '/projects': '~/projects',
-    '/about':    '~/about',
-    '/contact':  '~/contact',
+    '/about': '~/about',
+    '/contact': '~/contact',
   }
   if (pathname === '/') return pathMap['/']
   for (const [key, label] of Object.entries(pathMap)) {
@@ -21,8 +21,8 @@ function getLabel(pathname: string) {
 }
 
 const THEMES = [
-  { id: 'latte',    label: 'latte' },
-  { id: 'mocha',    label: 'mocha' },
+  { id: 'latte', label: 'latte' },
+  { id: 'mocha', label: 'mocha' },
   { id: 'old-hope', label: 'old hope' },
 ]
 
@@ -44,7 +44,7 @@ export default function Footer() {
   }, [])
 
   const today = mounted ? new Date().toISOString().slice(0, 10) : ''
-  const currentLabel = THEMES.find(t => t.id === theme)?.label ?? theme
+  const currentLabel = THEMES.find((t) => t.id === theme)?.label ?? theme
 
   return (
     <footer className="z-50 shrink-0 select-none">
@@ -57,8 +57,7 @@ export default function Footer() {
       >
         {/* 左：[用户名] ~/路径/ */}
         <span style={{ color: 'var(--c-subtext0)' }}>
-          <span style={{ color: 'var(--c-green)' }}>[Jimmy]</span>
-          {' '}
+          <span style={{ color: 'var(--c-green)' }}>[Jimmy]</span>{' '}
           <span style={{ color: 'var(--c-blue)' }}>{getLabel(pathname)}</span>
           <span style={{ color: 'var(--c-text)' }}>/</span>
         </span>
@@ -69,20 +68,23 @@ export default function Footer() {
             {/* 主题下拉 */}
             <div ref={ref} className="relative">
               <button
-                onClick={() => setOpen(o => !o)}
+                onClick={() => setOpen((o) => !o)}
                 className="group flex items-center gap-1 transition-colors"
                 style={{ color: 'var(--c-subtext0)' }}
               >
                 <span className="transition-colors group-hover:text-[var(--c-text)]">
                   [{currentLabel}]
                 </span>
-                <span className="transition-colors group-hover:text-[var(--c-text)]" style={{ fontSize: 9 }}>
+                <span
+                  className="transition-colors group-hover:text-[var(--c-text)]"
+                  style={{ fontSize: 9 }}
+                >
                   {open ? '▲' : '▼'}
                 </span>
               </button>
               {open && (
                 <div
-                  className="absolute bottom-full right-0 mb-1 flex flex-col"
+                  className="absolute right-0 bottom-full mb-1 flex flex-col"
                   style={{
                     backgroundColor: 'var(--c-mantle)',
                     border: '1px solid var(--c-split)',
@@ -92,7 +94,10 @@ export default function Footer() {
                   {THEMES.map(({ id, label }) => (
                     <button
                       key={id}
-                      onClick={() => { setTheme(id); setOpen(false) }}
+                      onClick={() => {
+                        setTheme(id)
+                        setOpen(false)
+                      }}
                       className="flex w-full items-center justify-between px-3 py-1.5 text-left transition-colors hover:bg-[var(--c-surface0)]"
                       style={{ color: theme === id ? 'var(--c-blue)' : 'var(--c-subtext0)' }}
                     >

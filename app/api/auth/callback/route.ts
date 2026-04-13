@@ -5,7 +5,11 @@ export async function GET(req: NextRequest) {
   const state = req.nextUrl.searchParams.get('state') ?? ''
 
   let redirect = '/'
-  try { redirect = Buffer.from(state, 'base64url').toString() } catch {}
+  try {
+    redirect = Buffer.from(state, 'base64url').toString()
+  } catch (_) {
+    // invalid base64url state, fall back to '/'
+  }
 
   const res = await fetch('https://github.com/login/oauth/access_token', {
     method: 'POST',

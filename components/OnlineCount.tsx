@@ -8,8 +8,8 @@ export default function OnlineCount() {
   useEffect(() => {
     const fetch_ = () =>
       fetch('/api/umami?type=active')
-        .then(r => r.json())
-        .then(d => setCount(d.count))
+        .then((r) => r.json())
+        .then((d) => setCount(d.count))
         .catch(() => {})
 
     fetch_()
@@ -20,10 +20,12 @@ export default function OnlineCount() {
   if (count === null) return null
 
   return (
-    <span className="flex items-center gap-1.5 font-mono text-[10px]"
-      style={{ color: 'var(--c-overlay0)' }}>
+    <span
+      className="flex items-center gap-1.5 font-mono text-[10px]"
+      style={{ color: 'var(--c-overlay0)' }}
+    >
       <span
-        className="inline-block h-1.5 w-1.5 rounded-full animate-pulse"
+        className="inline-block h-1.5 w-1.5 animate-pulse rounded-full"
         style={{ background: count > 0 ? 'var(--c-green)' : 'var(--c-overlay0)' }}
       />
       {count} online

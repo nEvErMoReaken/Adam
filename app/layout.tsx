@@ -101,9 +101,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       />
       <meta name="msapplication-TileColor" content="#000000" />
       <link rel="alternate" type="application/rss+xml" href={`${basePath}/feed.xml`} />
-      <body
-        className="bg-[var(--c-base)] pl-[calc(100vw-100%)] text-[var(--c-text)] antialiased"
-      >
+      <body className="bg-[var(--c-base)] pl-[calc(100vw-100%)] text-[var(--c-text)] antialiased">
         <ThemeProviders>
           <Analytics analyticsConfig={siteMetadata.analytics as AnalyticsConfig} />
           <div className="flex h-dvh flex-col overflow-hidden">
