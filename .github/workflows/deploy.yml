@@ -34,6 +34,7 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           password: ${{ secrets.VPS_PASSWORD }}
           port: ${{ secrets.VPS_PORT }}
+          command_timeout: "30m"
           script: |
             set -e
             cd /opt/jimmy-blog
