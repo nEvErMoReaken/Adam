@@ -148,6 +148,21 @@ function Heatmap({ dates }: { dates: DatesData }) {
                 return (
                   <div
                     key={di}
+                    aria-label={
+                      isFuture
+                        ? undefined
+                        : day.xp > 0
+                          ? `${day.date}: ${formatXP(day.xp)} XP`
+                          : `${day.date}: no activity`
+                    }
+                    title={
+                      isFuture
+                        ? undefined
+                        : day.xp > 0
+                          ? `${day.date}: ${formatXP(day.xp)} XP`
+                          : undefined
+                    }
+                    role={isFuture ? undefined : 'img'}
                     style={{
                       width: CELL,
                       height: CELL,
@@ -296,9 +311,37 @@ export default function CodeStatsWidget() {
       )}
 
       {!data && !err && (
-        <div className="flex items-center gap-2 text-[var(--c-overlay0)]">
-          <span className="animate-pulse">▌</span>
-          <span>fetching...</span>
+        <div className="animate-pulse space-y-4">
+          {/* level block skeleton */}
+          <div className="space-y-[5px]">
+            <div className="flex items-baseline gap-2">
+              <div className="h-4 w-10 rounded bg-[var(--c-surface1)]" />
+              <div className="h-3 w-16 rounded bg-[var(--c-surface0)]" />
+            </div>
+            <div className="h-2 w-full rounded bg-[var(--c-surface0)]" />
+            <div className="h-2 w-24 rounded bg-[var(--c-surface0)]" />
+          </div>
+          {/* heatmap skeleton */}
+          <div className="space-y-1.5">
+            <div className="h-2 w-28 rounded bg-[var(--c-surface0)]" />
+            <div className="h-[90px] w-full rounded bg-[var(--c-surface0)]" />
+          </div>
+          {/* lang bars skeleton */}
+          <div className="space-y-[10px]">
+            <div className="h-2 w-16 rounded bg-[var(--c-surface0)]" />
+            {[80, 65, 52, 40, 30, 20].map((w) => (
+              <div key={w} className="space-y-[4px]">
+                <div className="flex justify-between">
+                  <div
+                    className="h-2.5 rounded bg-[var(--c-surface0)]"
+                    style={{ width: `${w * 0.6}%` }}
+                  />
+                  <div className="h-2.5 w-8 rounded bg-[var(--c-surface0)]" />
+                </div>
+                <div className="h-2.5 w-full rounded bg-[var(--c-surface0)]" />
+              </div>
+            ))}
+          </div>
         </div>
       )}
 

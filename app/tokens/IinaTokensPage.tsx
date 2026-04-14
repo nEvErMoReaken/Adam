@@ -133,9 +133,55 @@ export default function IinaTokensPage() {
             </p>
           )}
           {!data && !err && (
-            <div className="flex items-center gap-2 text-[var(--c-overlay0)]">
-              <span className="animate-pulse">▌</span>
-              <span>{t.tokenFetching}</span>
+            <div className="flex flex-1 animate-pulse flex-col gap-6 overflow-hidden">
+              {/* stats grid skeleton */}
+              <div
+                className="grid grid-cols-2 gap-x-8 gap-y-3 border-b pb-5 sm:grid-cols-4"
+                style={{ borderColor: 'var(--c-split)' }}
+              >
+                {[1, 2, 3, 4].map((i) => (
+                  <div key={i} className="space-y-1.5">
+                    <div className="h-2 w-16 rounded bg-[var(--c-surface0)]" />
+                    <div className="h-5 w-20 rounded bg-[var(--c-surface1)]" />
+                  </div>
+                ))}
+              </div>
+              {/* bar chart skeleton */}
+              <div className="flex min-h-0 flex-1 flex-col gap-1">
+                <div className="h-2 w-20 rounded bg-[var(--c-surface0)]" />
+                <div className="flex min-h-0 flex-1 items-end gap-px">
+                  {Array.from({ length: 24 }, (_, i) => (
+                    <div
+                      key={i}
+                      className="flex-1 rounded-t bg-[var(--c-surface0)]"
+                      style={{ height: `${15 + ((Math.sin(i * 0.8) + 1) / 2) * 60}%` }}
+                    />
+                  ))}
+                </div>
+                <div className="flex">
+                  {Array.from({ length: 24 }, (_, i) => (
+                    <div key={i} className="flex flex-1 justify-center">
+                      <div className="h-1.5 w-3 rounded bg-[var(--c-surface0)]" />
+                    </div>
+                  ))}
+                </div>
+              </div>
+              {/* by-model skeleton */}
+              <div className="shrink-0 space-y-4">
+                <div className="h-2 w-20 rounded bg-[var(--c-surface0)]" />
+                {[90, 72, 55, 40, 28].map((w) => (
+                  <div key={w} className="space-y-[5px]">
+                    <div className="flex justify-between gap-4">
+                      <div
+                        className="h-3 rounded bg-[var(--c-surface0)]"
+                        style={{ width: `${w * 0.7}%` }}
+                      />
+                      <div className="h-3 w-20 shrink-0 rounded bg-[var(--c-surface0)]" />
+                    </div>
+                    <div className="h-2.5 w-full rounded bg-[var(--c-surface0)]" />
+                  </div>
+                ))}
+              </div>
             </div>
           )}
 
