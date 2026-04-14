@@ -68,6 +68,17 @@ export interface Translations {
   discussOnX: string
   viewOnGitHub: string
 
+  // TokensPage
+  tokenCmd: string
+  tokenError: string
+  tokenFetching: string
+  tokenTotalTokens: string
+  tokenPrompt: string
+  tokenCompletion: string
+  tokenRequests: string
+  tokenByModel: string
+  tokenFooter: string
+
   // AuthorLayout — nvidia-smi
   smiTitle: string
   smiDriver: string
@@ -141,6 +152,16 @@ export const translations: Record<Lang, Translations> = {
     backToList: '← 返回文章列表',
     discussOnX: '在 X 上讨论',
     viewOnGitHub: '在 GitHub 查看',
+
+    tokenCmd: 'token-usage --all-models',
+    tokenError: '连接失败 — iina.ai',
+    tokenFetching: '加载中...',
+    tokenTotalTokens: '总 token',
+    tokenPrompt: '输入',
+    tokenCompletion: '输出',
+    tokenRequests: '请求数',
+    tokenByModel: '按模型',
+    tokenFooter: '请求 · 最近 6 个月',
 
     smiTitle: 'jimmy-smi',
     smiDriver: '驱动: BYD-21div',
@@ -217,6 +238,16 @@ export const translations: Record<Lang, Translations> = {
     backToList: '← back',
     discussOnX: 'discuss on X',
     viewOnGitHub: 'view on GitHub',
+
+    tokenCmd: 'token-usage --all-models',
+    tokenError: 'connection refused — iina.ai',
+    tokenFetching: 'fetching...',
+    tokenTotalTokens: 'total tokens',
+    tokenPrompt: 'prompt',
+    tokenCompletion: 'completion',
+    tokenRequests: 'requests',
+    tokenByModel: 'by model',
+    tokenFooter: 'requests · last 6 months',
 
     smiTitle: 'jimmy-smi',
     smiDriver: 'Driver: BYD-21div',

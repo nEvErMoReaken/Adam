@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { PaneLayout, Pane } from '@/components/PaneLayout'
+import { useLang } from '@/lib/i18n'
 
 interface ModelStat {
   model: string
@@ -44,6 +45,7 @@ const COLORS = [
 ]
 
 export default function IinaTokensPage() {
+  const { t } = useLang()
   const [data, setData] = useState<IinaData | null>(null)
   const [err, setErr] = useState(false)
 
@@ -60,8 +62,6 @@ export default function IinaTokensPage() {
   const models = data?.models ?? []
   const maxTotal = models[0]?.total ?? 1
   const grandTotal = models.reduce((s, m) => s + m.total, 0)
-  const grandPrompt = models.reduce((s, m) => s + m.prompt, 0)
-  const grandCompletion = models.reduce((s, m) => s + m.completion, 0)
 
   return (
     <>
@@ -75,19 +75,19 @@ export default function IinaTokensPage() {
             {/* prompt line */}
             <div className="mb-5 flex flex-wrap items-center gap-x-1.5 gap-y-0.5 text-[11px]">
               <span className="text-[var(--c-blue)]">❯</span>
-              <span className="text-[var(--c-overlay0)]">token-usage --all-models</span>
+              <span className="text-[var(--c-overlay0)]">{t.tokenCmd}</span>
             </div>
 
             {err && (
               <p className="text-[var(--c-red)]">
-                <span className="text-[var(--c-overlay0)]">error</span> connection refused — iina.ai
+                <span className="text-[var(--c-overlay0)]">error</span> {t.tokenError}
               </p>
             )}
 
             {!data && !err && (
               <div className="flex items-center gap-2 text-[var(--c-overlay0)]">
                 <span className="animate-pulse">▌</span>
-                <span>fetching...</span>
+                <span>{t.tokenFetching}</span>
               </div>
             )}
 
@@ -95,26 +95,12 @@ export default function IinaTokensPage() {
               <div className="space-y-8" style={{ animation: 'token-in .3s ease both' }}>
                 {/* summary row */}
                 <div
-                  className="grid grid-cols-2 gap-x-8 gap-y-1 border-b pb-5 sm:grid-cols-4"
+                  className="grid grid-cols-2 gap-x-8 gap-y-1 border-b pb-5 sm:grid-cols-2"
                   style={{ borderColor: 'var(--c-split)' }}
                 >
                   {[
-                    {
-                      label: 'total tokens',
-                      val: formatTokens(grandTotal),
-                      color: 'var(--c-text)',
-                    },
-                    { label: 'prompt', val: formatTokens(grandPrompt), color: 'var(--c-blue)' },
-                    {
-                      label: 'completion',
-                      val: formatTokens(grandCompletion),
-                      color: 'var(--c-green)',
-                    },
-                    {
-                      label: 'requests',
-                      val: formatReqs(data.total_requests),
-                      color: 'var(--c-mauve)',
-                    },
+                    { label: t.tokenTotalTokens, val: formatTokens(grandTotal), color: 'var(--c-text)' },
+                    { label: t.tokenRequests, val: formatReqs(data.total_requests), color: 'var(--c-mauve)' },
                   ].map(({ label, val, color }) => (
                     <div key={label}>
                       <p className="mb-0.5 text-[9px] tracking-widest text-[var(--c-overlay0)] uppercase">
@@ -130,14 +116,12 @@ export default function IinaTokensPage() {
                 {/* per-model breakdown */}
                 <div className="space-y-5">
                   <p className="text-[9px] tracking-widest text-[var(--c-overlay0)] uppercase">
-                    by model
+                    {t.tokenByModel}
                   </p>
                   {models.map((m, i) => {
                     const pct = m.total / maxTotal
                     const filled = Math.round(pct * BAR_W)
                     const color = COLORS[i % COLORS.length]
-                    const promptPct = m.total > 0 ? m.prompt / m.total : 0
-                    const compPct = m.total > 0 ? m.completion / m.total : 0
                     return (
                       <div
                         key={m.model}
@@ -165,19 +149,6 @@ export default function IinaTokensPage() {
                             {'░'.repeat(BAR_W - filled)}
                           </span>
                         </div>
-                        {/* prompt / completion split */}
-                        <div className="flex gap-4 text-[9px] text-[var(--c-overlay0)]">
-                          <span>
-                            <span className="text-[var(--c-blue)]">↑</span>
-                            {' prompt '}
-                            {formatTokens(m.prompt)} ({(promptPct * 100).toFixed(0)}%)
-                          </span>
-                          <span>
-                            <span className="text-[var(--c-green)]">↓</span>
-                            {' completion '}
-                            {formatTokens(m.completion)} ({(compPct * 100).toFixed(0)}%)
-                          </span>
-                        </div>
                       </div>
                     )
                   })}
@@ -188,7 +159,7 @@ export default function IinaTokensPage() {
                   className="border-t pt-3 text-[9px] text-[var(--c-overlay0)]"
                   style={{ borderColor: 'var(--c-split)' }}
                 >
-                  sampled {formatReqs(data.sampled)} / {formatReqs(data.total_requests)} records
+                  {formatReqs(data.total_requests)} {t.tokenFooter}
                 </p>
               </div>
             )}
