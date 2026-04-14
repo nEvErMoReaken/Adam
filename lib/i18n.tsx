@@ -78,6 +78,9 @@ export interface Translations {
   tokenRequests: string
   tokenByModel: string
   tokenFooter: string
+  tokenUsed: string
+  tokenAllReqs: string
+  tokenToday: string
 
   // AuthorLayout — nvidia-smi
   smiTitle: string
@@ -160,8 +163,11 @@ export const translations: Record<Lang, Translations> = {
     tokenPrompt: '输入',
     tokenCompletion: '输出',
     tokenRequests: '请求数',
-    tokenByModel: '按模型',
+    tokenByModel: '按模型 top 5',
     tokenFooter: '请求 · 最近 6 个月',
+    tokenUsed: '历史消耗',
+    tokenAllReqs: '累计请求',
+    tokenToday: '今日用量',
 
     smiTitle: 'jimmy-smi',
     smiDriver: '驱动: BYD-21div',
@@ -246,8 +252,11 @@ export const translations: Record<Lang, Translations> = {
     tokenPrompt: 'prompt',
     tokenCompletion: 'completion',
     tokenRequests: 'requests',
-    tokenByModel: 'by model',
+    tokenByModel: 'by model top 5',
     tokenFooter: 'requests · last 6 months',
+    tokenUsed: 'total spent',
+    tokenAllReqs: 'all-time reqs',
+    tokenToday: "today's usage",
 
     smiTitle: 'jimmy-smi',
     smiDriver: 'Driver: BYD-21div',
