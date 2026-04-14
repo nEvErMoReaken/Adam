@@ -15,8 +15,8 @@ export interface ModelStat {
 }
 
 export interface HourStat {
-  ts: number   // unix timestamp (hour-aligned)
-  tokens: number
+  ts: number
+  segments: { model: string; tokens: number }[]  // 按 tokens 降序
 }
 
 interface QuotaData {
@@ -69,13 +69,20 @@ export async function GET() {
       ...monthRanges.map((r) => fetchQuotaData(r.start, r.end)),
     ])
 
-    // 今日按小时聚合
-    const hourMap = new Map<number, number>()
+    // 今日按小时 + 模型聚合
+    const hourModelMap = new Map<number, Map<string, number>>()
     for (const row of todayRows) {
-      hourMap.set(row.created_at, (hourMap.get(row.created_at) ?? 0) + row.token_used)
+      if (!hourModelMap.has(row.created_at)) hourModelMap.set(row.created_at, new Map())
+      const m = hourModelMap.get(row.created_at)!
+      m.set(row.model_name, (m.get(row.model_name) ?? 0) + row.token_used)
     }
-    const hourly: HourStat[] = Array.from(hourMap.entries())
-      .map(([ts, tokens]) => ({ ts, tokens }))
+    const hourly: HourStat[] = Array.from(hourModelMap.entries())
+      .map(([ts, modelTokens]) => ({
+        ts,
+        segments: Array.from(modelTokens.entries())
+          .map(([model, tokens]) => ({ model, tokens }))
+          .sort((a, b) => b.tokens - a.tokens),
+      }))
       .sort((a, b) => a.ts - b.ts)
 
     // 6 个月按模型聚合，取 Top 5
