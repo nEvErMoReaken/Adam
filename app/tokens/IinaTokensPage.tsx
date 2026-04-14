@@ -63,7 +63,7 @@ function buildSlots(hourly: HourStat[]): { ts: number; segments: { model: string
 
   return Array.from({ length: 24 }, (_, i) => {
     const ts = currentHourTs - (23 - i) * 3600
-    const h = new Date(ts * 1000).getUTCHours()
+    const h = new Date(ts * 1000).getHours()
     const segments = map.get(ts) ?? []
     const total = segments.reduce((s, seg) => s + seg.tokens, 0)
     const label = String(h).padStart(2, '0')
@@ -147,10 +147,10 @@ export default function IinaTokensPage() {
                   style={{ borderColor: 'var(--c-split)' }}
                 >
                   {[
-                    { label: t.tokenTotalTokens, val: formatTokens(models.reduce((s, m) => s + m.total, 0)), color: 'var(--c-text)' },
-                    { label: t.tokenRequests,    val: formatReqs(data.total_requests),  color: 'var(--c-mauve)' },
-                    { label: t.tokenUsed,        val: formatUsd(data.used),             color: 'var(--c-peach)' },
-                    { label: t.tokenAllReqs,     val: formatReqs(data.request_count),   color: 'var(--c-blue)'  },
+                    { label: t.tokenTotalTokens, val: Math.round(models.reduce((s, m) => s + m.total, 0)).toLocaleString(), color: 'var(--c-text)' },
+                    { label: t.tokenRequests,    val: data.total_requests.toLocaleString(),  color: 'var(--c-mauve)' },
+                    { label: t.tokenUsed,        val: `$${data.used.toFixed(2)}`,            color: 'var(--c-peach)' },
+                    { label: t.tokenAllReqs,     val: data.request_count.toLocaleString(),   color: 'var(--c-blue)'  },
                   ].map(({ label, val, color }) => (
                     <div key={label}>
                       <p className="mb-0.5 text-[9px] tracking-widest text-[var(--c-overlay0)] uppercase">{label}</p>
