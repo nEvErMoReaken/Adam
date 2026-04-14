@@ -66,7 +66,7 @@ function buildSlots(hourly: HourStat[]): { ts: number; segments: { model: string
     const h = new Date(ts * 1000).getUTCHours()
     const segments = map.get(ts) ?? []
     const total = segments.reduce((s, seg) => s + seg.tokens, 0)
-    const label = i % 6 === 0 ? String(h).padStart(2, '0') : ''
+    const label = String(h).padStart(2, '0')
     return { ts, segments, total, label }
   })
 }
@@ -167,7 +167,7 @@ export default function IinaTokensPage() {
                     </p>
                     {maxHourly > 1 && (
                       <span className="text-[9px] text-[var(--c-surface2)]">
-                        peak {formatTokens(maxHourly)}
+                        peak {maxHourly.toLocaleString()}
                       </span>
                     )}
                   </div>
@@ -212,7 +212,7 @@ export default function IinaTokensPage() {
                     {slots.map((slot, i) => (
                       <div
                         key={i}
-                        className="flex-1 text-center text-[8px] text-[var(--c-surface2)]"
+                        className="flex-1 text-center text-[7px] text-[var(--c-surface2)]"
                         style={{ minWidth: 0 }}
                       >
                         {slot.label}
