@@ -211,6 +211,30 @@ const QUOTES = [
   '> npm install',
 ]
 
+const LEGENDARY_QUOTES = [
+  '★ 传说诞生 ★',
+  'konami code ✓',
+  '★★★★★ MAX',
+  '> sudo legend',
+  '出金了！',
+  'legendary get!',
+  '你找到了彩蛋！',
+]
+
+// Konami 序列：↑↑↓↓←→←→BA
+const KONAMI = [
+  'ArrowUp',
+  'ArrowUp',
+  'ArrowDown',
+  'ArrowDown',
+  'ArrowLeft',
+  'ArrowRight',
+  'ArrowLeft',
+  'ArrowRight',
+  'b',
+  'a',
+]
+
 // ── 孵化动画帧（蛋 → 破壳）─────────────────────────────────────────
 
 const EGG_FRAMES = [
@@ -418,6 +442,9 @@ export default function WalkingPet() {
   const dirRef = useRef<1 | -1>(1)
   const maxXRef = useRef(typeof window !== 'undefined' ? window.innerWidth - 130 : 1000)
 
+  // Konami 序列进度
+  const konamiIdxRef = useRef(0)
+
   // footer 位置追踪
   useEffect(() => {
     const update = () => {
@@ -477,6 +504,42 @@ export default function WalkingPet() {
       }, delay)
     })
   }, [])
+
+  // Konami Code 出金：触发时当前 pet 强制升为 legendary + shiny
+  const activateLegendary = useCallback(() => {
+    setBuddy((prev) => {
+      if (!prev) return prev
+      return {
+        ...prev,
+        rarity: 'legendary',
+        shiny: true,
+        stats: generateStats('legendary'),
+      }
+    })
+    setHatchPhase('born')
+    setHovered(false)
+    const legendaryQuote = LEGENDARY_QUOTES[Math.floor(Math.random() * LEGENDARY_QUOTES.length)]
+    setQuote(legendaryQuote)
+    setTimeout(() => setHatchPhase('idle'), 600)
+    setTimeout(() => setQuote(null), 3500)
+  }, [])
+
+  // Konami 键盘监听
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === KONAMI[konamiIdxRef.current]) {
+        konamiIdxRef.current++
+        if (konamiIdxRef.current === KONAMI.length) {
+          konamiIdxRef.current = 0
+          activateLegendary()
+        }
+      } else {
+        konamiIdxRef.current = e.key === KONAMI[0] ? 1 : 0
+      }
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [activateLegendary])
 
   // 页面加载后延迟一点再开始孵化（等 footer 位置稳定）
   useEffect(() => {
@@ -637,27 +700,6 @@ export default function WalkingPet() {
                 {displayRows.join('\n')}
               </pre>
             )}
-
-            <style>{`
-          @keyframes petpop {
-            from { opacity:0; transform:scale(.85) translateY(3px); }
-            to   { opacity:1; transform:scale(1) translateY(0); }
-          }
-          @keyframes petshine {
-            0%,100% { opacity:1; }
-            50%      { opacity:.75; }
-          }
-          @keyframes eggrattle {
-            0%,100% { transform: rotate(0deg); }
-            25%      { transform: rotate(-8deg); }
-            75%      { transform: rotate(8deg); }
-          }
-          @keyframes bornpop {
-            0%   { opacity:0; transform: scale(0.3); }
-            60%  { transform: scale(1.2); }
-            100% { opacity:1; transform: scale(1); }
-          }
-        `}</style>
           </div>
         </>
       )}

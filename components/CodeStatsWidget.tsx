@@ -229,7 +229,7 @@ function LangBars({ langs }: { langs: [string, LangEntry][] }) {
               style={{
                 overflow: 'hidden',
                 whiteSpace: 'nowrap',
-                animation: `cs-bar 0.55s cubic-bezier(.4,0,.2,1) ${i * 55}ms both`,
+                animation: `bar-reveal 0.55s cubic-bezier(.4,0,.2,1) ${i * 55}ms both`,
               }}
             >
               <span className="text-[var(--c-blue)]">{'█'.repeat(Math.round(pct * BAR_W))}</span>
@@ -273,109 +273,101 @@ export default function CodeStatsWidget() {
   const lvlPct = data ? (data.total_xp - xpForCurr) / (xpForNext - xpForCurr) : 0
 
   return (
-    <>
-      <style>{`
-        @keyframes cs-bar  { from { clip-path: inset(0 100% 0 0) } to { clip-path: inset(0 0% 0 0) } }
-        @keyframes cs-in   { from { opacity:0; transform:translateY(3px) } to { opacity:1; transform:none } }
-      `}</style>
-
-      <div className="space-y-4 font-mono text-[11px] text-[var(--c-subtext0)]">
-        {/* ── prompt line ── */}
-        <div className="flex flex-wrap items-center gap-x-1.5 gap-y-0.5">
-          <span className="text-[var(--c-blue)]">❯</span>
-          <span>code-stats</span>
-          <span className="text-[var(--c-overlay0)]">fetch</span>
-          <a
-            href={`https://codestats.net/users/${USERNAME}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-[var(--c-mauve)] transition-opacity hover:opacity-70"
-          >
-            {USERNAME}
-          </a>
-        </div>
-
-        {err && (
-          <p className="text-[var(--c-red)]">
-            <span className="text-[var(--c-overlay0)]">error</span> connection refused —
-            codestats.net
-          </p>
-        )}
-
-        {!data && !err && (
-          <div className="flex items-center gap-2 text-[var(--c-overlay0)]">
-            <span className="animate-pulse">▌</span>
-            <span>fetching...</span>
-          </div>
-        )}
-
-        {data && dates && (
-          <div className="space-y-4" style={{ animation: 'cs-in .3s ease both' }}>
-            {/* ── level block ── */}
-            <div className="space-y-[5px]">
-              <div className="flex items-baseline gap-2">
-                <span className="text-base leading-none font-bold text-[var(--c-text)]">
-                  Lv.{level}
-                </span>
-                <span className="text-[var(--c-overlay0)]">{formatXP(data.total_xp)} xp</span>
-                {data.new_xp > 0 && (
-                  <span className="text-[var(--c-green)]">+{formatXP(data.new_xp)} today</span>
-                )}
-              </div>
-
-              {/* level progress bar */}
-              <div className="flex items-center gap-1.5">
-                <span className="shrink-0 text-[var(--c-overlay0)]" style={{ fontSize: 9 }}>
-                  {level}
-                </span>
-                <div
-                  className="flex flex-1 text-[var(--c-blue)]"
-                  style={{ fontSize: 10, lineHeight: 1 }}
-                >
-                  <span
-                    style={{
-                      display: 'inline-block',
-                      width: `${lvlPct * 100}%`,
-                      overflow: 'hidden',
-                      whiteSpace: 'nowrap',
-                    }}
-                  >
-                    {'━'.repeat(30)}
-                  </span>
-                  <span
-                    className="text-[var(--c-surface1)]"
-                    style={{ flex: 1, overflow: 'hidden', whiteSpace: 'nowrap' }}
-                  >
-                    {'━'.repeat(30)}
-                  </span>
-                </div>
-                <span className="shrink-0 text-[var(--c-overlay0)]" style={{ fontSize: 9 }}>
-                  {nextLvl}
-                </span>
-              </div>
-              <p className="text-[var(--c-overlay0)]" style={{ fontSize: 9 }}>
-                {formatXP(xpForNext - data.total_xp)} xp to next level
-              </p>
-            </div>
-
-            {/* ── heatmap ── */}
-            <div className="space-y-1.5">
-              <p className="text-[9px] tracking-widest text-[var(--c-overlay0)] uppercase">
-                xp / day · last 52 weeks
-              </p>
-              <Heatmap dates={dates} />
-            </div>
-
-            {/* ── lang bars ── */}
-            <div className="space-y-1.5">
-              <p className="text-[9px] tracking-widest text-[var(--c-overlay0)] uppercase">
-                languages
-              </p>
-              <LangBars langs={topLangs} />
-            </div>
-          </div>
-        )}
+    <div className="space-y-4 font-mono text-[11px] text-[var(--c-subtext0)]">
+      {/* ── prompt line ── */}
+      <div className="flex flex-wrap items-center gap-x-1.5 gap-y-0.5">
+        <span className="text-[var(--c-blue)]">❯</span>
+        <span>code-stats</span>
+        <span className="text-[var(--c-overlay0)]">fetch</span>
+        <a
+          href={`https://codestats.net/users/${USERNAME}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-[var(--c-mauve)] transition-opacity hover:opacity-70"
+        >
+          {USERNAME}
+        </a>
       </div>
-    </>
+
+      {err && (
+        <p className="text-[var(--c-red)]">
+          <span className="text-[var(--c-overlay0)]">error</span> connection refused — codestats.net
+        </p>
+      )}
+
+      {!data && !err && (
+        <div className="flex items-center gap-2 text-[var(--c-overlay0)]">
+          <span className="animate-pulse">▌</span>
+          <span>fetching...</span>
+        </div>
+      )}
+
+      {data && dates && (
+        <div className="space-y-4" style={{ animation: 'fade-up .3s ease both' }}>
+          {/* ── level block ── */}
+          <div className="space-y-[5px]">
+            <div className="flex items-baseline gap-2">
+              <span className="text-base leading-none font-bold text-[var(--c-text)]">
+                Lv.{level}
+              </span>
+              <span className="text-[var(--c-overlay0)]">{formatXP(data.total_xp)} xp</span>
+              {data.new_xp > 0 && (
+                <span className="text-[var(--c-green)]">+{formatXP(data.new_xp)} today</span>
+              )}
+            </div>
+
+            {/* level progress bar */}
+            <div className="flex items-center gap-1.5">
+              <span className="shrink-0 text-[var(--c-overlay0)]" style={{ fontSize: 9 }}>
+                {level}
+              </span>
+              <div
+                className="flex flex-1 text-[var(--c-blue)]"
+                style={{ fontSize: 10, lineHeight: 1 }}
+              >
+                <span
+                  style={{
+                    display: 'inline-block',
+                    width: `${lvlPct * 100}%`,
+                    overflow: 'hidden',
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  {'━'.repeat(30)}
+                </span>
+                <span
+                  className="text-[var(--c-surface1)]"
+                  style={{ flex: 1, overflow: 'hidden', whiteSpace: 'nowrap' }}
+                >
+                  {'━'.repeat(30)}
+                </span>
+              </div>
+              <span className="shrink-0 text-[var(--c-overlay0)]" style={{ fontSize: 9 }}>
+                {nextLvl}
+              </span>
+            </div>
+            <p className="text-[var(--c-overlay0)]" style={{ fontSize: 9 }}>
+              {formatXP(xpForNext - data.total_xp)} xp to next level
+            </p>
+          </div>
+
+          {/* ── heatmap ── */}
+          <div className="space-y-1.5">
+            <p className="text-[9px] tracking-widest text-[var(--c-overlay0)] uppercase">
+              xp / day · last 52 weeks
+            </p>
+            <Heatmap dates={dates} />
+          </div>
+
+          {/* ── lang bars ── */}
+          <div className="space-y-1.5">
+            <p className="text-[9px] tracking-widest text-[var(--c-overlay0)] uppercase">
+              languages
+            </p>
+            <LangBars langs={topLangs} />
+          </div>
+        </div>
+      )}
+    </div>
   )
 }

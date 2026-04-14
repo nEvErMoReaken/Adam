@@ -10,7 +10,7 @@ const siteMetadata = {
   siteRepo: 'https://github.com/nEvErMoReaken/Adam',
   siteLogo: `${process.env.BASE_PATH || ''}/static/images/logo.png`,
   socialBanner: `${process.env.BASE_PATH || ''}/static/images/twitter-card.png`,
-  email: 'loves@sleeprhino.com',
+  email: 'I@sleeprhino.com',
   github: 'https://github.com/nEvErMoReaken',
   locale: 'zh-CN',
   // set to true if you want a navbar fixed to the top

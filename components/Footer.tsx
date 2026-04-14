@@ -69,6 +69,7 @@ export default function Footer() {
             <div ref={ref} className="relative">
               <button
                 onClick={() => setOpen((o) => !o)}
+                data-theme-toggle
                 className="group flex items-center gap-1 transition-colors"
                 style={{ color: 'var(--c-subtext0)' }}
               >
@@ -95,8 +96,27 @@ export default function Footer() {
                     <button
                       key={id}
                       onClick={() => {
-                        setTheme(id)
                         setOpen(false)
+                        if (typeof document !== 'undefined' && 'startViewTransition' in document) {
+                          // 以主题按钮为圆心扩散
+                          const btn = document.querySelector('[data-theme-toggle]') as HTMLElement
+                          if (btn) {
+                            const r = btn.getBoundingClientRect()
+                            const x = (((r.left + r.width / 2) / window.innerWidth) * 100).toFixed(
+                              1
+                            )
+                            const y = (((r.top + r.height / 2) / window.innerHeight) * 100).toFixed(
+                              1
+                            )
+                            document.documentElement.style.setProperty('--theme-origin-x', `${x}%`)
+                            document.documentElement.style.setProperty('--theme-origin-y', `${y}%`)
+                          }
+                          ;(
+                            document as Document & { startViewTransition: (cb: () => void) => void }
+                          ).startViewTransition(() => setTheme(id))
+                        } else {
+                          setTheme(id)
+                        }
                       }}
                       className="flex w-full items-center justify-between px-3 py-1.5 text-left transition-colors hover:bg-[var(--c-surface0)]"
                       style={{ color: theme === id ? 'var(--c-blue)' : 'var(--c-subtext0)' }}

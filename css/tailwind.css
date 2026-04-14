@@ -29,6 +29,8 @@
   --c-green:    #40a02b;
   --c-yellow:   #df8e1d;
   --c-peach:    #fe640b;
+  --c-teal:     #179299;
+  --c-sapphire: #209fb5;
   --c-split:    #ccd0da;
 }
 
@@ -50,6 +52,8 @@
   --c-green:    #a6e3a1;
   --c-yellow:   #f9e2af;
   --c-peach:    #fab387;
+  --c-teal:     #94e2d5;
+  --c-sapphire: #74c7ec;
   --c-split:    #313244;
 }
 
@@ -72,6 +76,8 @@
   --c-green:    #78bd65;
   --c-yellow:   #e5cd52;
   --c-peach:    #ef7c2a;
+  --c-teal:     #87c3a9;
+  --c-sapphire: #7bb8d4;
   --c-split:    #2f3137;
 }
 
@@ -401,4 +407,60 @@ input:-webkit-autofill:focus {
 .linkicon {
   display: inline-block;
   vertical-align: middle;
+}
+
+/* ─── 共享动画变量 + keyframes ────────────────────────────────── */
+
+:root {
+  --anim-fast:  0.15s;
+  --anim-std:   0.3s;
+  --anim-slow:  0.55s;
+  --anim-ease:  cubic-bezier(.4,0,.2,1);
+}
+
+@keyframes bar-reveal {
+  from { clip-path: inset(0 100% 0 0) }
+  to   { clip-path: inset(0 0% 0 0) }
+}
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(4px) }
+  to   { opacity: 1; transform: none }
+}
+@keyframes bar-grow {
+  from { transform: scaleY(0) }
+  to   { transform: scaleY(1) }
+}
+@keyframes petpop {
+  from { opacity: 0; transform: scale(.85) translateY(3px) }
+  to   { opacity: 1; transform: scale(1) translateY(0) }
+}
+@keyframes petshine {
+  0%, 100% { opacity: 1 }
+  50%       { opacity: .75 }
+}
+@keyframes eggrattle {
+  0%, 100% { transform: rotate(0deg) }
+  25%       { transform: rotate(-8deg) }
+  75%       { transform: rotate(8deg) }
+}
+@keyframes bornpop {
+  0%   { opacity: 0; transform: scale(0.3) }
+  60%  { transform: scale(1.2) }
+  100% { opacity: 1; transform: scale(1) }
+}
+
+/* ─── 主题切换动画（View Transitions API）────────────────────── */
+
+@keyframes theme-reveal {
+  from { clip-path: circle(0% at var(--theme-origin-x, 95%) var(--theme-origin-y, 98%)) }
+  to   { clip-path: circle(150% at var(--theme-origin-x, 95%) var(--theme-origin-y, 98%)) }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  ::view-transition-old(root) {
+    animation: none;
+  }
+  ::view-transition-new(root) {
+    animation: theme-reveal 0.45s var(--anim-ease) both;
+  }
 }
