@@ -251,9 +251,19 @@ export default function IinaTokensPage() {
                     <div
                       className="pointer-events-none absolute z-20"
                       style={{
-                        left: `${((hoveredIdx + 0.5) / 24) * 100}%`,
+                        ...(hoveredIdx >= 20
+                          ? { right: 0, left: 'auto' }
+                          : hoveredIdx <= 3
+                            ? { left: 0 }
+                            : {
+                                left: `${((hoveredIdx + 0.5) / 24) * 100}%`,
+                                transform: 'translateX(-50%)',
+                              }),
                         top: 0,
-                        transform: `translate(${hoveredIdx > 18 ? '-90%' : hoveredIdx < 5 ? '-10%' : '-50%'}, calc(-100% - 6px))`,
+                        transform:
+                          hoveredIdx >= 20 || hoveredIdx <= 3
+                            ? 'translateY(calc(-100% - 6px))'
+                            : 'translate(-50%, calc(-100% - 6px))',
                         background: 'var(--c-crust)',
                         border: '1px solid var(--c-split)',
                         borderRadius: 3,
