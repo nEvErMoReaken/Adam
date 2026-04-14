@@ -8,6 +8,9 @@ concurrency:
   group: deploy
   cancel-in-progress: true
 
+env:
+  IMAGE: ghcr.io/${{ github.repository_owner }}/jimmy-blog:latest
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -16,6 +19,9 @@ jobs:
       packages: write
     steps:
       - uses: actions/checkout@v4
+
+      - name: Lowercase image name
+        run: echo "IMAGE=${IMAGE,,}" >> $GITHUB_ENV
 
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3
@@ -32,7 +38,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: ghcr.io/${{ github.repository_owner }}/jimmy-blog:latest
+          tags: ${{ env.IMAGE }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -40,6 +46,9 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
+      - name: Lowercase image name
+        run: echo "IMAGE=${IMAGE,,}" >> $GITHUB_ENV
+
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -50,8 +59,8 @@ jobs:
           command_timeout: "10m"
           script: |
             set -e
-            echo "${{ secrets.GH_TOKEN }}" | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
-            docker pull ghcr.io/${{ github.repository_owner }}/jimmy-blog:latest
+            echo "${{ secrets.GH_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+            docker pull ${{ env.IMAGE }}
             docker stop jimmy-blog 2>/dev/null || true
             docker rm jimmy-blog 2>/dev/null || true
             docker run -d \
@@ -66,5 +75,5 @@ jobs:
               -e UMAMI_USER=${{ secrets.UMAMI_USER }} \
               -e UMAMI_PASS=${{ secrets.UMAMI_PASS }} \
               -e NEXT_UMAMI_ID=${{ secrets.NEXT_UMAMI_ID }} \
-              ghcr.io/${{ github.repository_owner }}/jimmy-blog:latest
+              ${{ env.IMAGE }}
             docker image prune -f
