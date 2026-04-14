@@ -53,7 +53,6 @@ const PALETTE = [
 ]
 
 const MODEL_BAR_W = 24
-const CHART_H = 56 // px
 
 /** 生成 24 个对齐 slot，每个 slot 包含各模型 tokens */
 function buildSlots(hourly: HourStat[]): { ts: number; segments: { model: string; tokens: number }[]; total: number; label: string }[] {
@@ -119,7 +118,7 @@ export default function IinaTokensPage() {
       `}</style>
       <PaneLayout cols="grid-cols-1">
         <Pane title="token-usage" index={0}>
-          <div className="p-5 font-mono text-[11px] text-[var(--c-subtext0)]">
+          <div className="flex h-full flex-col p-5 font-mono text-[11px] text-[var(--c-subtext0)]">
             {/* prompt line */}
             <div className="mb-5 flex items-center gap-x-1.5">
               <span className="text-[var(--c-blue)]">❯</span>
@@ -139,7 +138,7 @@ export default function IinaTokensPage() {
             )}
 
             {data && (
-              <div className="space-y-7" style={{ animation: 'token-in .3s ease both' }}>
+              <div className="flex flex-1 flex-col gap-6 overflow-hidden" style={{ animation: 'token-in .3s ease both' }}>
 
                 {/* 统计数字 */}
                 <div
@@ -160,7 +159,7 @@ export default function IinaTokensPage() {
                 </div>
 
                 {/* 今日堆叠柱状图 */}
-                <div className="space-y-1">
+                <div className="flex min-h-0 flex-1 flex-col gap-1">
                   <div className="flex items-center justify-between">
                     <p className="text-[9px] tracking-widest text-[var(--c-overlay0)] uppercase">
                       {t.tokenToday}
@@ -172,39 +171,35 @@ export default function IinaTokensPage() {
                     )}
                   </div>
 
-                  {/* 柱子 */}
-                  <div className="flex items-end gap-px" style={{ height: CHART_H }}>
-                    {slots.map((slot, i) => {
-                      const totalH = (slot.total / maxHourly) * CHART_H
-                      return (
-                        <div
-                          key={slot.ts}
-                          className="flex flex-1 flex-col justify-end overflow-hidden"
-                          style={{ height: CHART_H }}
-                        >
-                          {slot.total === 0 ? (
-                            <div style={{ height: 1, background: 'var(--c-surface0)', opacity: 0.4 }} />
-                          ) : (
-                            // 堆叠各模型色块（从下到上：占比最大的在底部）
-                            [...slot.segments].reverse().map((seg) => {
-                              const segH = (seg.tokens / slot.total) * totalH
-                              return (
-                                <div
-                                  key={seg.model}
-                                  style={{
-                                    height: segH,
-                                    background: colorOf(seg.model),
-                                    transformOrigin: 'bottom',
-                                    animation: `bar-grow 0.4s cubic-bezier(.4,0,.2,1) ${i * 12}ms both`,
-                                    flexShrink: 0,
-                                  }}
-                                />
-                              )
-                            })
-                          )}
-                        </div>
-                      )
-                    })}
+                  {/* 柱子：flex-1 撑满剩余高度，用 flex-grow 比例替代像素 */}
+                  <div className="flex min-h-0 flex-1 items-stretch gap-px">
+                    {slots.map((slot, i) => (
+                      <div key={slot.ts} className="flex flex-1 flex-col">
+                        {slot.total === 0 ? (
+                          <>
+                            <div className="flex-1" />
+                            <div style={{ height: 1, background: 'var(--c-surface0)', opacity: 0.3 }} />
+                          </>
+                        ) : (
+                          <>
+                            {/* 顶部空白 */}
+                            <div style={{ flex: maxHourly - slot.total }} />
+                            {/* 各模型色块，从下到上最大的在底 */}
+                            {[...slot.segments].reverse().map((seg) => (
+                              <div
+                                key={seg.model}
+                                style={{
+                                  flex: seg.tokens,
+                                  background: colorOf(seg.model),
+                                  transformOrigin: 'bottom',
+                                  animation: `bar-grow 0.4s cubic-bezier(.4,0,.2,1) ${i * 12}ms both`,
+                                }}
+                              />
+                            ))}
+                          </>
+                        )}
+                      </div>
+                    ))}
                   </div>
 
                   {/* x 轴 */}
@@ -237,7 +232,7 @@ export default function IinaTokensPage() {
                 </div>
 
                 {/* by-model top 5 */}
-                <div className="space-y-4">
+                <div className="shrink-0 space-y-4">
                   <p className="text-[9px] tracking-widest text-[var(--c-overlay0)] uppercase">
                     {t.tokenByModel}
                   </p>
@@ -275,7 +270,7 @@ export default function IinaTokensPage() {
 
                 {/* footer */}
                 <p
-                  className="border-t pt-3 text-[9px] text-[var(--c-overlay0)]"
+                  className="shrink-0 border-t pt-3 text-[9px] text-[var(--c-overlay0)]"
                   style={{ borderColor: 'var(--c-split)' }}
                 >
                   {formatReqs(data.total_requests)} {t.tokenFooter}
